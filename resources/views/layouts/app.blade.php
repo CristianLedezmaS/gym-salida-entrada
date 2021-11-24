@@ -124,7 +124,7 @@
                                     @if (Auth::user()->tipo_usuario === 1)
                                     Administrador
                                     @else
-                                    Empleado
+                                    Usuario
                                     @endif
                                 </h6>
                             </div>
@@ -219,7 +219,7 @@
                 </li>
 
                 <li
-                    class="grey with-sub {{ Request::is('tipo-usuario*','usuario*', 'cliente', 'categoria*', 'producto*', 'proveedor*') ? 'opened' : ''}}">
+                    class="grey with-sub {{ Request::is('tipo-usuario*') ? 'opened' : ''}}">
                     <span>
                         <img src="{{asset('img-inicio/pa.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-user-plus"></i> --}}
@@ -227,13 +227,13 @@
                     </span>
                     <ul>
                         <li>
-                            <a href="" class="{{ Request::is('salida') ? 'activo' : ''}}">
+                            <a href="" class="{{ Request::is('usuario-in') ? 'activo' : ''}}">
                                 <i class="fas fa-plus-square icono-submenu"></i>
                                 <span class="lbl">Registrar paciente</span>
                             </a>
                         </li>
                         <li>
-                            <a href="" class="{{ Request::is('salida-venta') ? 'activo' : ''}}">
+                            <a href="" class="{{ Request::is('usuario-venta') ? 'activo' : ''}}">
                                 <i class="fas fa-th-list icono-submenu"></i>
                                 <span class="lbl">Lista de pacientes</span>
                             </a>
@@ -266,19 +266,41 @@
 
                 <li class="grey with-sub {{ Request::is('entrada*') ? 'opened' : ''}}">
                     <span>
+                        <img src="{{asset('img-inicio/es.png')}}" class="img-inicio" alt="">
+                        {{-- <i class="fas fa-sort-amount-down-alt"></i> --}}
+                        <span class="lbl">ESPECIALIDAD</span>
+                    </span>
+                    <ul>
+                        <li>
+                            <a href="" class="{{ Request::is('salida') ? 'activo' : ''}}">
+                                <i class="fas fa-plus-square icono-submenu"></i>
+                                <span class="lbl">Registrar especialidad</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('especialidad.index')}}" class="{{ Request::is('salida-venta') ? 'activo' : ''}}">
+                                <i class="fas fa-th-list icono-submenu"></i>
+                                <span class="lbl">Lista de especialidades</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="grey with-sub {{ Request::is('usuario*') ? 'opened' : ''}}">
+                    <span>
                         <img src="{{asset('img-inicio/team.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-sort-amount-down-alt"></i> --}}
                         <span class="lbl">USUARIOS</span>
                     </span>
                     <ul>
                         <li>
-                            <a href="" class="{{ Request::is('salida') ? 'activo' : ''}}">
+                            <a href="{{route('usuario.create')}}" class="{{ Request::is('usuario-create*') ? 'activo' : ''}}">
                                 <i class="fas fa-plus-square icono-submenu"></i>
                                 <span class="lbl">Registrar usuario</span>
                             </a>
                         </li>
                         <li>
-                            <a href="" class="{{ Request::is('salida-venta') ? 'activo' : ''}}">
+                            <a href="{{route('usuario.index')}}" class="{{ Request::is('usuario-index*') ? 'activo' : ''}}">
                                 <i class="fas fa-th-list icono-submenu"></i>
                                 <span class="lbl">Lista de usuarios</span>
                             </a>
@@ -288,20 +310,12 @@
 
 
                 <li class="red">
-                    <a href="" class="{{ Request::is('empresa*') ? 'activo' : ''}}">
+                    <a href="{{route('empresa.index')}}" class="{{ Request::is('empresa*') ? 'activo' : ''}}">
                         <img src="{{asset('img-inicio/info.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-exclamation"></i> --}}
                         <span class="lbl">ACERCA DE</span>
                     </a>
                 </li>
-
-                {{-- <li class="red">
-                    <a href="{{route('backup.index')}}" class="{{ Request::is('empresa*') ? 'activo' : ''}}">
-                        <i class="fas fa-cloud-download-alt"></i>
-                        <span class="lbl">BACKUP</span>
-                    </a>
-                </li> --}}
-
 
 
 
