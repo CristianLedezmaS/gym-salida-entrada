@@ -196,7 +196,7 @@
                     </a>
                 </li>
 
-                <li class="grey with-sub {{ Request::is('salida*') ? 'opened' : ''}}">
+                <li class="grey with-sub {{ Request::is('cita*') ? 'opened' : ''}}">
                     <span>
                         <img src="{{asset('img-inicio/programar.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
@@ -204,13 +204,13 @@
                     </span>
                     <ul>
                         <li>
-                            <a href="" class="{{ Request::is('salida') ? 'activo' : ''}}">
+                            <a href="{{route('cita.create')}}" class="{{ Request::is('cita-create*') ? 'activo' : ''}}">
                                 <i class="fas fa-plus-square icono-submenu"></i>
                                 <span class="lbl">Registrar cita</span>
                             </a>
                         </li>
                         <li>
-                            <a href="" class="{{ Request::is('salida-venta') ? 'activo' : ''}}">
+                            <a href="{{route('cita.index')}}" class="{{ Request::is('cita-index*') ? 'activo' : ''}}">
                                 <i class="fas fa-th-list icono-submenu"></i>
                                 <span class="lbl">Lista de citas</span>
                             </a>
@@ -219,7 +219,7 @@
                 </li>
 
                 <li
-                    class="grey with-sub {{ Request::is('tipo-usuario*') ? 'opened' : ''}}">
+                    class="grey with-sub {{ Request::is('paciente*') ? 'opened' : ''}}">
                     <span>
                         <img src="{{asset('img-inicio/pa.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-user-plus"></i> --}}
@@ -227,13 +227,13 @@
                     </span>
                     <ul>
                         <li>
-                            <a href="" class="{{ Request::is('usuario-in') ? 'activo' : ''}}">
+                            <a href="{{route('paciente.create')}}" class="{{ Request::is('paciente-create*') ? 'activo' : ''}}">
                                 <i class="fas fa-plus-square icono-submenu"></i>
                                 <span class="lbl">Registrar paciente</span>
                             </a>
                         </li>
                         <li>
-                            <a href="" class="{{ Request::is('usuario-venta') ? 'activo' : ''}}">
+                            <a href="{{route('paciente.index')}}" class="{{ Request::is('paciente-index*') ? 'activo' : ''}}">
                                 <i class="fas fa-th-list icono-submenu"></i>
                                 <span class="lbl">Lista de pacientes</span>
                             </a>
@@ -242,7 +242,7 @@
                     </ul>
                 </li>
 
-                <li class="grey with-sub {{ Request::is('entrada*') ? 'opened' : ''}}">
+                <li class="grey with-sub {{ Request::is('medico*') ? 'opened' : ''}}">
                     <span>
                         <img src="{{asset('img-inicio/doctor.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-sort-amount-down-alt"></i> --}}
@@ -250,13 +250,13 @@
                     </span>
                     <ul>
                         <li>
-                            <a href="" class="{{ Request::is('salida') ? 'activo' : ''}}">
+                            <a href="{{route('medico.create')}}" class="{{ Request::is('medico-create*') ? 'activo' : ''}}">
                                 <i class="fas fa-plus-square icono-submenu"></i>
                                 <span class="lbl">Registrar medico</span>
                             </a>
                         </li>
                         <li>
-                            <a href="" class="{{ Request::is('salida-venta') ? 'activo' : ''}}">
+                            <a href="{{route('medico.index')}}" class="{{ Request::is('medico-index*') ? 'activo' : ''}}">
                                 <i class="fas fa-th-list icono-submenu"></i>
                                 <span class="lbl">Lista de medicos</span>
                             </a>
@@ -264,7 +264,7 @@
                     </ul>
                 </li>
 
-                <li class="grey with-sub {{ Request::is('entrada*') ? 'opened' : ''}}">
+                <li class="grey with-sub {{ Request::is('especialidad*') ? 'opened' : ''}}">
                     <span>
                         <img src="{{asset('img-inicio/es.png')}}" class="img-inicio" alt="">
                         {{-- <i class="fas fa-sort-amount-down-alt"></i> --}}
@@ -272,13 +272,13 @@
                     </span>
                     <ul>
                         <li>
-                            <a href="" class="{{ Request::is('salida') ? 'activo' : ''}}">
+                            <a href="{{route('especialidad.create')}}" class="{{ Request::is('especialidad-create*') ? 'activo' : ''}}">
                                 <i class="fas fa-plus-square icono-submenu"></i>
                                 <span class="lbl">Registrar especialidad</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{route('especialidad.index')}}" class="{{ Request::is('salida-venta') ? 'activo' : ''}}">
+                            <a href="{{route('especialidad.index')}}" class="{{ Request::is('especialidad-index*') ? 'activo' : ''}}">
                                 <i class="fas fa-th-list icono-submenu"></i>
                                 <span class="lbl">Lista de especialidades</span>
                             </a>

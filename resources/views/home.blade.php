@@ -16,9 +16,9 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <article class="statistic-box red">
                         <div>
-                            <div class="number text-light"></div>
+                            <div class="number text-light">{{$paciente}}</div>
                             <div class="caption">
-                                <div>USUARIOS</div>
+                                <div>PACIENTE</div>
                             </div>
                         </div>
                     </article>
@@ -27,9 +27,9 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <article class="statistic-box purple">
                         <div>
-                            <div class="number text-light"></div>
+                            <div class="number text-light">{{$doctor}}</div>
                             <div class="caption">
-                                <div>CLIENTE</div>
+                                <div>MEDICO</div>
                             </div>
                         </div>
                     </article>
@@ -38,9 +38,9 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <article class="statistic-box green">
                         <div>
-                            <div class="number text-light">S/. </div>
+                            <div class="number text-light">{{$especialidad}}</div>
                             <div class="caption">
-                                <div>VENTAS DE HOY</div>
+                                <div>ESPECIALIDAD</div>
                             </div>
                         </div>
                     </article>
@@ -49,9 +49,9 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <article class="statistic-box yellow">
                         <div>
-                            <div class="number text-light"></div>
+                            <div class="number text-light">{{$usuario}}</div>
                             <div class="caption">
-                                <div>PRODUCTO</div>
+                                <div>USUARIO</div>
                             </div>
                         </div>
                     </article>

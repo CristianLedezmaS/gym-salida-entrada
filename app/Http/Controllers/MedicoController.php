@@ -5,31 +5,46 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class EspecialidadController extends Controller
+class MedicoController extends Controller
 {
     public function index()
+    {
+        try {
+            $sql = DB::select('SELECT
+            *,
+            especialidad.cargo
+            FROM
+            doctor
+            INNER JOIN especialidad ON doctor.area = especialidad.id_especialidad
+             where doctor.estado=1');
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return view('vistas/doctor/doctor', compact("sql"));
+    }
+
+    public function create()
     {
         try {
             $sql = DB::select('select * from especialidad where estado=1');
         } catch (\Throwable $th) {
             //throw $th;
         }
-        return view('vistas/especialidad/especialidad', compact("sql"));
-    }
-
-    public function create()
-    {
-        return view('vistas/especialidad/registrar');
+        return view('vistas/doctor/registrar', compact('sql'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => ['required', 'unique:App\Models\especialidad,cargo']
+            'cargo' => ['required'],
+            'nombre' => ['required']
         ]);
         try {
-            $sql = DB::insert('insert into especialidad (cargo,estado) values (?,1)', [
-                $request->nombre
+            $sql = DB::insert('insert into doctor (area,nombre,apellido,telefono,estado) values (?,?,?,?,1)', [
+                $request->cargo,
+                $request->nombre,
+                $request->apellido,
+                $request->telefono
             ]);
         } catch (\Throwable $th) {
             $sql = 0;
@@ -44,23 +59,21 @@ class EspecialidadController extends Controller
     public function edit($id)
     {
         try {
-            $sql = DB::select("select * from especialidad where id_especialidad=$id");
+            $sql = DB::select("select * from doctor where id_doctor=$id");
+            $sql2 = DB::select("select * from especialidad where estado=1");
         } catch (\Throwable $th) {
             //throw $th;
         }
-        return view('vistas/especialidad/actualizar', compact('sql'));
+        return view('vistas/doctor/actualizar', compact('sql'))->with("sql2", $sql2);
     }
     public function update(Request $request)
     {
-
-        $datos = DB::select("select count(*) as 'total' from especialidad where cargo='$request->nombre' and id_especialidad!=$request->id  ");
-        if ($datos[0]->total > 0) {
-            return back()->with('DUPLICADO', 'El nombre ya está en uso');
-        }
-
         try {
-            $sql = DB::update('update especialidad set cargo=? where id_especialidad=?', [
+            $sql = DB::update('update doctor set area=?, nombre=?, apellido=?, telefono=? where id_doctor=?', [
+                $request->cargo,
                 $request->nombre,
+                $request->apellido,
+                $request->telefono,
                 $request->id
             ]);
             if ($sql == 0) {
@@ -78,7 +91,7 @@ class EspecialidadController extends Controller
     public function destroy($id)
     {
         try {
-            $sql = DB::update('update especialidad set estado=0 where id_especialidad=?', [
+            $sql = DB::update('update doctor set estado=0 where id_doctor=?', [
                 $id
             ]);
             if ($sql == 0) {

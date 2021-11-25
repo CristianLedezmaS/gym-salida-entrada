@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\CitaController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\EspecialidadController;
+use App\Http\Controllers\MedicoController;
+use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -49,3 +52,29 @@ Route::post('especialidad-store',[EspecialidadController::class,'store'])->name(
 Route::get('especialidad-edit-{id}',[EspecialidadController::class,'edit'])->name('especialidad.edit')->middleware('verified');
 Route::post('especialidad-update',[EspecialidadController::class,'update'])->name('especialidad.update')->middleware('verified');
 Route::get('especialidad-destroy-{id}',[EspecialidadController::class,'destroy'])->name('especialidad.destroy')->middleware('verified');
+
+
+//medico
+Route::get('medico-index',[MedicoController::class,'index'])->name('medico.index')->middleware('verified');
+Route::get('medico-create',[MedicoController::class,'create'])->name('medico.create')->middleware('verified');
+Route::post('medico-store',[MedicoController::class,'store'])->name('medico.store')->middleware('verified');
+Route::get('medico-edit-{id}',[MedicoController::class,'edit'])->name('medico.edit')->middleware('verified');
+Route::post('medico-update',[MedicoController::class,'update'])->name('medico.update')->middleware('verified');
+Route::get('medico-destroy-{id}',[MedicoController::class,'destroy'])->name('medico.destroy')->middleware('verified');
+
+//paciente
+Route::get('paciente-index',[PacienteController::class,'index'])->name('paciente.index')->middleware('verified');
+Route::get('paciente-create',[PacienteController::class,'create'])->name('paciente.create')->middleware('verified');
+Route::post('paciente-store',[PacienteController::class,'store'])->name('paciente.store')->middleware('verified');
+Route::get('paciente-edit-{id}',[PacienteController::class,'edit'])->name('paciente.edit')->middleware('verified');
+Route::post('paciente-update',[PacienteController::class,'update'])->name('paciente.update')->middleware('verified');
+Route::get('paciente-destroy-{id}',[PacienteController::class,'destroy'])->name('paciente.destroy')->middleware('verified');
+
+
+//cita
+Route::get('cita-index',[CitaController::class,'index'])->name('cita.index')->middleware('verified');
+Route::get('cita-create',[CitaController::class,'create'])->name('cita.create')->middleware('verified');
+Route::post('cita-store',[CitaController::class,'store'])->name('cita.store')->middleware('verified');
+Route::get('cita-edit-{id}',[CitaController::class,'edit'])->name('cita.edit')->middleware('verified');
+Route::post('cita-update',[CitaController::class,'update'])->name('cita.update')->middleware('verified');
+Route::get('cita-destroy-{id}',[CitaController::class,'destroy'])->name('cita.destroy')->middleware('verified');
