@@ -12,10 +12,9 @@ class duplicidadUsuario implements Rule
      *
      * @return void
      */
-    public function __construct($id = 0, $usuario="")
+    public function __construct()
     {
-        $this->id = $id;
-    $this->usuario=$usuario;
+        //
     }
 
     /**
@@ -27,13 +26,13 @@ class duplicidadUsuario implements Rule
      */
     public function passes($attribute, $value)
     {
-        $verificarUsuario = DB::select("select count(*) as total from usuario where usuario=? and id_usuario!=? and estado=1", [
-            $value,
-            $this->id
+        /* validando duplicidad de usuario */
+        $valUsuario = DB::select("select count(*) as total from usuario where usuario=? and estado=1", [
+            $value
         ]);
-        if ($verificarUsuario[0]->total > 0) {
+        if ($valUsuario[0]->total > 0) {
             return false;
-        } else {
+        }else{
             return true;
         }
     }
@@ -45,6 +44,6 @@ class duplicidadUsuario implements Rule
      */
     public function message()
     {
-        return "El usuario $this->usuario ya existe.";
+        return 'Este usuario ya existe';
     }
 }

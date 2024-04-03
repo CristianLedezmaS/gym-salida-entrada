@@ -12,10 +12,9 @@ class duplicidadCorreo implements Rule
      *
      * @return void
      */
-    public function __construct($id = 0, $correo = "")
+    public function __construct()
     {
-        $this->id = $id;
-        $this->correo = $correo;
+        //
     }
 
     /**
@@ -27,11 +26,11 @@ class duplicidadCorreo implements Rule
      */
     public function passes($attribute, $value)
     {
-        $verificarCorreo = DB::select("select count(*) as total from usuario where correo=? and id_usuario!=? and estado=1", [
-            $value,
-            $this->id
+        /* validando duplicidad de correo */
+        $valCorreo = DB::select("select count(*) as total from usuario where correo=? and estado=1", [
+            $value
         ]);
-        if ($verificarCorreo[0]->total > 0) {
+        if ($valCorreo[0]->total > 0) {
             return false;
         } else {
             return true;
@@ -45,6 +44,6 @@ class duplicidadCorreo implements Rule
      */
     public function message()
     {
-        return "El correo $this->correo ya existe.";
+        return 'Este correo ya existe';
     }
 }

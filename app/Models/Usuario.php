@@ -8,10 +8,24 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Usuario extends Authenticatable
 {
     use HasFactory;
-    protected $table = "usuario";
-    protected $primaryKey = "id_usuario";
+    public $table = 'cliente';
+    public $primaryKey = 'id_cliente';
     public $timestamps = false;
-    protected $fillable = [
-        "tipo_usuario", "nombre", "apellido", "usuario", "password", "correo", "estado"
+    public $fillable = [
+        'membresia',
+        'tipo_usuario',
+        'creado_por',
+        'usuario',
+        'password',
+        'dni',
+        'nombre',
+        'correo',
+        'telefono',
+        'desde',
+        'hasta',
+        'DT',
+        'DA',
+        'DR',
+
     ];
 }

@@ -1,4 +1,4 @@
-@charset "UTF-8";
+f@charset "UTF-8";
 /* 
 #212e36->sidebar
 
@@ -44,7 +44,7 @@ a.label:hover {
     background-color: #687077;
 }
 .label-primary {
-    background-color: #0275d8;
+    background-color: #0210d8;
 }
 .label-primary[href]:focus,
 .label-primary[href]:hover {
@@ -133,8 +133,8 @@ a.label:hover {
     z-index: 2;
     color: #fff;
     cursor: default;
-    background-color: #0275d8;
-    border-color: #0275d8;
+    background-color: #3a5770;
+    border-color: #436685;
 }
 .page-item.disabled .page-link,
 .page-item.disabled .page-link:focus,

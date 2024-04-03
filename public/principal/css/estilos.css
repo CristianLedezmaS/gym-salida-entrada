@@ -3,19 +3,17 @@
     border: none;
     background: white;
     padding: 15px;
-    border-bottom: 2px solid rgb(238, 238, 238);
-    border-right: 2px solid rgb(238, 238, 238);
-    transition: all 0.3s;
+    border-bottom: 2px solid rgb(159, 159, 178);
+    border-right: 2px solid rgb(159, 159, 178);
     color: rgb(7, 7, 7) !important;
     font-weight: 600;
     font-size: 17px;
-    box-shadow: 1px 1px 2px rgb(238, 238, 238);
     margin-bottom: -5px;
     outline: none !important;
 }
 .input:focus {
-    border-bottom: 2px solid rgba(98, 191, 253, 0.644);
-    border-right: 2px solid rgba(98, 191, 253, 0.644);
+    border-bottom: 2px solid rgb(0, 85, 255);
+    border-right: 2px solid rgba(0, 85, 255);
 }
 
 .input::placeholder {

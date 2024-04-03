@@ -1,12 +1,23 @@
 <?php
 
+use App\Http\Controllers\AsistenciaController;
+use App\Http\Controllers\CambiarClaveController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\EspecialidadController;
+use App\Http\Controllers\HomeUsuarioController;
 use App\Http\Controllers\MedicoController;
+use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecuperarClaveController;
+use App\Http\Controllers\ReporteExcelController;
+use App\Http\Controllers\ReportePdfController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,56 +36,70 @@ Route::get('/', function () {
     return redirect()->route("home");
 });
 
+Route::get('/homeCliente', [HomeUsuarioController::class, "index"])->name('homeCliente')->middleware(['verified', 'cliente']);
+Route::get('/verAsistencia', [HomeUsuarioController::class, 'verAsistencia'])->name('ver.asistencia')->middleware('verified', 'cliente');
+
 Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['verified','admin_empleado']);
+
+
+//marcar por qr
+Route::get('/marcar/QR', [AsistenciaController::class, 'marcarQR'])->name('marcar.qr')->middleware(['verified','cliente']);
 
 
 /* mis rutas */
 
-//USUARIO
-Route::get('usuario-index',[UsuarioController::class,'index'])->name('usuario.index')->middleware('verified');
-Route::get('usuario-create',[UsuarioController::class,'create'])->name('usuario.create')->middleware('verified');
-Route::post('usuario-store',[UsuarioController::class,'store'])->name('usuario.store')->middleware('verified');
-Route::get('usuario-edit-{id}',[UsuarioController::class,'edit'])->name('usuario.edit')->middleware('verified');
-Route::post('usuario-update',[UsuarioController::class,'update'])->name('usuario.update')->middleware('verified');
-Route::get('usuario-destroy-{id}',[UsuarioController::class,'destroy'])->name('usuario.destroy')->middleware('verified');
+Route::resource("usuario", UsuarioController::class)->middleware(['verified', 'administrador']);
+Route::post("/usuarioActualizar-img", [UsuarioController::class, "actualizarImagen"])->name("usuario.actualizarImagen")->middleware(['verified', 'administrador']);
+Route::get("/usuarioEliminar-img-{id}", [UsuarioController::class, "eliminarImagen"])->name("usuario.eliminarImagen")->middleware(['verified', 'administrador']);
+
+
+Route::resource("membresia", MembresiaController::class)->middleware(['verified', 'admin_empleado']);
+
+Route::resource("asistencia", AsistenciaController::class)->middleware(['verified', 'admin_empleado']);
+
+Route::resource("cliente", ClienteController::class)->middleware(['verified', 'admin_empleado']);
+Route::get("/clienteDatos-{id}", [ClienteController::class, "datosCliente"])->name("cliente.datosCliente")->middleware(['verified', 'admin_empleado']);
+Route::get("/clienteTransaccion-{id}", [ClienteController::class, "transaccionCliente"])->name("cliente.transaccionCliente")->middleware(['verified', 'admin_empleado']);
+Route::get("/clientePago-{id}", [ClienteController::class, "pagoCliente"])->name("cliente.pagoCliente")->middleware(['verified', 'admin_empleado']);
+Route::get("/consultar/registro/cliente/{id_membresia}/{desde}", [ClienteController::class, "consultar"])->name("cliente.consultar")->middleware(['verified', 'admin_empleado']);
+Route::PUT("/renovar/cliente/{id_cliente}", [ClienteController::class, "renovar"])->name("cliente.renovar")->middleware(['verified', 'admin_empleado']);
+Route::POST("/actualizar/cliente", [ClienteController::class, "editarDatosCliente"])->name("cliente.editarDatosCliente")->middleware(['verified', 'admin_empleado']);
+
+
+Route::resource("pagos", PagoController::class)->middleware(['verified', 'admin_empleado']);
+
 
 
 //empresa
-Route::get('empresa-index',[EmpresaController::class,'index'])->name('empresa.index')->middleware('verified');
-Route::post('empresa-update-{id}',[EmpresaController::class,'update'])->name('empresa.update')->middleware('verified');
-
-//ESPECIALIDAD
-Route::get('especialidad-index',[EspecialidadController::class,'index'])->name('especialidad.index')->middleware('verified');
-Route::get('especialidad-create',[EspecialidadController::class,'create'])->name('especialidad.create')->middleware('verified');
-Route::post('especialidad-store',[EspecialidadController::class,'store'])->name('especialidad.store')->middleware('verified');
-Route::get('especialidad-edit-{id}',[EspecialidadController::class,'edit'])->name('especialidad.edit')->middleware('verified');
-Route::post('especialidad-update',[EspecialidadController::class,'update'])->name('especialidad.update')->middleware('verified');
-Route::get('especialidad-destroy-{id}',[EspecialidadController::class,'destroy'])->name('especialidad.destroy')->middleware('verified');
+/* info de la empresa */
+Route::get("/empresa", [EmpresaController::class, "datos"])->name("empresa.datos")->middleware(['verified', 'administrador']);
+Route::post("/empresa-editar", [EmpresaController::class, "editar"])->name("empresa.update")->middleware(['verified', 'administrador']);
+Route::post("/empresa-edit-img", [EmpresaController::class, "editarImg"])->name("empresa.updateImg")->middleware(['verified', 'administrador']);
+Route::get("/empresa-eliminar-img-{id}", [EmpresaController::class, "eliminarImg"])->name("empresa.destroy")->middleware(['verified', 'administrador']);
 
 
-//medico
-Route::get('medico-index',[MedicoController::class,'index'])->name('medico.index')->middleware('verified');
-Route::get('medico-create',[MedicoController::class,'create'])->name('medico.create')->middleware('verified');
-Route::post('medico-store',[MedicoController::class,'store'])->name('medico.store')->middleware('verified');
-Route::get('medico-edit-{id}',[MedicoController::class,'edit'])->name('medico.edit')->middleware('verified');
-Route::post('medico-update',[MedicoController::class,'update'])->name('medico.update')->middleware('verified');
-Route::get('medico-destroy-{id}',[MedicoController::class,'destroy'])->name('medico.destroy')->middleware('verified');
+/* info de usuarioProfile */
+Route::get("/profile-eliminar-img-{id}", [ProfileController::class, "eliminarImg"])->name("profile.destroy")->middleware(['verified', 'admin_empleado']);
+Route::post("/profile-edit-img", [ProfileController::class, "editarImg"])->name("profile.updateImg")->middleware(['verified', 'admin_empleado']);
+Route::post("/profile-editar", [ProfileController::class, "editar"])->name("profile.update")->middleware(['verified', 'admin_empleado']);
+Route::get("/profile-{id}", [ProfileController::class, "datos"])->name("profile.datos")->middleware(['verified', 'admin_empleado']);
 
-//paciente
-Route::get('paciente-index',[PacienteController::class,'index'])->name('paciente.index')->middleware('verified');
-Route::get('paciente-create',[PacienteController::class,'create'])->name('paciente.create')->middleware('verified');
-Route::post('paciente-store',[PacienteController::class,'store'])->name('paciente.store')->middleware('verified');
-Route::get('paciente-edit-{id}',[PacienteController::class,'edit'])->name('paciente.edit')->middleware('verified');
-Route::post('paciente-update',[PacienteController::class,'update'])->name('paciente.update')->middleware('verified');
-Route::get('paciente-destroy-{id}',[PacienteController::class,'destroy'])->name('paciente.destroy')->middleware('verified');
+/* cambiar password */
+Route::get('/cambiarClave-bd', [CambiarClaveController::class, 'index'])->name("cambiarClave.index")->middleware('verified');
+Route::post('/cambiarClave-update-bd', [CambiarClaveController::class, 'update'])->name("cambiarClave.update")->middleware('verified');
 
 
-//cita
-Route::get('cita-index',[CitaController::class,'index'])->name('cita.index')->middleware('verified');
-Route::get('cita-create',[CitaController::class,'create'])->name('cita.create')->middleware('verified');
-Route::post('cita-store',[CitaController::class,'store'])->name('cita.store')->middleware('verified');
-Route::get('cita-edit-{id}',[CitaController::class,'edit'])->name('cita.edit')->middleware('verified');
-Route::post('cita-update',[CitaController::class,'update'])->name('cita.update')->middleware('verified');
-Route::get('cita-destroy-{id}',[CitaController::class,'destroy'])->name('cita.destroy')->middleware('verified');
+/* recuperar password */
+Route::get("/recuperar-contraseña", [RecuperarClaveController::class, 'index'])->name("recuperar.index");
+Route::post("/recuperar-contraseña-update", [RecuperarClaveController::class, 'update'])->name("recuperar.update");
+Route::get("/nueva-contraseña-index-{correo}-{codigo}", [RecuperarClaveController::class, 'nuevoClave'])->name("nuevo.clave");
+Route::post("/nueva-contraseña-reset", [RecuperarClaveController::class, 'reset'])->name("reset.clave");
+
+
+/* reportes excel */
+Route::get("reporte/asistencia-excel",[ReporteExcelController::class, "reporteAsistencia"] )->name("reporte.asistencia")->middleware(['verified', 'admin_empleado']);
+
+/* reportes pdf */
+Route::get("reporte/asistencia-pdf",[ReportePdfController::class, "reporteAsistencia"] )->name("reporte.asistencia.pdf")->middleware(['verified', 'admin_empleado']);

@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="{{ asset('bootstrap4/css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('inicio/css/style.css') }}">
@@ -43,11 +44,17 @@
                             </button>
                         </div>
                     @enderror
-
-
                     @error('password')
                         <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
                             <small>{{ $errors->first('password') }}</small>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @enderror
+                    @error('tipo')
+                        <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                            <small>{{ $errors->first('tipo') }}</small>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -65,8 +72,6 @@
                             class="input @error('usuario') is-invalid
                         @enderror" name="usuario"
                             title="ingrese su nombre de usuario" autocomplete="usuario" value="{{ old('usuario') }}">
-
-
                     </div>
                 </div>
                 <div class="input-div pass">
@@ -77,8 +82,6 @@
                         <h5>Contraseña</h5>
                         <input type="password" id="input" class="input @error('password') is-invalid @enderror"
                             name="password" title="ingrese su clave para ingresar" autocomplete="current-password">
-
-
                     </div>
                 </div>
                 <div class="view">
@@ -86,8 +89,24 @@
                 </div>
 
 
+                {{-- <div class="input-div pass">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div">
+                        <h5>Ingresar como</h5>
+                        <select name="tipo" class="input @error('tipo') is-invalid @enderror">
+                            <option value=""></option>
+                            <option value="administrador">Administrador</option>
+                            <option value="vendedor">Vendedor</option>
+                            <option value="cliente">Cliente</option>
+                        </select>
+                    </div>
+                </div> --}}
+
+
                 <div class="text-center">
-                    <a class="font-italic isai5" href="">Olvidé mi contraseña</a>
+                    <a class="font-italic isai5" href="{{route("recuperar.index")}}">Olvidé mi contraseña</a>
                 </div>
                 <input name="btningresar" class="btn" title="click para ingresar" type="submit"
                     value="INICIAR SESION">

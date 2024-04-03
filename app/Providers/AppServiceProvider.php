@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-
+use Carbon\Carbon;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -25,16 +25,32 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $paciente=DB::select(" select count(*) as 'total' from paciente where estado=1 ");
-        View::share('paciente', $paciente[0]->total);
+        $totalMembresia = DB::select(" select count(*) as 'total_membresia' from membresia ");
+        View::share('totalMembresia', $totalMembresia[0]->total_membresia);
 
-        $doctor=DB::select(" select count(*) as 'total' from doctor where id_doctor=1 ");
-        View::share('doctor', $doctor[0]->total);
+        $totalCliente = DB::select(" select count(*) as 'total_cliente' from cliente where tipo_usuario='cliente' ");
+        View::share('totalCliente', $totalCliente[0]->total_cliente);
 
-        $especialidad=DB::select(" select count(*) as 'total' from especialidad where estado=1");
-        View::share('especialidad', $especialidad[0]->total);
+        $totalUsuario = DB::select(" select count(*) as 'total_usuario' from cliente where tipo_usuario!='cliente' ");
+        View::share('totalUsuario', $totalUsuario[0]->total_usuario);
 
-        $usuario=DB::select(" select count(*) as 'total' from usuario where estado=1 ");
-        View::share('usuario', $usuario[0]->total);
+        $fechaActual = Carbon::now()->toDateString();
+        $totalAsistencia = DB::select("SELECT COUNT(*) AS total_asistencia FROM asistencia WHERE DATE(fecha_hora) = '{$fechaActual}'");
+        View::share('totalAsistencia', $totalAsistencia[0]->total_asistencia);
+
+        //consultas para mostrar tabla de renovacion y cuentas por cobrar
+        $miembrosPorRenovar = DB::select(' SELECT cliente.id_cliente,cliente.nombre,cliente.foto,DATEDIFF(hasta, now()) AS diferencia_fechas,membresia.precio,membresia.modo
+        FROM cliente INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia
+        where tipo_usuario="cliente" and (select DATEDIFF(hasta, now()) AS diferencia_fechas)<=10 order by diferencia_fechas desc ');
+        View::share('miembrosPorRenovar', $miembrosPorRenovar);
+
+
+        $cuentasPorCobrar = DB::select(" SELECT cliente.id_cliente,cliente.nombre,debe,cliente.foto,DATEDIFF(now(),desde) AS diferencia_fechas,membresia.nombre as 'nomMem',membresia.precio,membresia.modo
+        FROM cliente INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia
+        where debe>0 order by diferencia_fechas desc
+         ");
+        View::share('cuentasPorCobrar', $cuentasPorCobrar);
+
+
     }
 }

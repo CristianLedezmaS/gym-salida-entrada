@@ -1,6 +1,9 @@
 @extends('layouts/app')
-@section('titulo', 'Actualizar usuario')
+@section('titulo', 'registrar usuario')
+
 @section('content')
+
+
     {{-- notificaciones --}}
 
     @if (session('DUPLICADO'))
@@ -44,39 +47,40 @@
         </script>
     @endif
 
+    @if (session('AVISO'))
+        <script>
+            $(function notificacion() {
+                new PNotify({
+                    title: "AVISO",
+                    type: "error",
+                    text: "{{ session('AVISO') }}",
+                    styling: "bootstrap3"
+                });
+            });
+        </script>
+    @endif
+
 
     <h4 class="text-center text-secondary">ACTUALIZAR USUARIO</h4>
 
     <div class="mb-0 col-12 bg-white p-5">
         @foreach ($sql as $item)
-            <form action="{{ route('usuario.update', $item->id_usuario) }}" method="POST">
+            <form action="{{ route('usuario.update', $item->id_cliente) }}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="row">
                     <div class="fl-flex-label mb-4 col-12 col-lg-6">
-                        <input hidden type="text" name="id" value="{{ $item->id_usuario }}">
                         <select class="input input__select" name="tipo">
-                            <option value="">Seleccionar tipo de usuario...</option>
-                            @foreach ($tipoUsuario as $item2)
-                                <option {{ $item->tipo_usuario == $item2->id_tipo ? 'selected' : '' }}
-                                    value="{{ $item2->id_tipo }}">
-                                    {{ $item2->tipo }}</option>
-                            @endforeach
+                            <option value="">Seleccionar Tipo de usuario</option>
+                            <option {{ $item->tipo_usuario == 'administrador' ? 'selected' : '' }} value="administrador">
+                                Administrador
+                            </option>
+                            <option {{ $item->tipo_usuario == 'vendedor' ? 'selected' : '' }} value="vendedor">Vendedor
+                            </option>
                         </select>
                         @error('tipo')
                             <small class="error error__text">{{ $message }}</small>
                         @enderror
-                    </div>
-
-                    <div class="fl-flex-label mb-4 col-12 col-lg-6">
-                        <input type="text" name="nombre" class="input input__text" id="nombre" placeholder="Nombre"
-                            value="{{ $item->nombre }}">
-                        @error('nombre')
-                            <small class="error error__text">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <div class="fl-flex-label mb-4 col-12 col-lg-6">
-                        <input type="text" name="apellido" class="input input__text" id="apellido" placeholder="Apellido"
-                            value="{{ $item->apellido }}">
                     </div>
                     <div class="fl-flex-label mb-4 col-12 col-lg-6">
                         <input type="text" name="usuario" class="input input__text" placeholder="Usuario *"
@@ -86,14 +90,34 @@
                         @enderror
                     </div>
 
-
-
+                    <div class="fl-flex-label mb-4 col-12 col-lg-6">
+                        <input type="number" name="dni" class="input input__text" id="dni" placeholder="Dni *"
+                            value="{{ old('dni', $item->dni) }}">
+                        @error('dni')
+                            <small class="error error__text">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="fl-flex-label mb-4 col-12 col-lg-6">
+                        <input type="text" name="nombre" class="input input__text" id="nombre"
+                            placeholder="Nombres y Apellidos *" value="{{ old('nombre', $item->nombre) }}">
+                        @error('nombre')
+                            <small class="error error__text">{{ $message }}</small>
+                        @enderror
+                    </div>
                     <div class="fl-flex-label mb-4 col-12 col-lg-6">
                         <input type="email" name="correo" class="input input__text" placeholder="Correo *"
                             value="{{ old('correo', $item->correo) }}">
                         @error('correo')
                             <small class="error error__text">{{ $message }}</small>
                         @enderror
+                    </div>
+                    <div class="fl-flex-label mb-4 col-12 col-lg-6">
+                        <input type="text" name="telefono" class="input input__text" placeholder="Telefono"
+                            value="{{ old('telefono', $item->telefono) }}">
+                    </div>
+                    <div class="fl-flex-label mb-4 col-12 col-lg-6">
+                        <input type="text" name="direccion" class="input input__text" placeholder="Dirección"
+                            value="{{ old('direccion', $item->direccion) }}">
                     </div>
 
                     <div class="text-right mt-0">
@@ -105,5 +129,8 @@
             </form>
         @endforeach
     </div>
+
+
+
 
 @endsection

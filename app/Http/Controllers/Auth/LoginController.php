@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -41,4 +41,14 @@ class LoginController extends Controller
     {
         return 'usuario'; //este es el nombre del campo de la tabla
     }
+
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            $this->username() => 'required',
+            'password' => 'required',
+            // 'tipo' => 'required',
+        ]);
+    }
+    
 }
