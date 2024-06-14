@@ -273,17 +273,16 @@
 
             <script type="text/javascript">
                 let scanner;
-                let activeCamera = 0;
+                let activeCamera = 1;
 
-                function switchCamera() {
-                    Instascan.Camera.getCameras().then(function(cameras) {
-                        if (cameras.length > 1) {
-                            activeCamera = (activeCamera + 1) % cameras.length;
-                            scanner.start(cameras[activeCamera]);
-                        }
-                    });
-                }
-
+                //function switchCamera() {
+                //    Instascan.Camera.getCameras().then(function(cameras) {
+                //        if (cameras.length > 1) {
+                //            activeCamera = (activeCamera + 1) % cameras.length;
+                //            scanner.start(cameras[activeCamera]);
+                //        }
+                //    });
+                //
                 // function activarCamara() {
                 //     Instascan.Camera.getCameras().then(function(cameras) {
                 //         var backCamera = cameras.find(function(camera) {
@@ -301,20 +300,18 @@
                 //         }
                 //     }).catch(function(e) {
                 //         console.error(e);
-                //     });
-
+                //     })
                 //     scanner = new Instascan.Scanner({
                 //         video: document.getElementById('preview'),
                 //         mirror: false
-                //     });
-
+                //     })
                 //     scanner.addListener('scan', function(content) {
                 //         console.log(content);
                 //         window.location.href = content;
                 //         document.getElementById("audio").play();
                 //     });
                 // }
-
+                //}
                 function activarCamara() {
                     Instascan.Camera.getCameras().then(function(cameras) {
                         var backCamera = cameras.find(function(camera) {
@@ -345,6 +342,7 @@
                         document.getElementById("audio").play();
                     });
                 }
+                
             </script>
 
 
