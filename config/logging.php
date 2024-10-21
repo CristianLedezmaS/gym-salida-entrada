@@ -15,9 +15,21 @@ return [
     | messages to the logs. The name specified in this option should match
     | one of the channels defined in the "channels" configuration array.
     |
-    */
+    */'default' => env('LOG_CHANNEL', 'stack'),
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+'channels' => [
+    'stack' => [
+        'driver' => 'stack',
+        'channels' => ['single'],
+        'ignore_exceptions' => false,
+    ],
+    'single' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/laravel.log'),
+        'level' => env('LOG_LEVEL', 'debug'),
+    ],
+    // ... otras configuraciones
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -114,5 +126,6 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
     ],
+    
 
 ];

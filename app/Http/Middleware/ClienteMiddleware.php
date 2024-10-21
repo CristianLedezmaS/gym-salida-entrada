@@ -17,9 +17,13 @@ class ClienteMiddleware
     public function handle(Request $request, Closure $next)
     {
         if ($request->user() && $request->user()->tipo_usuario == 'cliente') {
+            // Redirigir a los clientes fuera de la página de inicio de sesión
+            if ($request->route()->getName() === 'login') {
+                return redirect()->route('home');
+            }
             return $next($request);
         }
-        return redirect()->route("home");
-    
+        
+        return $next($request);
     }
 }

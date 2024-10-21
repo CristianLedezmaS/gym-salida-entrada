@@ -17,7 +17,7 @@
                     title: "DUPLICADO",
                     type: "warning",
                     text: "{{ session('DUPLICADO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -30,7 +30,7 @@
                     title: "CORRECTO",
                     type: "success",
                     text: "{{ session('CORRECTO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -43,7 +43,7 @@
                     title: "INCORRECTO",
                     type: "error",
                     text: "{{ session('INCORRECTO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -56,7 +56,7 @@
                     title: "AVISO",
                     type: "error",
                     text: "{{ session('AVISO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -66,8 +66,8 @@
     <h4 class="text-center text-secondary">ACTUALIZAR CLIENTE</h4>
 
     <div class="mb-0 col-12 bg-white p-5">
-        {{-- <div class="alert alert-danger"><b>ADVERTENCIA:</b>Si el cliente ya registró su asistencia <b>al menos una vez</b>,
-            no modique; esto puede alterar la informacion en la BD</div> --}}
+        <div class="alert alert-danger"><b>ADVERTENCIA:</b>Si el cliente ya registró su asistencia <b>al menos una vez</b>,
+            no modique; esto puede alterar la informacion en la BD</div>
         @foreach ($sql as $item)
             <form action="{{ route('cliente.update', $item->id_cliente) }}" method="POST">
                 @csrf

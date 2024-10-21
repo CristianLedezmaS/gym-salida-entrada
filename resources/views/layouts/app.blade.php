@@ -115,52 +115,58 @@
                         <div class="site-header-shown">
 
                             <div class="dropdown dropdown-notification">
-                                <h6 class="text-light mt-2">
+                            <h6 class="text-light mt-2">
+                                @if (Auth::check())
                                     @if (Auth::user()->tipo_usuario === 'administrador')
                                         Administrador
-                                    @else
-                                        @if (Auth::user()->tipo_usuario === 'vendedor')
-                                            Vendedor
-                                        @else
-                                            @if (Auth::user()->tipo_usuario === 'cliente')
-                                                Cliente
-                                            @endif
-                                        @endif
+                                    @elseif (Auth::user()->tipo_usuario === 'vendedor')
+                                        Vendedor
+                                    @elseif (Auth::user()->tipo_usuario === 'cliente')
+                                        Cliente
                                     @endif
-                                </h6>
+                                @else
+                                    Usuario no autenticado
+                                @endif
+                            </h6>
+
                             </div>
 
                             <div class="dropdown user-menu">
-                                <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown"
+                            <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                    @if (Auth::user()->foto == null)
-                                        <img src="{{ asset('app/publico/img/user.svg') }}" alt="">
-                                    @else
-                                        <img src="{{ asset('foto/usuario/' . Auth::user()->foto) }}" alt="">
-                                    @endif
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right pt-0" aria-labelledby="dd-user-menu">
+                                @if (Auth::check() && Auth::user()->foto != null)
+                                    <img src="{{ asset('foto/usuario/' . Auth::user()->foto) }}" alt="">
+                                @else
+                                    <img src="{{ asset('app/publico/img/user.svg') }}" alt="">
+                                @endif
+                            </button>
 
+                            <div class="dropdown-menu dropdown-menu-right pt-0" aria-labelledby="dd-user-menu">
+                                @if (Auth::check())
                                     <h5 class="p-2 text-center bg-primary">{{ Auth::user()->nombre }}</h5>
-
-                                    <a class="dropdown-item"
-                                        href="{{ route('profile.datos', Auth::user()->id_cliente) }}"><span
-                                            class="font-icon glyphicon glyphicon-user"></span>Perfil</a>
-                                    <a class="dropdown-item" href="{{ route('cambiarClave.index') }}"><span
-                                            class="font-icon glyphicon glyphicon-lock"></span>Cambiar contraseña</a>
-
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                                        <span class="font-icon glyphicon glyphicon-log-out"></span>salir
+                                    <a class="dropdown-item" href="{{ route('profile.datos', Auth::user()->id_cliente) }}">
+                                        <span class="font-icon glyphicon glyphicon-user"></span>Perfil
                                     </a>
+                                @else
+                                    <h5 class="p-2 text-center bg-primary">Invitado</h5>
+                                @endif
+                                    
+                                <a class="dropdown-item" href="{{ route('cambiarClave.index') }}">
+                                    <span class="font-icon glyphicon glyphicon-lock"></span>Cambiar contraseña
+                                </a>
+                                    
+                                <div class="dropdown-divider"></div>
+                                    
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <span class="font-icon glyphicon glyphicon-log-out"></span>salir
+                                </a>
+                                    
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
                             </div>
                         </div>
                         <!--.site-header-shown-->
@@ -191,18 +197,19 @@
                     </a>
                 </li>
 
-                @if (Auth::user()->tipo_usuario == 'cliente')
+                @if (Auth::check() && Auth::user()->tipo_usuario == 'cliente')
                     <li class="red">
                         <a href="{{ route('ver.asistencia') }}"
-                            class="{{ Request::is('verAsistencia*') ? 'activo' : '' }}">
+                           class="{{ Request::is('verAsistencia*') ? 'activo' : '' }}">
                             <img src="{{ asset('img-inicio/programar.png') }}" class="img-inicio" alt="">
-                            {{-- <i class="fas fa-house-user"></i> --}}
                             <span class="lbl">MI ASISTENCIA</span>
                         </a>
                     </li>
                 @endif
 
-                @if (Auth::user()->tipo_usuario != 'cliente')
+
+                @if (Auth::check() && Auth::user()->tipo_usuario != 'cliente')
+
                     <li class="grey with-sub {{ Request::is('membresia*') ? 'opened' : '' }}">
                         <span>
                             <img src="{{ asset('img-inicio/mem.png') }}" class="img-inicio" alt="">
@@ -230,7 +237,6 @@
                     <li class="grey with-sub {{ Request::is('cliente*') ? 'opened' : '' }}">
                         <span>
                             <img src="{{ asset('img-inicio/team.png') }}" class="img-inicio" alt="">
-                            {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
                             <span class="lbl">CLIENTE</span>
                         </span>
                         <ul>
@@ -242,6 +248,20 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('usuarios') }}"
+                                   class="{{ Request::is('cliente/usuarios*') ? 'activo' : '' }}">
+                                   <i class="fas fa-plus-square icono-submenu"></i>
+                                   <span class="lbl">Registrar usuario</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('pagos.index') }}"
+                                   class="{{ Request::is('cliente.pagos*') ? 'activo' : '' }}">
+                                   <i class="fas fa-plus-square icono-submenu"></i>
+                                   <span class="lbl">Registrar pago</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('cliente.index') }}"
                                     class="{{ Request::is('cliente') ? 'activo' : '' }}">
                                     <i class="fas fa-th-list icono-submenu"></i>
@@ -250,6 +270,7 @@
                             </li>
                         </ul>
                     </li>
+
 
                     <li class="grey with-sub {{ Request::is('asistencia*') ? 'opened' : '' }}">
                         <span>
@@ -294,13 +315,37 @@
                             </li>
                         </ul>
                     </li> --}}
+                    <li class="grey with-sub {{ Request::is('rutinas*') ? 'opened' : '' }}">
+                        <span>
+                            <img src="{{ asset('img-inicio/rutinas.png') }}" class="img-inicio" alt="">
+                            <span class="lbl">RUTINAS</span>
+                        </span>
+                        <ul>
+                            <li>
+                                <a href="{{ route('rutinas.rutinas') }}"
+                                   class="{{ Request::is('rutinas/rutinas*') ? 'activo' : '' }}">
+                                   <i class="fas fa-dumbbell icono-submenu"></i>
+                                   <span class="lbl">Generar rutina</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('rutinas.ListaClienteRutina') }}" class="{{ Request::is('rutinas/lista*') ? 'activo' : '' }}">
+                                    <i class="fas fa-th-list icono-submenu"></i>
+                                    <span class="lbl">Lista de rutinas</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                            
+
 
 
                     @if (Auth::user()->tipo_usuario == 'administrador')
                         <li class="grey with-sub {{ Request::is('usuario*') ? 'opened' : '' }}">
                             <span>
                                 <img src="{{ asset('img-inicio/admin.png') }}" class="img-inicio" alt="">
-                                {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
+                                 {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
                                 <span class="lbl">USUARIOS</span>
                             </span>
                             <ul>
@@ -320,12 +365,12 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                         <li class="red">
                             <a href="{{ route('empresa.datos') }}"
                                 class="{{ Request::is('empresa*') ? 'activo' : '' }}">
                                 <img src="{{ asset('img-inicio/info.png') }}" class="img-inicio" alt="">
-                                {{-- <i class="fas fa-exclamation"></i> --}}
+                               
                                 <span class="lbl">ACERCA DE</span>
                             </a>
                         </li>
@@ -334,14 +379,14 @@
 
 
                     <div class="container m-auto mt-4 py-3 bg-white">
-                        <a class="btn btn-secondary mb-2" id="buttonAdd">Instalar APK</a>
+                        
                         <img style="width: 100px;margin: auto" src="{{ asset('qr/qrcode.png') }}" alt=""
                             class="img-fluid mb-2">
                         <a class="btn btn-primary" href="{{ asset('qr/qrcode.png') }}" download="">Descargar este
                             QR</a>
 
 
-                    </div>
+                    </div>            
                 @endif
 
 

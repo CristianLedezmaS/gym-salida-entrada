@@ -1,48 +1,66 @@
 <style>
-    body{
-        font-family: sans-serif
+    body {
+        font-family: 'Aptos Display', sans-serif;
+        background-color: #ffffff; /* Fondo blanco para la hoja */
+        color: #333;
+        margin: 0;
+        padding: 20px;
     }
-    h1{
+
+    h1 {
         text-align: center;
-        font-size: 28px;
+        font-size: 32px;
+        color: #000; /* Título en negro */
+        margin-bottom: 20px;
+        font-weight: 700;
     }
+
     table {
         border-collapse: collapse;
         width: 100%;
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    th,
-    td {
+    th, td {
         text-align: left;
-        padding: 8px;
+        padding: 12px;
+        border: 1px solid #ddd;
     }
 
     th {
-        background-color: #f2f2f2;
-        color: #000000;
+        background-color: #154360; /* Fondo azul para el encabezado */
+        color: #fff; /* Texto blanco en el encabezado */
+        font-size: 16px;
+        font-weight: 700;
     }
 
     tr:nth-child(even) {
-        background-color: #f2f2f2;
+        background-color: #e9f2fc; /* Color claro para las filas pares */
     }
 
     tr:hover {
-        background-color: #dddddd;
+        background-color: #cce5ff; /* Color más intenso al pasar el ratón */
     }
 
     p {
-        margin-top: 20px;
+        margin-top: 30px;
         text-align: right;
-        font-size: 12px;
+        font-size: 14px;
+        color: #555;
     }
 </style>
-<h1>REPORTE DE ASISTENCIAS</h1>
+
+<h1>Reporte de Asistencias</h1>
+
 <table>
     <thead>
         <tr>
-            <th>CLIENTE</th>
-            <th>FECHA</th>
-            <th>MARCADO POR</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Marcado Por</th>
         </tr>
     </thead>
     <tbody>
@@ -55,4 +73,5 @@
         @endforeach
     </tbody>
 </table>
+
 <p>Generado el {{ date('d-m-Y H:i:s') }}</p>

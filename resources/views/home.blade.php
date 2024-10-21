@@ -1,16 +1,104 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        .block {
-            background: rgb(236, 236, 236);
-        }
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
 
-        .danger {
-            color: red !important;
-            font-weight: bold;
-        }
-    </style>
+    .block {
+        background-color: #1e1e1e;
+        border: none;
+        border-radius: 10px;
+        padding: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .block:hover {
+        background-color: #2a2a2a;
+    }
+
+    .statistic-box {
+        background-color: #252525;
+        border: none;
+        border-radius: 10px;
+        padding: 20px;
+        color: #4fc3f7; /* Azul brillante */
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .statistic-box:hover {
+        background-color: #3a3a3a;
+        transform: scale(1.05);
+    }
+
+    .table {
+        background-color: #1e1e1e;
+        border: none;
+        border-radius: 10px;
+    }
+
+    .table thead {
+        background-color: #252525;
+        color: #4fc3f7;
+    }
+
+    .table tbody tr {
+        background-color: #252525;
+        color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #3a3a3a;
+    }
+
+    .form-control {
+        background-color: #252525;
+        border: none;
+        border-radius: 5px;
+        color: #e0e0e0;
+    }
+
+    .btn-primary {
+        background-color: #4fc3f7;
+        border: none;
+        border-radius: 5px;
+        color: #121212;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #29b6f6;
+        transform: scale(1.05);
+    }
+
+    h2, h2.text-center {
+        color: #4fc3f7;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background-color: #2e7d32;
+        border: none;
+        color: #fff;
+    }
+
+    .alert-danger {
+        background-color: #d32f2f;
+        border: none;
+        color: #fff;
+    }
+
+    .alert-warning {
+        background-color: #fbc02d;
+        border: none;
+        color: #121212;
+    }
+
+</style>
+
     <!--.side-menu-->
     @if (session('CORRECTO'))
         <script>
@@ -72,7 +160,6 @@
                                 </div>
                             </article>
                         </div>
-                        <!--.col-->
                         <div class="col-12 col-sm-6 col-lg-3">
                             <article class="statistic-box purple">
                                 <div>
@@ -94,7 +181,7 @@
                                 </div>
                             </article>
                         </div>
-                        <!--.col-->
+                        
                         <div class="col-12 col-sm-6 col-lg-3">
                             <article class="statistic-box yellow">
                                 <div>
@@ -105,12 +192,8 @@
                                 </div>
                             </article>
                         </div>
-
-                        <!--.col-->
                     </div>
-                    <!--.row-->
                 </div>
-                <!--.col-->
                 <div class="container">
                     <h2>Registra tu Asistencia</h2>
                     <form action="{{ route('asistencia.store') }}" method="POST">
@@ -135,7 +218,7 @@
 
                             <div class="col-12 col-md-8 col-lg-9 mb-3">
                                 <input type="number" class="form-control p-4 border-secondary"
-                                    placeholder="Ingrese el DNI del cliente" name="txtdni" required>
+                                    placeholder="Ingrese el CI del cliente" name="txtdni" required>
                             </div>
                             <div class="col-12 col-md-4 col-lg-3" style="min-width: 200px">
                                 <button type="submit" class="form-control btn btn-primary p-4">Marcar
@@ -144,9 +227,8 @@
                         </div>
                     </form>
                 </div>
-                <!--.col-->
             </div>
-
+            
             <div class="col-12 col-sm-5 col-md-3 overflow-scroll" style="height: 60vh">
                 <table class="table mb-2">
                     <thead class="thead-dark">
@@ -193,7 +275,6 @@
                                     </td>
                                 </tr>
                             @endif
-
                             @if ($item->diferencia_fechas <= 0 && $item->diferencia_fechas >= -10)
                                 <tr style="background:#FFDADA;">
                                     <td colspan="2">
@@ -230,7 +311,7 @@
                                 </tr>
                             @endif
 
-                            {{-- @if ($item->diferencia_fechas < -10)
+                             @if ($item->diferencia_fechas < -10)
                                 <tr style="background:#FFDADA;">
                                     <td colspan="2">
                                         <div class="user-card-row">
@@ -264,11 +345,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endif --}}
+                            @endif 
                         @endforeach
 
                     </tbody>
-                </table>
+                </table> 
 
                 <table class="table">
                     <thead class="thead-dark">
@@ -316,7 +397,16 @@
                     </tbody>
                 </table>
             </div>
+                    <div class="container m-auto mt-4 py-3 bg-white">
+                        
+                        <img style="width: 100px;margin: auto" src="{{ asset('qr/qrcode.png') }}" alt=""
+                            class="img-fluid mb-2">
+                        <a class="btn btn-primary" href="{{ asset('qr/qrcode.png') }}" download="">Descargar este
+                            QR</a>
 
+
+                    </div>        
+            
 
 
 

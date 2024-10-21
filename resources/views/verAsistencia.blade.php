@@ -96,7 +96,7 @@
                 calendar.render();
             });
         </script>
-
+    
         <style>
             #calendar {
                 height: 60vh;
@@ -243,7 +243,7 @@
                     </a>
                 </li>
 
-                <a class="btn btn-secondary mt-2" id="buttonAdd">Instalar APK</a>
+                
             </ul>
 
         </nav>

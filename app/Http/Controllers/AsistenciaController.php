@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use App\Models\Cliente;
+use Illuminate\Support\Facades\Log;
+use App\Models\Asistencia;
 
 class AsistenciaController extends Controller
 {
-
 
 
     public function index()
@@ -37,6 +39,7 @@ class AsistenciaController extends Controller
         $buscarCliente = DB::select("select count(*) as 'total',id_cliente, date(desde) as desde,date(hasta)as 'hasta',DR from cliente where dni='$request->txtdni' and tipo_usuario='cliente' ");
         $ultimaEntrada = DB::select(" select max(date(fecha_hora)) as 'fecha_hora' from asistencia where asistencia.id_cliente=?  ", [
             $buscarCliente[0]->id_cliente
+        
         ]);
 
         if ($buscarCliente[0]->total <= 0) {
@@ -86,9 +89,9 @@ class AsistenciaController extends Controller
             return back()->with("INCORRECTO", "Error al registrar la asistencia");
         }
     }
-
+    
     public function marcarQR()
-    {
+{
 
         $fecha_hora = date("Y-m-d H:i:s");
         $solofecha = date("Y-m-d");
@@ -148,4 +151,4 @@ class AsistenciaController extends Controller
             return back()->with("INCORRECTO", "Error al registrar la asistencia");
         }
     }
-}
+    }

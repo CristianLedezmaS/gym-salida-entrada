@@ -63,7 +63,7 @@
                         <th>id</th>
                         <th>Tipo</th>
                         <th>Usuario</th>
-                        <th>Dni</th>
+                        <th>CI</th>
                         <th>Nombres</th>
                         <th>Correo</th>
                         <th>Teléfono</th>

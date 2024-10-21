@@ -99,7 +99,7 @@
                     title: "DUPLICADO",
                     type: "warning",
                     text: "{{ session('DUPLICADO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -112,7 +112,7 @@
                     title: "CORRECTO",
                     type: "success",
                     text: "{{ session('CORRECTO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -125,7 +125,7 @@
                     title: "INCORRECTO",
                     type: "error",
                     text: "{{ session('INCORRECTO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>
@@ -138,7 +138,7 @@
                     title: "AVISO",
                     type: "error",
                     text: "{{ session('AVISO') }}",
-                    styling: "bootstrap3"
+                    styling: "bootstrap5"
                 });
             });
         </script>

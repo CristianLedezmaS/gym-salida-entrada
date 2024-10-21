@@ -59,7 +59,7 @@
 }
 .sign-box a {
   text-decoration: none;
-  color: #0082c6;
+  color: #0d1738;
   border-bottom: solid 1px transparent;
 }
 .sign-box a:hover {
@@ -94,7 +94,7 @@
   color: #c5d6de;
 }
 .sign-box .close:hover {
-  color: #00a8ff;
+  color: #05405efa;
 }
 .sign-box.reset-password-box .btn {
   display: inline-block !important;

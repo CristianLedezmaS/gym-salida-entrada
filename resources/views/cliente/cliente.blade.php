@@ -48,7 +48,7 @@
                 <tr>
                     <th>id</th>
                     <th>Tipo</th>
-                    <th>Dni</th>
+                    <th>Ci</th>
                     <th>Nombres</th>
                     <th>Usuario</th>
                     <th>Teléfono</th>

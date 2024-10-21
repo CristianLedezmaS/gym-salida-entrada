@@ -19,6 +19,9 @@ use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RutinasExpertController;
+use App\Http\Controllers\RutinaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -67,9 +70,27 @@ Route::get("/consultar/registro/cliente/{id_membresia}/{desde}", [ClienteControl
 Route::PUT("/renovar/cliente/{id_cliente}", [ClienteController::class, "renovar"])->name("cliente.renovar")->middleware(['verified', 'admin_empleado']);
 Route::POST("/actualizar/cliente", [ClienteController::class, "editarDatosCliente"])->name("cliente.editarDatosCliente")->middleware(['verified', 'admin_empleado']);
 
+// Rutas para Usuarios dentro de 'cliente'
+Route::get('/usuarios', [ClienteController::class, 'usuariosIndex'])->name('usuarios')->middleware(['verified', 'admin_empleado']);
+Route::get('/usuarios/create', [ClienteController::class, 'create'])->name('usuarios.create')->middleware(['verified', 'admin_empleado']);
+Route::post('/usuarios/store', [ClienteController::class, 'usuariosStore'])->name('usuarios.store')->middleware(['verified', 'admin_empleado']);
+
+Route::get('/cliente/pagos', [ClienteController::class, 'pagos'])->name('cliente.pagos');
 
 Route::resource("pagos", PagoController::class)->middleware(['verified', 'admin_empleado']);
 
+// Rutas para usuarios
+Route::get('/usuarios', [ClienteController::class, 'usuariosIndex'])->name('usuarios');
+Route::get('/usuarios/create', [ClienteController::class, 'usuariosCreate'])->name('usuarios.create');
+Route::post('/usuarios', [ClienteController::class, 'usuariosStore'])->name('usuarios.store');
+Route::get('/usuarios/create', [ClienteController::class, 'usuariosCreate'])->name('usuarios.create');
+
+
+// Rutas para pagos
+Route::get('/pagos', [ClienteController::class, 'pagosIndex'])->name('pagos.index');
+Route::get('/pagos/create', [ClienteController::class, 'pagosCreate'])->name('pagos.create');
+Route::post('/pagos', [ClienteController::class, 'pagosStore'])->name('pagos.store');
+Route::get('/pagos/create/{clienteId}', [ClienteController::class, 'pagosCreate'])->name('pagos.create');
 
 
 //empresa
@@ -103,3 +124,26 @@ Route::get("reporte/asistencia-excel",[ReporteExcelController::class, "reporteAs
 
 /* reportes pdf */
 Route::get("reporte/asistencia-pdf",[ReportePdfController::class, "reporteAsistencia"] )->name("reporte.asistencia.pdf")->middleware(['verified', 'admin_empleado']);
+
+// rutas_rutinas
+
+Route::get('/rutinas/generar', [RutinasExpertController::class, 'create'])->name('rutinas.rutinas');
+Route::get('/rutinas/lista', [RutinasExpertController::class, 'index'])->name('rutinas.ListaClienteRutina');
+Route::get('/rutinas', [RutinasExpertController::class, 'index'])->name('rutinas.rutinas');
+Route::get('/rutinas/create', [RutinasExpertController::class, 'create'])->name('rutinas.create');
+Route::post('/rutinas/generate', [RutinasExpertController::class, 'generate'])->name('rutinas.generate');
+//Route::get('/rutinas', [RutinasExpertController::class, 'index'])->name('rutinas.ListaClienteRutina');
+//
+//
+//
+//// Rutas para las rutinas
+Route::get('/registrar', [RutinaController::class, 'seleccionarGenero'])->name('registrar');
+Route::post('/seleccionar-areas', [RutinaController::class, 'seleccionarAreas'])->name('seleccionar.areas');
+// Rutas de rutinas
+Route::get('/rutinas', [RutinasExpertController::class, 'index'])->name('rutinas.lista'); // Ruta para listar rutinas
+Route::get('/rutinas/create', [RutinasExpertController::class, 'create'])->name('rutinas.create'); // Ruta para crear rutina
+Route::post('/rutinas', [RutinasExpertController::class, 'store'])->name('rutinas.store'); // Ruta para almacenar rutina
+Route::get('/rutinas/{id}/edit', [RutinasExpertController::class, 'edit'])->name('rutinas.edit'); // Ruta para editar rutina
+Route::put('/rutinas/{id}', [RutinasExpertController::class, 'update'])->name('rutinas.update'); // Ruta para actualizar rutina
+Route::delete('/rutinas/{id}', [RutinasExpertController::class, 'destroy'])->name('rutinas.destroy'); // Ruta para eliminar rutina
+Route::post('/submit-fitness-form', [RutinaController::class, 'tuMetodo'])->name('submit.fitness.form');

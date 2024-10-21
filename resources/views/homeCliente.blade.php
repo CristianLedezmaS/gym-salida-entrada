@@ -232,8 +232,6 @@
                         <span class="lbl">MI ASISTENCIA</span>
                     </a>
                 </li>
-
-                <a class="btn btn-secondary mb-2" id="buttonAdd">Instalar APK</a>
             </ul>
 
         </nav>
@@ -256,7 +254,7 @@
 
             <div>
                 <h1>BIENVENIDO: {{ strtoupper(Auth::user()->nombre) }}</h1>
-            </div>
+                </div>
             <div class="col-12 col-sm-8">
                 <div class="d-flex justify-content-between">
                     <p class="alert alert-secondary">Clases restantes: <b>{{ Auth::user()->DR }}</b></p>
@@ -265,11 +263,11 @@
                     mi Asistencia</a> --}}
                     <button onclick="activarCamara()" class="btn btn-primary mb-2"><i class="fas fa-qrcode"></i>
                         ESCANEAR QR</button>
-                </div>
-            </div>
+        </div>
+    </div>
 
-
-            <div class="col-8 vistaCamara"><video id="preview"></video></div>
+    
+    <div class="col-8 vistaCamara"><video id="preview"></video></div>
 
             <script type="text/javascript">
                 let scanner;
@@ -342,7 +340,7 @@
                         document.getElementById("audio").play();
                     });
                 }
-                
+
             </script>
 
 
@@ -354,17 +352,17 @@
     </div>
 
 
-    {{-- instalar apk PWA --}}
-    <script>
+{{-- instalar apk PWA --}}
+<script>
         window.onload = (e) => {
             const buttonAdd = document.querySelector('#buttonAdd');
-
+ 
             let deferredPrompt;
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
             });
-
+    
             buttonAdd.addEventListener('click', (e) => {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice

@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
 class Cliente extends Authenticatable
-{
-    use HasFactory;
-
-    use Notifiable;
+{   
+    use HasFactory, Notifiable;
     public $table = 'cliente';
     public $primaryKey = 'id_cliente';
     public $timestamps = false;
@@ -31,4 +29,8 @@ class Cliente extends Authenticatable
         'DR',
 
     ];
+    public function rutinas()
+    {
+        return $this->belongsToMany(Rutina::class, 'cliente_rutina', 'cliente_id', 'rutina_id');
+    }
 }

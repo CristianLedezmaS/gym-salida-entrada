@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class MembresiaController extends Controller
 {
-
     public function index()
     {
+        // Usar DB::table() para construir la consulta y paginar
+        $datos = DB::table('membresia')->orderBy('id_membresia', 'desc')->paginate(10);
 
-        $datos = DB::select(" select * from membresia order by id_membresia desc ");
+        return view('vistas/membresia/membresia', compact('datos'));
+        }
 
-        return view("vistas/membresia/membresia", compact("datos"));
-    }
 
     public function create()
     {
@@ -31,13 +31,13 @@ class MembresiaController extends Controller
             "precio" => "required",
         ]);
 
-        $verifificarDuplicidad = DB::select(" select count(*) as 'total' from membresia where (categoria='$request->categoria' and nombre='$request->nombre') ");
+        $verifificarDuplicidad = DB::select("SELECT count(*) as 'total' FROM membresia WHERE categoria='$request->categoria' AND nombre='$request->nombre'");
         if ($verifificarDuplicidad[0]->total >= 1) {
-            return back()->with("AVISO", "El nombre y categoria de la Membresia ya existe");
+            return back()->with("AVISO", "El nombre y categoría de la Membresía ya existe");
         }
 
         try {
-            $sql = DB::insert("insert into membresia(categoria,nombre,meses,modo,precio) values(?,?,?,?,?)", [
+            $sql = DB::insert("INSERT INTO membresia (categoria, nombre, meses, modo, precio) VALUES (?, ?, ?, ?, ?)", [
                 $request->categoria,
                 $request->nombre,
                 $request->mes,
@@ -47,8 +47,9 @@ class MembresiaController extends Controller
         } catch (\Throwable $th) {
             $sql = 0;
         }
+
         if ($sql == 1) {
-            return back()->with("CORRECTO", "Membresia registrado correctamente");
+            return back()->with("CORRECTO", "Membresía registrada correctamente");
         } else {
             return back()->with("INCORRECTO", "Error al registrar");
         }
@@ -56,16 +57,12 @@ class MembresiaController extends Controller
 
     public function edit($id)
     {
-        $sql = DB::select("select * from membresia where id_membresia=?", [
-            $id
-        ]);
-
+        $sql = DB::select("SELECT * FROM membresia WHERE id_membresia=?", [$id]);
         return view('vistas/membresia/actualizar', compact('sql'));
     }
 
     public function update(Request $request, $id)
     {
-
         $request->validate([
             "categoria" => "required",
             "nombre" => "required",
@@ -74,14 +71,13 @@ class MembresiaController extends Controller
             "precio" => "required",
         ]);
 
-        $verifificarDuplicidad = DB::select(" select count(*) as 'total' from membresia where (categoria='$request->categoria' and nombre='$request->nombre') and id_membresia!=$id");
+        $verifificarDuplicidad = DB::select("SELECT count(*) as 'total' FROM membresia WHERE categoria='$request->categoria' AND nombre='$request->nombre' AND id_membresia!=$id");
         if ($verifificarDuplicidad[0]->total >= 1) {
-            return back()->with("AVISO", "El nombre y categoria de la Membresia ya existe");
+            return back()->with("AVISO", "El nombre y categoría de la Membresía ya existe");
         }
 
-
         try {
-            $sql = DB::update("update membresia set categoria=?,nombre=?, meses=?, modo=?,precio=?  where id_membresia=?", [
+            $sql = DB::update("UPDATE membresia SET categoria=?, nombre=?, meses=?, modo=?, precio=? WHERE id_membresia=?", [
                 $request->categoria,
                 $request->nombre,
                 $request->mes,
@@ -89,6 +85,7 @@ class MembresiaController extends Controller
                 $request->precio,
                 $id
             ]);
+
             if ($sql == 0) {
                 $sql = 1;
             }
@@ -97,30 +94,39 @@ class MembresiaController extends Controller
         }
 
         if ($sql == 1) {
-            return back()->with("CORRECTO", "Membresia actualizado correctamente");
+            return back()->with("CORRECTO", "Membresía actualizada correctamente");
         } else {
             return back()->with("INCORRECTO", "Error al actualizar");
         }
     }
-
-
     public function destroy($id)
     {
         try {
-            $sql = DB::delete("delete from membresia where id_membresia=?", [
-                $id
-            ]);
-            if ($sql == 0) {
-                $sql = 1;
+            // Verificamos si existen clientes asociados a la membresía
+            // Usamos el nombre correcto de la columna, por ejemplo, 'id_membresia'
+            $clientesAsociados = DB::select("SELECT COUNT(*) as total FROM cliente WHERE id_membresia = ?", [$id]);
+    
+            // Si hay clientes asociados, mostramos un aviso y no eliminamos la membresía
+            if ($clientesAsociados[0]->total > 0) {
+                return back()->with("AVISO", "No puedes eliminar esta membresía porque tiene clientes asociados.");
             }
+    
+            // Si no hay clientes asociados, procedemos con la eliminación de la membresía
+            $sql = DB::delete("DELETE FROM membresia WHERE id_membresia = ?", [$id]);
+    
+            if ($sql == 0) {
+                return back()->with("INCORRECTO", "No se pudo eliminar la membresía.");
+            }
+    
+            return back()->with("CORRECTO", "Membresía eliminada correctamente.");
+    
         } catch (\Throwable $th) {
-            $sql = 0;
-        }
-
-        if ($sql == 1) {
-            return back()->with("CORRECTO", "Membresia eliminado correctamente");
-        } else {
-            return back()->with("INCORRECTO", "Error al eliminar");
+            // Capturamos el error y mostramos un mensaje específico
+            return back()->with("INCORRECTO", "Ocurrió un error al intentar eliminar la membresía: " . $th->getMessage());
         }
     }
+    
+    
 }
+
+

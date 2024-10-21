@@ -38,7 +38,61 @@ class ClienteController extends Controller
 
         return view("vistas/cliente/cliente", compact("sql"));
     }
+    public function usuariosIndex() {
+        $usuarios = DB::table('usuarios')->get();
+        return view('vistas.cliente.usuarios', compact('usuarios'));
+    }
+    
+    public function usuariosCreate() {
+        return view('vistas.cliente.usuarios.create');
+    }
+    
+    public function usuariosStore(Request $request) {
+        $request->validate([
+            'nombre' => 'required',
+            'email' => 'required|email|unique:usuarios',
+            'password' => 'required|min:8',
+        ]);
+    
+        DB::table('usuarios')->insert([
+            'nombre' => $request->nombre,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+    
+        return redirect()->route('usuarios')->with('success', 'Usuario creado exitosamente.');
+    }
+    
 
+    // Métodos relacionados con pagos
+    public function pagosIndex() {
+        $pagos = DB::table('pago')->get();
+        return view('vistas.cliente.pagos', compact('pagos'));
+    }
+    
+    public function pagosCreate($clienteId) {
+        // Busca el cliente por su ID, si es necesario
+        $cliente = DB::table('cliente')->find($clienteId); // Asegúrate de que 'cliente' sea el nombre correcto de la tabla
+        return view('vistas.cliente.pagos.create', compact('cliente'));
+    }
+    
+    
+    public function pagosStore(Request $request) {
+        $request->validate([
+            'cliente_id' => 'required',
+            'monto' => 'required|numeric',
+            'fecha' => 'required|date',
+        ]);
+    
+        DB::table('pagos')->insert([
+            'cliente_id' => $request->cliente_id,
+            'monto' => $request->monto,
+            'fecha' => $request->fecha,
+        ]);
+    
+        return redirect()->route('pagos.index')->with('success', 'Pago registrado exitosamente.');
+    }
+    
     public function create()
     {
         $membresia = DB::select("select * from membresia");

@@ -3,16 +3,178 @@
 
 @section('content')
 
-    <style>
-        .block {
-            background: rgb(236, 236, 236);
-        }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<style>
+    body {
+        font-family: 'Aptos Display', sans-serif;
+        background-color: #d7dbdd; /* Fondo gris claro */
+        color: #ffff; /* Texto blanco */
+        margin: 0;
+        padding: 20px;
+    }
 
-        .danger {
-            color: red !important;
-            font-weight: bold;
-        }
-    </style>
+    h4 {
+        text-align: center;
+        color: #00bcd4; /* Título en color turquesa */
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .btn-rounded {
+        border-radius: 25px; /* Bordes redondeados para botones */
+    }
+
+    .card {
+        background-color: #1f1f1f; /* Fondo oscuro para la tarjeta */
+        border: 1px solid #333; /* Borde oscuro para la tarjeta */
+        border-radius: 8px; /* Bordes redondeados */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+        padding: 20px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    th, td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #444; /* Borde oscuro */
+    }
+
+    th {
+        background-color: #00bcd4; /* Fondo turquesa para el encabezado */
+        color: #000; /* Texto negro en el encabezado */
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+        background-color: #2c2c2c; /* Color oscuro para filas pares */
+    }
+
+    tr:hover {
+        background-color: #444; /* Color más oscuro al pasar el ratón */
+    }
+
+    p {
+        margin-top: 30px;
+        text-align: right;
+        font-size: 14px;
+        color: #bbb;
+    }
+
+    .modal-content {
+        border: 1px solid #00bcd4; /* Borde turquesa para el modal */
+        border-radius: 8px; /* Bordes redondeados del modal */
+    }
+
+    .modal-header {
+        background-color: #00bcd4; /* Fondo turquesa para el encabezado del modal */
+        color: #ffffff; /* Texto blanco en el encabezado del modal */
+    }
+
+    .modal-title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .modal-close {
+        color: #ffffff; /* Color blanco para el botón de cierre del modal */
+    }
+
+    .form-group input[type="file"] {
+        border: 1px solid #444; /* Borde oscuro */
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 14px;
+        background-color: #333; /* Fondo oscuro para el input de archivo */
+        color: #fff; /* Texto blanco */
+    }
+
+    .alert-danger {
+        background-color: #721c24; /* Fondo rojo oscuro para alertas de error */
+        border-color: #f5c6cb;
+        color: #fff;
+    }
+
+    .badge-warning {
+        background-color: #ffc107; /* Color de fondo para badges de advertencia */
+        color: #212529;
+    }
+
+    .badge-danger {
+        background-color: #dc3545; /* Color de fondo para badges de error */
+        color: #fff;
+    }
+
+    .badge-success {
+        background-color: #28a745; /* Color de fondo para badges de éxito */
+        color: #fff;
+    }
+
+    .btn {
+        border-radius: 25px; /* Bordes redondeados para botones */
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .btn-primary {
+        background-color: #00bcd4; /* Color de fondo para el botón primario */
+        border-color: #00bcd4; /* Borde del botón primario */
+    }
+
+    .btn-primary:hover {
+        background-color: #00a8c7; /* Color de fondo al pasar el ratón */
+        border-color: #00a8c7; /* Borde del botón primario al pasar el ratón */
+    }
+
+    .btn-secondary {
+        background-color: #6c757d; /* Color de fondo para el botón secundario */
+        border-color: #6c757d; /* Borde del botón secundario */
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268; /* Color de fondo al pasar el ratón */
+        border-color: #545b62; /* Borde del botón secundario al pasar el ratón */
+    }
+
+    .btn-info {
+        background-color: #17a2b8; /* Color de fondo para el botón de info */
+        border-color: #17a2b8; /* Borde del botón de info */
+    }
+
+    .btn-info:hover {
+        background-color: #138496; /* Color de fondo al pasar el ratón */
+        border-color: #117a8b; /* Borde del botón de info al pasar el ratón */
+    }
+
+    .btn-warning {
+        background-color: #ffc107; /* Color de fondo para el botón de advertencia */
+        border-color: #ffc107; /* Borde del botón de advertencia */
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800; /* Color de fondo al pasar el ratón */
+        border-color: #d39e00; /* Borde del botón de advertencia al pasar el ratón */
+    }
+
+    .btn-danger {
+        background-color: #dc3545; /* Color de fondo para el botón de peligro */
+        border-color: #dc3545; /* Borde del botón de peligro */
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333; /* Color de fondo al pasar el ratón */
+        border-color: #bd2130; /* Borde del botón de peligro al pasar el ratón */
+    }
+</style>
+
 
     @if (session('CORRECTO'))
         <script>
@@ -56,7 +218,7 @@
 
 
 
-    <h4 class="text-center text-secondary">LISTA DE CLIENTES REGISTRADOS</h4>
+    <h4 class="text-center text-secondary">GESTIONAR CLIENTES REGISTRADOS</h4>
     <div class="pb-1 pt-2">
         <a href="{{ route('cliente.create') }}" class="btn btn-rounded btn-primary"><i class="fas fa-plus"></i>&nbsp;
             Registrar</a>
@@ -69,9 +231,9 @@
                 <thead class="table-primary">
                     <tr>
                         <th>id</th>
-                        <th>Creado por</th>
-                        <th>Membresia</th>
-                        <th>Dni</th>
+                        <th>Registrado por</th>
+                       <!--  <th>Membresia</th>-->
+                        <th>CI</th>
                         <th>Nombres</th>
                         <th>Usuario</th>
                         <th>Correo</th>
@@ -79,7 +241,7 @@
                         <th>Dirección</th>
                         <th>Desde</th>
                         <th>Hasta</th>
-                        <th>Dias Rest.</th>
+                        <th>DiasRest.</th>
                         <th>Pago</th>
                         <th>Foto</th>
                         <th></th>
@@ -90,8 +252,8 @@
                     @foreach ($sql as $key => $item)
                         <tr>
                             <td>{{ $item->id_cliente }}</td>
-                            <td>{{ $item->creado_por }}</td>
-                            <td>{{ $item->nomMem }}</td>
+                           <td>{{ $item->creado_por }}</td>
+                             <!--<td>{{ $item->nomMem }}</td>-->
                             <td>{{ $item->dni }}</td>
                             <td>{{ $item->nombre }}</td>
                             <td>{{ $item->usuario }}</td>
@@ -102,7 +264,7 @@
                             <td>{{ $item->hasta }}</td>
                             <td>
 
-                                @if ($item->DR <= 7 and $item->DR >= 5)
+                                 @if ($item->DR <= 7 and $item->DR >= 5)
                                     <span class="badge bg-warning">{{ $item->DR }}</span>
                                 @else
                                     @if ($item->DR < 5)
@@ -112,7 +274,7 @@
                                     @endif
                                 @endif
                             </td>
-                            <td>
+                           <td>
 
                                 @if ($item->debe == null or $item->debe == 0)
                                     <span class="badge bg-success">Pagado</span>
@@ -121,7 +283,7 @@
                                 @endif
                             </td>
 
-                            <td>
+                           <td>
                                 @if ($item->foto == null)
                                     <a class="text-danger" data-toggle="modal"
                                         data-target=".bd-example-modal-md-{{ $item->id_cliente }}"

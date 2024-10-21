@@ -96,7 +96,7 @@
                         <select name="modo" class="input input__select">
                             <option value="">Selecionar Modo</option>
                             <option {{$item->modo == 'diario' ? 'selected' : ''}} value="diario">Diario</option>
-                            <option {{$item->modo == 'interdiario' ? 'selected' : ''}} value="interdiario">InterDiario</option>
+                           {{--<option {{$item->modo == 'interdiario' ? 'selected' : ''}} value="interdiario">InterDiario</option>--}} 
                         </select>
                         @error('modo')
                             <small class="error error__text">{{ $message }}</small>

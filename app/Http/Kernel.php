@@ -35,12 +35,14 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            //\App\Http\Middleware\VerifyCsrfToken::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            
         ],
 
         'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -66,6 +68,7 @@ class Kernel extends HttpKernel
         'cliente' => \App\Http\Middleware\ClienteMiddleware::class,
         'admin_empleado' => \App\Http\Middleware\AdminEmpleadoMiddleware::class,
         'administrador' => \App\Http\Middleware\AdministradorMiddleware::class,
+        \App\Http\Middleware\Cors::class,
 
     ];
 }
