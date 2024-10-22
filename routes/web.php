@@ -79,7 +79,7 @@ Route::post('/usuarios/store', [ClienteController::class, 'usuariosStore'])->nam
 Route::get('/cliente/pagos', [ClienteController::class, 'pagos'])->name('cliente.pagos');
 
 Route::resource("pagos", PagoController::class)->middleware(['verified', 'admin_empleado']);
-Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+Route::get('/clientes/verificar', [ClienteController::class, 'verificar'])->name('cliente.verificar');
 // Rutas para usuarios
 Route::get('/usuarios', [ClienteController::class, 'usuariosIndex'])->name('usuarios');
 Route::get('/usuarios/create', [ClienteController::class, 'usuariosCreate'])->name('usuarios.create');

@@ -138,30 +138,42 @@
 {{-- Notificaciones --}}
 @if (session('CORRECTO'))
 <script>
-$(function notificacion() {
+$(function() {
     new PNotify({
-         title:"CORRECTO",
-         type:"success",
-         text:"{{ session('CORRECTO') }}",
-         styling:"bootstrap3"
-     });
+        title: "CORRECTO",
+        type: "success",
+        text: "{{ session('CORRECTO') }}",
+        styling: "bootstrap3"
+    });
 });
 </script>
 @endif
 
 @if (session('INCORRECTO'))
 <script>
-$(function notificacion() {
-     new PNotify({
-         title:"INCORRECTO",
-         type:"error",
-         text:"{{ session('INCORRECTO') }}",
-         styling:"bootstrap3"
-     });
+$(function() {
+    new PNotify({
+        title: "INCORRECTO",
+        type: "error",
+        text: "{{ session('INCORRECTO') }}",
+        styling: "bootstrap3"
+    });
 });
 </script>
 @endif
 
+@if (session('AVISO'))
+<script>
+$(function() {
+    new PNotify({
+        title: "AVISO",
+        type: "warning",
+        text: "{{ session('AVISO') }}",
+        styling: "bootstrap3"
+    });
+});
+</script>
+@endif
 @if (session('AVISO'))
 <script>
 $(function notificacion() {
@@ -336,7 +348,33 @@ $(function notificacion() {
 
 </form>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+$(document).ready(function() {
+    $('#nombre, #dni').on('blur', function() {
+        const correo = $('correo').val();
+        const dni = $('#dni').val();
+
+        if (nombre || dni) {
+            $.ajax({
+                url: '{{ route("cliente.verificar") }}', // Ruta que verificaría si el cliente existe
+                method: 'GET',
+                data: { cooreo: correo, dni: dni },
+                success: function(response) {
+                    if (response.existe) {
+                        // Mostrar advertencia con PNotify
+                        new PNotify({
+                            title: "Advertencia",
+                            text: "El cliente ya está registrado.",
+                            type: "warning",
+                            styling: "bootstrap3"
+                        });
+                    }
+                }
+            });
+        }
+    });
+});
         function consultar() {
             let membresia = document.getElementById("membresia").value
             let desde = document.getElementById("desde").value

@@ -71,12 +71,17 @@ class ClienteController extends Controller
     }
     
     public function pagosCreate($clienteId) {
-        // Busca el cliente por su ID, si es necesario
-        $cliente = DB::table('cliente')->find($clienteId); // Asegúrate de que 'cliente' sea el nombre correcto de la tabla
+        // Busca el cliente por su ID
+        $cliente = DB::table('cliente')->where('id_cliente', $clienteId)->first(); // Asegúrate de usar 'id_cliente'
+        
+        // Verifica si el cliente existe
+        if (!$cliente) {
+            return back()->with("INCORRECTO", "El cliente no existe");
+        }
+    
+        // Carga la vista con los datos del cliente
         return view('vistas.cliente.pagos.create', compact('cliente'));
     }
-    
-    
     public function pagosStore(Request $request) {
         $request->validate([
             'cliente_id' => 'required',
@@ -99,104 +104,75 @@ class ClienteController extends Controller
         return view("vistas/cliente/registrar")->with("membresia", $membresia);
     }
 
-     public function store(Request $request)
-    {
-        $request->validate([
-            "membresia" => "required",
-            "desde" => "required",
-            "hasta" => "required",
-            "dias" => "required",
-            "dni" => "required|unique:App\Models\Cliente,dni",
-            "usuario" => "required|unique:App\Models\Cliente,usuario",
-            "password" => "required|min:8",
-            "nombre" => "required",
-            "correo" => [
-                "required",
-                "email",
-                "unique:App\Models\Cliente,correo",
-            ],
-            "precio" => "required|numeric",
-            "foto" => "nullable|mimes:jpg,jpeg,png|max:2048",
-            "acuenta" => "nullable|numeric"
-        ]);
+    public function store(Request $request)
+{
+    $request->validate([
+        "membresia" => "required",
+        "desde" => "required",
+        "hasta" => "required",
+        "dias" => "required",
+        "dni" => "required|unique:App\Models\Cliente,dni",
+        "usuario" => "required|unique:App\Models\Cliente,usuario",
+        "password" => "required",
+        "nombre" => "required",
+        "correo" => [
+            "required",
+            "email",
+            "unique:App\Models\Cliente,correo",
+        ],
+        "precio" => "required",
+        "foto" => "mimes:jpg,jpeg,png",
+        "acuenta" => "numeric"
+    ]);
 
-        $nombreUsuario = Auth::user()->nombre;
-        $debe = $request->precio - ($request->acuenta ?? 0);
+    $nombreUsuario = Auth::user()->nombre;
+    $debe = $request->precio - $request->acuenta;
 
-        // Verificación de duplicidad
-        $verifificarDuplicidad = DB::select("SELECT COUNT(*) as 'total' FROM cliente WHERE (usuario='$request->usuario' OR dni='$request->dni')");
-        
-        if ($verifificarDuplicidad[0]->total >= 1) {
-            return back()->with("AVISO", "El usuario o DNI ya está en uso");
-        }
-
-        // Registro del cliente
-        try {
-            $id_registro = DB::table('cliente')->insertGetId([
-                'id_membresia' => $request->membresia,
-                'tipo_usuario' => 'cliente',
-                'creado_por' => $nombreUsuario,
-                'usuario' => $request->usuario,
-                'password' => bcrypt($request->password),
-                'dni' => $request->dni,
-                'nombre' => $request->nombre,
-                'correo' => $request->correo,
-                'telefono' => $request->telefono,
-                'direccion' => $request->direccion,
-                'desde' => $request->desde,
-                'hasta' => $request->hasta,
-                'DT' => $request->dias,
-                'DA' => 0,
-                'DR' => $request->dias,
-                'debe' => $debe
-            ]);
-        } catch (\Throwable $th) {
-            return back()->with("INCORRECTO", "Error al registrar: ".$th->getMessage());
-        }
-
-        // Registro de la imagen en el servidor
-        if ($request->hasFile("foto")) {
-            try {
-                $foto = $request->file("foto");
-                $nombreFoto = "usuario-$id_registro." . $foto->guessExtension();
-                $ruta = public_path("foto/usuario/$nombreFoto");
-                copy($foto, $ruta);
-                
-                // Actualizar el campo foto en la base de datos
-                DB::update("UPDATE cliente SET foto='$nombreFoto' WHERE id_cliente=$id_registro");
-                
-            } catch (\Throwable $th) {
-                return back()->with("INCORRECTO", "Error al subir la foto: ".$th->getMessage());
-            }
-        }
-
-        // Registro en la tabla abonos si acuenta es mayor que 0
-        if ($request->acuenta > 0) {
-            try {
-                $id_registro_abono = DB::table('abono')->insertGetId([
-                    'monto' => $request->acuenta,
-                    'cliente' => $id_registro,
-                    'fecha' => Carbon::now(),
-                    'recepcionista' => $nombreUsuario,
-                    'derecho_pago' => "Matricula"
-                ]);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-        }
-
-        if ($id_registro >= 1) {
-            return back()->with("CORRECTO", "Cliente registrado correctamente");
-        } else {
-            return back()->with("INCORRECTO", "Error al registrar");
-        }
+    // Verificar duplicidad
+    $verifificarDuplicidad = DB::select("SELECT count(*) as 'total' FROM cliente WHERE (usuario='$request->usuario' OR dni='$request->dni')");
+    
+    if ($verifificarDuplicidad[0]->total >= 1) {
+        // En lugar de redirigir, devuelve un mensaje
+        return back()->with("AVISO", "El usuario o CI ya está en uso");
     }
 
-    public function show($id)
-    {
+    // Registrar datos del cliente
+    try {
+        $id_registro = DB::table('cliente')->insertGetId([
+            'id_membresia' => $request->membresia,
+            'tipo_usuario' => 'cliente',
+            'creado_por' => $nombreUsuario,
+            'usuario' => $request->usuario,
+            'password' => md5($request->password),
+            'dni' => $request->dni,
+            'nombre' => $request->nombre,
+            'correo' => $request->correo,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'desde' => $request->desde,
+            'hasta' => $request->hasta,
+            'DT' => $request->dias,
+            'DA' => '0',
+            'DR' => $request->dias,
+            'debe' => $debe
+        ]);
+        
+        // Manejo de la imagen
+        if ($request->hasFile('foto')) {
+            // Guardar la imagen...
+        }
 
-        $sql = DB::select("select *,date(desde)as 'Ndesde',DATE_ADD(date(hasta), INTERVAL 1 DAY) as'Nhasta' from cliente where id_cliente=?", [
-            $id
+        return back()->with("CORRECTO", "Cliente registrado correctamente");
+        
+    } catch (\Throwable $th) {
+        return back()->with("INCORRECTO", "Error al registrar");
+    }
+}
+
+    public function show($id_cliente) // Cambia $id por $id_cliente
+    {
+        $sql = DB::select("SELECT *, DATE(desde) AS 'Ndesde', DATE_ADD(DATE(hasta), INTERVAL 1 DAY) AS 'Nhasta' FROM cliente WHERE id_cliente = ?", [
+            $id_cliente // Asegúrate de usar id_cliente aquí
         ]);
 
         if (count($sql) <= 0) {
@@ -204,6 +180,7 @@ class ClienteController extends Controller
         }
 
         $currentDate = date('Y-m-d');
+        $Nhasta = null; // Inicializa Nhasta
 
         foreach ($sql as $row) {
             $Nhasta = $row->Nhasta;
@@ -215,14 +192,24 @@ class ClienteController extends Controller
             // Resto de tu lógica aquí
         }
 
-        //verificar si Nhasta es menor que la fecha actual. si es menor quiero poner el dia actual
-
-
-        $membresia = DB::select("select * from membresia");
+        // Obtener membresía
+        $membresia = DB::select("SELECT * FROM membresia");
 
         return view('vistas/cliente/renovar', compact('sql'))->with("membresia", $membresia)->with("hasta", $Nhasta);
     }
+    public function verificar(Request $request)
+{
+    $cliente = DB::table('cliente')
+        ->where('correo', $request->correo) // Verifica por correo
+        ->orWhere('dni', $request->dni)
+        ->first();
 
+    if ($cliente) {
+        return response()->json(['existe' => true]);
+    }
+
+    return response()->json(['existe' => false]);
+}
     public function edit($id)
     {
 
