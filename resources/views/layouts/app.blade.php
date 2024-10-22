@@ -247,20 +247,7 @@
                                     <span class="lbl">Registrar clientes</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('usuarios') }}"
-                                   class="{{ Request::is('cliente/usuarios*') ? 'activo' : '' }}">
-                                   <i class="fas fa-plus-square icono-submenu"></i>
-                                   <span class="lbl">Registrar usuario</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('pagos.index') }}"
-                                   class="{{ Request::is('cliente.pagos*') ? 'activo' : '' }}">
-                                   <i class="fas fa-plus-square icono-submenu"></i>
-                                   <span class="lbl">Registrar pago</span>
-                                </a>
-                            </li>
+                            
                             <li>
                                 <a href="{{ route('cliente.index') }}"
                                     class="{{ Request::is('cliente') ? 'activo' : '' }}">

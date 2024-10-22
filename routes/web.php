@@ -69,8 +69,9 @@ Route::get("/clientePago-{id}", [ClienteController::class, "pagoCliente"])->name
 Route::get("/consultar/registro/cliente/{id_membresia}/{desde}", [ClienteController::class, "consultar"])->name("cliente.consultar")->middleware(['verified', 'admin_empleado']);
 Route::PUT("/renovar/cliente/{id_cliente}", [ClienteController::class, "renovar"])->name("cliente.renovar")->middleware(['verified', 'admin_empleado']);
 Route::POST("/actualizar/cliente", [ClienteController::class, "editarDatosCliente"])->name("cliente.editarDatosCliente")->middleware(['verified', 'admin_empleado']);
+Route::post('/clientes/store', [ClienteController::class, 'store'])->name('clientes.store');
+// Rutas para Usuarios dentro de 'cliente'Route::post('/clientes/store', [ClienteController::class, 'store'])->name('clientes.store');
 
-// Rutas para Usuarios dentro de 'cliente'
 Route::get('/usuarios', [ClienteController::class, 'usuariosIndex'])->name('usuarios')->middleware(['verified', 'admin_empleado']);
 Route::get('/usuarios/create', [ClienteController::class, 'create'])->name('usuarios.create')->middleware(['verified', 'admin_empleado']);
 Route::post('/usuarios/store', [ClienteController::class, 'usuariosStore'])->name('usuarios.store')->middleware(['verified', 'admin_empleado']);
@@ -78,7 +79,7 @@ Route::post('/usuarios/store', [ClienteController::class, 'usuariosStore'])->nam
 Route::get('/cliente/pagos', [ClienteController::class, 'pagos'])->name('cliente.pagos');
 
 Route::resource("pagos", PagoController::class)->middleware(['verified', 'admin_empleado']);
-
+Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
 // Rutas para usuarios
 Route::get('/usuarios', [ClienteController::class, 'usuariosIndex'])->name('usuarios');
 Route::get('/usuarios/create', [ClienteController::class, 'usuariosCreate'])->name('usuarios.create');

@@ -99,7 +99,7 @@ class ClienteController extends Controller
         return view("vistas/cliente/registrar")->with("membresia", $membresia);
     }
 
-    public function store(Request $request)
+     public function store(Request $request)
     {
         $request->validate([
             "membresia" => "required",
@@ -107,36 +107,37 @@ class ClienteController extends Controller
             "hasta" => "required",
             "dias" => "required",
             "dni" => "required|unique:App\Models\Cliente,dni",
-            "usuario" => "required||unique:App\Models\Cliente,usuario",
-            "password" => "required",
+            "usuario" => "required|unique:App\Models\Cliente,usuario",
+            "password" => "required|min:8",
             "nombre" => "required",
             "correo" => [
                 "required",
                 "email",
                 "unique:App\Models\Cliente,correo",
             ],
-            "precio" => "required",
-            "foto" => "mimes:jpg,jpeg,png",
-            "acuenta" => "numeric"
+            "precio" => "required|numeric",
+            "foto" => "nullable|mimes:jpg,jpeg,png|max:2048",
+            "acuenta" => "nullable|numeric"
         ]);
 
-
         $nombreUsuario = Auth::user()->nombre;
-        $debe = $request->precio - $request->acuenta;
+        $debe = $request->precio - ($request->acuenta ?? 0);
 
-        $verifificarDuplicidad = DB::select(" select count(*) as 'total' from cliente where (usuario='$request->usuario' or dni='$request->dni')");
+        // Verificación de duplicidad
+        $verifificarDuplicidad = DB::select("SELECT COUNT(*) as 'total' FROM cliente WHERE (usuario='$request->usuario' OR dni='$request->dni')");
+        
         if ($verifificarDuplicidad[0]->total >= 1) {
             return back()->with("AVISO", "El usuario o DNI ya está en uso");
         }
 
-        //primero registramos los datos
+        // Registro del cliente
         try {
             $id_registro = DB::table('cliente')->insertGetId([
                 'id_membresia' => $request->membresia,
                 'tipo_usuario' => 'cliente',
                 'creado_por' => $nombreUsuario,
                 'usuario' => $request->usuario,
-                'password' => md5($request->password),
+                'password' => bcrypt($request->password),
                 'dni' => $request->dni,
                 'nombre' => $request->nombre,
                 'correo' => $request->correo,
@@ -145,32 +146,31 @@ class ClienteController extends Controller
                 'desde' => $request->desde,
                 'hasta' => $request->hasta,
                 'DT' => $request->dias,
-                'DA' => '0',
+                'DA' => 0,
                 'DR' => $request->dias,
                 'debe' => $debe
             ]);
         } catch (\Throwable $th) {
+            return back()->with("INCORRECTO", "Error al registrar: ".$th->getMessage());
         }
 
-        //ahora registramos la imagen en el servidor
-        try {
-            $foto = $request->file("foto");
-            $nombreFoto = "usuario-$id_registro" . "." . $foto->guessExtension();
-            $ruta = public_path("foto/usuario/$nombreFoto");
-            copy($foto, $ruta);
-        } catch (\Throwable $th) {
-            //throw $th;
+        // Registro de la imagen en el servidor
+        if ($request->hasFile("foto")) {
+            try {
+                $foto = $request->file("foto");
+                $nombreFoto = "usuario-$id_registro." . $foto->guessExtension();
+                $ruta = public_path("foto/usuario/$nombreFoto");
+                copy($foto, $ruta);
+                
+                // Actualizar el campo foto en la base de datos
+                DB::update("UPDATE cliente SET foto='$nombreFoto' WHERE id_cliente=$id_registro");
+                
+            } catch (\Throwable $th) {
+                return back()->with("INCORRECTO", "Error al subir la foto: ".$th->getMessage());
+            }
         }
 
-        //ahora actualizamos el campo foto de la BD
-        try {
-            $actualizar = DB::update("update cliente set foto='$nombreFoto' where id_cliente=$id_registro");
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-
-
-        //ahora verificamos si el monto de acuenta es > 0, entoces registramos en la tabla abonos
+        // Registro en la tabla abonos si acuenta es mayor que 0
         if ($request->acuenta > 0) {
             try {
                 $id_registro_abono = DB::table('abono')->insertGetId([
@@ -184,7 +184,6 @@ class ClienteController extends Controller
                 //throw $th;
             }
         }
-
 
         if ($id_registro >= 1) {
             return back()->with("CORRECTO", "Cliente registrado correctamente");
