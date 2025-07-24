@@ -88,4 +88,11 @@ class RutinasExpertController extends Controller
 
         return redirect()->back()->with('success', 'Formulario enviado exitosamente');
     }
+    public function seleccionAreas(Request $request)
+    {
+        $objetivo = $request->input('objetivo');
+        $descripciones = $this->getDescripciones();
+        
+        return view('rutinas.registrar', compact('objetivo', 'descripciones'));
+    }
   }

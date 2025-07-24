@@ -223,7 +223,18 @@
         <a href="{{ route('cliente.create') }}" class="btn btn-rounded btn-primary"><i class="fas fa-plus"></i>&nbsp;
             Registrar</a>
     </div>
-
+      <!-- Botones para ver los reportes -->
+        <div class="pb-1 pt-2">
+            <!-- Botones para los reportes en PDF -->
+            <a href="{{ route('reporte.membresiaActiva.pdf') }}" class="btn btn-rounded btn-info"><i class="fas fa-users"></i>&nbsp;
+                Reporte Membresía Activa (PDF)</a>
+            <a href="{{ route('reporte.morosos.pdf') }}" class="btn btn-rounded btn-warning"><i class="fas fa-credit-card"></i>&nbsp;
+                Reporte Morosos (PDF)</a>
+            <a href="{{ route('reporte.ingresos.pdf') }}" class="btn btn-rounded btn-success"><i class="fas fa-calendar-check"></i>&nbsp;
+                Reporte Ingresos (PDF)</a>
+                
+            
+        </div>
 
     <section class="card">
         <div class="card-block">

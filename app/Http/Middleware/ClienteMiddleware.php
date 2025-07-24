@@ -19,7 +19,7 @@ class ClienteMiddleware
         if ($request->user() && $request->user()->tipo_usuario == 'cliente') {
             // Redirigir a los clientes fuera de la página de inicio de sesión
             if ($request->route()->getName() === 'login') {
-                return redirect()->route('home');
+                return redirect()->route('homeCliente');
             }
             return $next($request);
         }

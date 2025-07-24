@@ -126,6 +126,15 @@ Route::get("reporte/asistencia-excel",[ReporteExcelController::class, "reporteAs
 /* reportes pdf */
 Route::get("reporte/asistencia-pdf",[ReportePdfController::class, "reporteAsistencia"] )->name("reporte.asistencia.pdf")->middleware(['verified', 'admin_empleado']);
 
+Route::get('/reporte/membresia-activa-pdf', [ReportePdfController::class, 'membresiaActiva'])
+    ->name('reporte.membresiaActiva.pdf');
+
+Route::get('/reporte/morosos-pdf', [ReportePdfController::class, 'morosos'])
+    ->name('reporte.morosos.pdf');
+
+Route::get('/reporte/ingresos-pdf', [ReportePdfController::class, 'exportarIngresosPdf'])
+    ->name('reporte.ingresos.pdf');
+
 // rutas_rutinas
 
 Route::get('/rutinas/generar', [RutinasExpertController::class, 'create'])->name('rutinas.rutinas');
@@ -148,3 +157,5 @@ Route::get('/rutinas/{id}/edit', [RutinasExpertController::class, 'edit'])->name
 Route::put('/rutinas/{id}', [RutinasExpertController::class, 'update'])->name('rutinas.update'); // Ruta para actualizar rutina
 Route::delete('/rutinas/{id}', [RutinasExpertController::class, 'destroy'])->name('rutinas.destroy'); // Ruta para eliminar rutina
 Route::post('/submit-fitness-form', [RutinaController::class, 'tuMetodo'])->name('submit.fitness.form');
+Route::get('/rutinas', [App\Http\Controllers\RutinasExpertController::class, 'index'])->name('rutinas.index');
+Route::get('/rutinas/registrar', [App\Http\Controllers\RutinaController::class, 'seleccionarGenero'])->name('rutinas.registrar');

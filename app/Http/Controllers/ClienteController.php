@@ -433,6 +433,8 @@ class ClienteController extends Controller
             $id
         ]);
 
+        $entrada = null;
+        $salida = null;
         foreach ($sql as $event) {
             $entrada = $event->desde;
             $salida = $event->hasta;
@@ -449,7 +451,7 @@ class ClienteController extends Controller
         $abonos = DB::select("SELECT
         abono.id_abono,
         abono.monto,
-        abono.cliente,
+        abono.id_cliente as cliente,
         abono.fecha,
         abono.recepcionista,
         abono.derecho_pago,
@@ -464,7 +466,7 @@ class ClienteController extends Controller
         date(cliente.hasta) as 'hasta'
         FROM
         abono
-        INNER JOIN cliente ON abono.cliente = cliente.id_cliente
+        INNER JOIN cliente ON abono.id_cliente = cliente.id_cliente
         INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia
         where cliente.id_cliente=$id
         ");
@@ -496,8 +498,8 @@ class ClienteController extends Controller
         membresia.nombre AS nomMem,
         membresia.precio,
         cliente.id_cliente
-        FROM cliente INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia where id_cliente=$id_cliente ");
-
+        FROM cliente INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia WHERE id_cliente=$id_cliente");
         return view("vistas/cliente/pago", compact("datos"));
     }
+    
 }

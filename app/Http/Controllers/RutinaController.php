@@ -10,12 +10,12 @@ class RutinaController extends Controller
     public function index()
     {
         $rutinas = Rutina::all();
-        return view('rutinas.index', compact('rutinas'));
+        return view('Rutinas.index', compact('rutinas'));
     }
 
     public function create()
     {
-        return view('rutinas.create');
+        return view('Rutinas.create');
     }
 
     public function store(Request $request)
@@ -31,7 +31,7 @@ class RutinaController extends Controller
     public function edit($id)
     {
         $rutina = Rutina::findOrFail($id);
-        return view('rutinas.edit', compact('rutina'));
+        return view('Rutinas.edit', compact('rutina'));
     }
 
     public function update(Request $request, $id)
@@ -56,18 +56,28 @@ class RutinaController extends Controller
     // Método para mostrar la vista "registrar"
     public function seleccionarGenero()
     {
-        return view('rutinas.registrar'); // Aquí se carga la vista llamada 'registrar'
+        return view('Rutinas.registrar');
     }
 
     // Método para manejar la selección de áreas del cuerpo dentro de la misma vista
     public function seleccionarAreas(Request $request)
     {
-        $genero = $request->input('genero'); // Hombre o Mujer seleccionado
-        $areas = $request->input('areas');   // Áreas seleccionadas (si se eligen más de una)
+        $genero = $request->input('genero');
+        $areas = $request->input('selected_areas');
+        return view('Rutinas.registrar', compact('genero', 'areas'));
+    }
 
-        // Aquí podrías procesar las áreas seleccionadas si fuera necesario
+    // Método para ver una rutina específica
+    public function show($id)
+    {
+        $rutina = Rutina::findOrFail($id);
+        return view('Rutinas.show', compact('rutina'));
+    }
 
-        return view('rutinas.registrar', compact('genero', 'areas'));  // Cargar de nuevo la misma vista con los datos
+    // Método para manejar el formulario de fitness
+    public function tuMetodo(Request $request)
+    {
+        // Aquí procesas los datos del formulario de fitness
+        return redirect()->route('rutinas.index')->with('success', 'Datos de fitness guardados exitosamente.');
     }
 }
- 

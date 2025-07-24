@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
     <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
-    <title>Inicio de sesión</title>
+    <title>login</title>
 
     <style>
         body {

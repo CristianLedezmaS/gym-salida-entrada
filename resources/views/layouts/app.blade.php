@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="{{ asset('app/publico/css/separate/vendor/lobipanel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('app/publico/css/lib/jqueryui/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ asset('app/publico/css/separate/pages/widgets.min.css') }}">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
         {{-- font awesome --}}
         <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
@@ -60,34 +61,6 @@
 
         {{-- chart js --}}
         <script src="{{ asset('chart/chart.js') }}"></script>
-
-        <style>
-            .marca {
-                width: 100%;
-                background: rgb(13, 39, 48);
-                position: fixed;
-                bottom: 0;
-                z-index: 999;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-            }
-
-            .marca__parrafo {
-                margin: 0 !important;
-                color: white;
-            }
-
-            .marca__texto {
-                color: rgb(0, 162, 255);
-                text-decoration: underline;
-            }
-
-            .marca__parrafo span {
-                color: red;
-            }
-        </style>
 
         @laravelPWA
     </head>
@@ -187,199 +160,160 @@
         <div class="mobile-menu-left-overlay">
         </div>
         <nav class="side-menu">
-
             <ul class="side-menu-list p-0">
-                <li class="red">
-                    <a href="{{ route('home') }}" class="{{ Request::is('home*') ? 'activo' : '' }}">
-                        <img src="{{ asset('img-inicio/house.png') }}" class="img-inicio" alt="">
-                        {{-- <i class="fas fa-house-user"></i> --}}
-                        <span class="lbl">INICIO</span>
-                    </a>
-                </li>
-
                 @if (Auth::check() && Auth::user()->tipo_usuario == 'cliente')
                     <li class="red">
-                        <a href="{{ route('ver.asistencia') }}"
-                           class="{{ Request::is('verAsistencia*') ? 'activo' : '' }}">
+                        <a href="{{ route('homeCliente') }}" class="{{ Request::is('homeCliente*') ? 'activo' : '' }}">
+                            <img src="{{ asset('img-inicio/house.png') }}" class="img-inicio" alt="">
+                            <span class="lbl">INICIO</span>
+                        </a>
+                    </li>
+                    <li class="red">
+                        <a href="{{ route('ver.asistencia') }}" class="{{ Request::is('verAsistencia*') ? 'activo' : '' }}">
                             <img src="{{ asset('img-inicio/programar.png') }}" class="img-inicio" alt="">
                             <span class="lbl">MI ASISTENCIA</span>
                         </a>
                     </li>
-                @endif
-
-
-                @if (Auth::check() && Auth::user()->tipo_usuario != 'cliente')
-
-                    <li class="grey with-sub {{ Request::is('membresia*') ? 'opened' : '' }}">
-                        <span>
-                            <img src="{{ asset('img-inicio/mem.png') }}" class="img-inicio" alt="">
-                            {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
-                            <span class="lbl">MEMBRESIAS</span>
-                        </span>
-                        <ul>
-                            <li>
-                                <a href="{{ route('membresia.create') }}"
-                                    class="{{ Request::is('membresia/create*') ? 'activo' : '' }}">
-                                    <i class="fas fa-plus-square icono-submenu"></i>
-                                    <span class="lbl">Registrar membresia</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('membresia.index') }}"
-                                    class="{{ Request::is('membresia') ? 'activo' : '' }}">
-                                    <i class="fas fa-th-list icono-submenu"></i>
-                                    <span class="lbl">Lista de membresias</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="grey with-sub {{ Request::is('cliente*') ? 'opened' : '' }}">
-                        <span>
-                            <img src="{{ asset('img-inicio/team.png') }}" class="img-inicio" alt="">
-                            <span class="lbl">CLIENTE</span>
-                        </span>
-                        <ul>
-                            <li>
-                                <a href="{{ route('cliente.create') }}"
-                                    class="{{ Request::is('cliente/create*') ? 'activo' : '' }}">
-                                    <i class="fas fa-plus-square icono-submenu"></i>
-                                    <span class="lbl">Registrar clientes</span>
-                                </a>
-                            </li>
-                            
-                            <li>
-                                <a href="{{ route('cliente.index') }}"
-                                    class="{{ Request::is('cliente') ? 'activo' : '' }}">
-                                    <i class="fas fa-th-list icono-submenu"></i>
-                                    <span class="lbl">Lista de clientes</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-
-                    <li class="grey with-sub {{ Request::is('asistencia*') ? 'opened' : '' }}">
-                        <span>
+                    <li class="red">
+                        <a href="{{ route('rutinas.rutinas') }}" class="{{ Request::is('rutinas.rutinas*') ? 'activo' : '' }}">
                             <img src="{{ asset('img-inicio/programar.png') }}" class="img-inicio" alt="">
-                            {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
-                            <span class="lbl">ASISTENCIA</span>
-                        </span>
-                        <ul>
-                            {{-- <li>
-                                <a href="" class="{{ Request::is('asistencia/create*') ? 'activo' : '' }}">
-                                    <i class="fas fa-plus-square icono-submenu"></i>
-                                    <span class="lbl">Registrar asistencias</span>
-                                </a>
-                            </li> --}}
-                            <li>
-                                <a href="{{ route('asistencia.index') }}"
-                                    class="{{ Request::is('asistencia') ? 'activo' : '' }}">
-                                    <i class="fas fa-th-list icono-submenu"></i>
-                                    <span class="lbl">Lista de asistencias</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- <li class="grey with-sub {{ Request::is('cita*') ? 'opened' : '' }}">
-                        <span>
-                            <img src="{{ asset('img-inicio/pago.png') }}" class="img-inicio" alt="">
-                            <span class="lbl">PAGOS</span>
-                        </span>
-                        <ul>
-                            <li>
-                                <a href="" class="{{ Request::is('cita-create*') ? 'activo' : '' }}">
-                                    <i class="fas fa-plus-square icono-submenu"></i>
-                                    <span class="lbl">Registrar pagos</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="" class="{{ Request::is('cita-index*') ? 'activo' : '' }}">
-                                    <i class="fas fa-th-list icono-submenu"></i>
-                                    <span class="lbl">Lista de pagos</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> --}}
-                    <li class="grey with-sub {{ Request::is('rutinas*') ? 'opened' : '' }}">
-                        <span>
-                            <img src="{{ asset('img-inicio/rutinas.png') }}" class="img-inicio" alt="">
                             <span class="lbl">RUTINAS</span>
-                        </span>
-                        <ul>
-                            <li>
-                                <a href="{{ route('rutinas.rutinas') }}"
-                                   class="{{ Request::is('rutinas/rutinas*') ? 'activo' : '' }}">
-                                   <i class="fas fa-dumbbell icono-submenu"></i>
-                                   <span class="lbl">Generar rutina</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('rutinas.ListaClienteRutina') }}" class="{{ Request::is('rutinas/lista*') ? 'activo' : '' }}">
-                                    <i class="fas fa-th-list icono-submenu"></i>
-                                    <span class="lbl">Lista de rutinas</span>
-                                </a>
-                            </li>
-                        </ul>
+                        </a>
                     </li>
+                @else
+                    <li class="red">
+                        <a href="{{ route('home') }}" class="{{ Request::is('home*') ? 'activo' : '' }}">
+                            <img src="{{ asset('img-inicio/house.png') }}" class="img-inicio" alt="">
+                            <span class="lbl">INICIO</span>
+                        </a>
+                    </li>
+                    @if (Auth::check() && Auth::user()->tipo_usuario != 'cliente')
 
-                            
-
-
-
-                    @if (Auth::user()->tipo_usuario == 'administrador')
-                        <li class="grey with-sub {{ Request::is('usuario*') ? 'opened' : '' }}">
+                        <li class="grey with-sub {{ Request::is('membresia*') ? 'opened' : '' }}">
                             <span>
-                                <img src="{{ asset('img-inicio/admin.png') }}" class="img-inicio" alt="">
-                                 {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
-                                <span class="lbl">USUARIOS</span>
+                                <img src="{{ asset('img-inicio/mem.png') }}" class="img-inicio" alt="">
+                                {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
+                                <span class="lbl">MEMBRESIAS</span>
                             </span>
                             <ul>
                                 <li>
-                                    <a href="{{ route('usuario.create') }}"
-                                        class="{{ Request::is('usuario/create*') ? 'activo' : '' }}">
+                                    <a href="{{ route('membresia.create') }}"
+                                        class="{{ Request::is('membresia/create*') ? 'activo' : '' }}">
                                         <i class="fas fa-plus-square icono-submenu"></i>
-                                        <span class="lbl">Registrar usuarios</span>
+                                        <span class="lbl">Registrar membresia</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('usuario.index') }}"
-                                        class="{{ Request::is('usuario') ? 'activo' : '' }}">
+                                    <a href="{{ route('membresia.index') }}"
+                                        class="{{ Request::is('membresia') ? 'activo' : '' }}">
                                         <i class="fas fa-th-list icono-submenu"></i>
-                                        <span class="lbl">Lista de usuarios</span>
+                                        <span class="lbl">Lista de membresias</span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
 
-                        <li class="red">
-                            <a href="{{ route('empresa.datos') }}"
-                                class="{{ Request::is('empresa*') ? 'activo' : '' }}">
-                                <img src="{{ asset('img-inicio/info.png') }}" class="img-inicio" alt="">
-                               
-                                <span class="lbl">ACERCA DE</span>
-                            </a>
+                        <li class="grey with-sub {{ Request::is('cliente*') ? 'opened' : '' }}">
+                            <span>
+                                <img src="{{ asset('img-inicio/team.png') }}" class="img-inicio" alt="">
+                                <span class="lbl">CLIENTE</span>
+                            </span>
+                            <ul>
+                                <li>
+                                    <a href="{{ route('cliente.create') }}"
+                                        class="{{ Request::is('cliente/create*') ? 'activo' : '' }}">
+                                        <i class="fas fa-plus-square icono-submenu"></i>
+                                        <span class="lbl">Registrar clientes</span>
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <a href="{{ route('cliente.index') }}"
+                                        class="{{ Request::is('cliente') ? 'activo' : '' }}">
+                                        <i class="fas fa-th-list icono-submenu"></i>
+                                        <span class="lbl">Lista de clientes</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
+
+
+                        <li class="grey with-sub {{ Request::is('asistencia*') ? 'opened' : '' }}">
+                            <span>
+                                <img src="{{ asset('img-inicio/programar.png') }}" class="img-inicio" alt="">
+                                {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
+                                <span class="lbl">ASISTENCIA</span>
+                            </span>
+                            <ul>
+                                {{-- <li>
+                                    <a href="" class="{{ Request::is('asistencia/create*') ? 'activo' : '' }}">
+                                        <i class="fas fa-plus-square icono-submenu"></i>
+                                        <span class="lbl">Registrar asistencias</span>
+                                    </a>
+                                </li> --}}
+                                <li>
+                                    <a href="{{ route('asistencia.index') }}"
+                                        class="{{ Request::is('asistencia') ? 'activo' : '' }}">
+                                        <i class="fas fa-th-list icono-submenu"></i>
+                                        <span class="lbl">Lista de asistencias</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                               
+
+
+
+                        @if (Auth::user()->tipo_usuario == 'administrador')
+                            <li class="grey with-sub {{ Request::is('usuario*') ? 'opened' : '' }}">
+                                <span>
+                                    <img src="{{ asset('img-inicio/admin.png') }}" class="img-inicio" alt="">
+                                     {{-- <i class="fas fa-sort-amount-up-alt"></i> --}}
+                                    <span class="lbl">USUARIOS</span>
+                                </span>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('usuario.create') }}"
+                                            class="{{ Request::is('usuario/create*') ? 'activo' : '' }}">
+                                            <i class="fas fa-plus-square icono-submenu"></i>
+                                            <span class="lbl">Registrar usuarios</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('usuario.index') }}"
+                                            class="{{ Request::is('usuario') ? 'activo' : '' }}">
+                                            <i class="fas fa-th-list icono-submenu"></i>
+                                            <span class="lbl">Lista de usuarios</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="red">
+                                <a href="{{ route('empresa.datos') }}"
+                                    class="{{ Request::is('empresa*') ? 'activo' : '' }}">
+                                    <img src="{{ asset('img-inicio/info.png') }}" class="img-inicio" alt="">
+                                   
+                                    <span class="lbl">ACERCA DE</span>
+                                </a>
+                            </li>
+                        @endif
+
+
+
+                        <div class="container m-auto mt-4 py-3 bg-white">
+                            
+                            <img style="width: 100px;margin: auto" src="{{ asset('qr/qrcode.png') }}" alt=""
+                                class="img-fluid mb-2">
+                            <a class="btn btn-primary" href="{{ asset('qr/qrcode.png') }}" download="">Descargar este
+                                QR</a>
+
+
+                        </div>            
                     @endif
-
-
-
-                    <div class="container m-auto mt-4 py-3 bg-white">
-                        
-                        <img style="width: 100px;margin: auto" src="{{ asset('qr/qrcode.png') }}" alt=""
-                            class="img-fluid mb-2">
-                        <a class="btn btn-primary" href="{{ asset('qr/qrcode.png') }}" download="">Descargar este
-                            QR</a>
-
-
-                    </div>            
                 @endif
-
-
-
             </ul>
-
         </nav>
         <div class="page-content mt-5 pt-5">
             @yield('content')
@@ -660,9 +594,6 @@
         });
     })(jQuery);
     </script>
-
-
-
 
 </body>
 

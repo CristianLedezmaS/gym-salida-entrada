@@ -23,6 +23,8 @@ class HomeUsuarioController extends Controller
             Auth::user()->id_cliente
         ]);
 
+        $entrada = null;
+        $salida = null;
         foreach ($sql as $event) {
             $entrada = $event->desde;
             $salida = $event->hasta;

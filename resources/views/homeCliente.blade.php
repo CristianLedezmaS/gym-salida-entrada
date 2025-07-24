@@ -1,534 +1,128 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.app')
 
-<head>
-
-    <head lang="es">
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
-        <meta content="ie=edge" http-equiv="x-ua-compatible">
-        <title>Sistema GYM</title>
-
-        {{-- token --}}
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
-        <link href="{{ asset('app/publico/css/lib/font-awesome/font-awesome.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('bootstrap5/css/bootstrap.min.css') }}" rel="stylesheet"
-            integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-
-        <link rel="stylesheet" href="{{ asset('app/publico/css/lib/lobipanel/lobipanel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('app/publico/css/separate/vendor/lobipanel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('app/publico/css/lib/jqueryui/jquery-ui.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('app/publico/css/separate/pages/widgets.min.css') }}">
-
-        {{-- font awesome --}}
-        <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
-
-        {{-- datatables --}}
-        <link rel="stylesheet" href="{{ asset('app/publico/css/lib/datatables-net/datatables.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('app/publico/css/separate/vendor/datatables-net.min.css') }}">
-
-        <link href="{{ asset('app/publico/css/lib/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('app/publico/css/main.css') }}" rel="stylesheet">
-        <link href="{{ asset('app/publico/css/mis_estilos/estilos.css') }}" rel="stylesheet">
-
-        {{-- form --}}
-        <link rel="stylesheet" type="text/css"
-            href="{{ asset('app/publico/css/lib/jquery-flex-label/jquery.flex.label.css') }}"> <!-- Original -->
-
-        {{-- mis estilos --}}
-        <link href="{{ asset('principal/css/estilos.css') }}" rel="stylesheet">
-
-        {{-- pNotify --}}
-        <link href="{{ asset('pnotify/css/pnotify.css') }}" rel="stylesheet" />
-        <link href="{{ asset('pnotify/css/pnotify.buttons.css') }}" rel="stylesheet" />
-        <link href="{{ asset('pnotify/css/custom.min.css') }}" rel="stylesheet" />
-
-        {{-- google fonts --}}
-        <link href="https://fonts.gstatic.com" rel="preconnect">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-
-        {{-- pnotify --}}
-        <script src="{{ asset('pnotify/js/jquery.min.js') }}"></script>
-        <script src="{{ asset('pnotify/js/pnotify.js') }}"></script>
-        <script src="{{ asset('pnotify/js/pnotify.buttons.js') }}"></script>
-
-        {{-- alpine js --}}
-        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-
-        {{-- chart js --}}
-        <script src="{{ asset('chart/chart.js') }}"></script>
-
-
-        {{-- lector qr --}}
-        {{-- <script src="https://unpkg.com/quagga"></script> --}}
-
-        <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-
-        <style>
-            #calendar {
-                height: 60vh;
-            }
-
-            td:has(.fc-event) {
-                background-color: rgb(231, 238, 243);
-            }
-
-            .evento {
-                background: rgb(0, 166, 39) !important;
-                color: white !important;
-            }
-
-            h1 {
-                text-align: center;
-                padding: 10px;
-                padding-bottom: 0;
-                font-size: 32px;
-                font-weight: bold;
-            }
-
-            .page-content {
-                text-align: center;
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                align-items: center;
-                align-content: center;
-            }
-
-            .vistaCamara {
-                margin-top: 50px;
-                width: 40vh;
-                height: 40vh;
-                position: relative;
-                overflow: hidden;
-            }
-
-            #preview {
-                background-image: url("{{ asset('img-inicio/qr.png') }}");
-                background-repeat: no-repeat;
-                background-size: contain;
-                width: 100%;
-                height: 100vh;
-                object-fit: cover;
-            }
-        </style>
-
-
-
-        @laravelPWA
-    </head>
-</head>
-
-<body class="with-side-menu">
-
-
-    <div id="app">
-
-        <audio controls src="{{ asset('mp3/pitido.mp3') }}" id="audio"></audio>
-
-        <header class="site-header">
-            <div class="container-fluid" style="padding-left: 40px;">
-
-                <a href="#" class="site-logo">
-
-                </a>
-
-                <button id="show-hide-sidebar-toggle" class="show-hide-sidebar">
-                    <span>toggle menu</span>
-                </button>
-
-                <button class="hamburger hamburger--htla">
-                    <span>toggle menu</span>
-                </button>
-                <div class="site-header-content">
-                    <div class="site-header-content-in">
-                        <div class="site-header-shown">
-
-                            <div class="dropdown dropdown-notification">
-                                <h6 class="text-light mt-2">
-                                    @if (Auth::user()->tipo_usuario === 'administrador')
-                                        Administrador
-                                    @else
-                                        @if (Auth::user()->tipo_usuario === 'vendedor')
-                                            Vendedor
-                                        @else
-                                            @if (Auth::user()->tipo_usuario === 'cliente')
-                                                Cliente
-                                            @endif
-                                        @endif
-                                    @endif
-                                </h6>
-                            </div>
-
-                            <div class="dropdown user-menu">
-                                <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                    @if (Auth::user()->foto == null)
-                                        <img src="{{ asset('app/publico/img/user.svg') }}" alt="">
-                                    @else
-                                        <img src="{{ asset('foto/usuario/' . Auth::user()->foto) }}"
-                                            alt="">
-                                    @endif
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right pt-0" aria-labelledby="dd-user-menu">
-
-                                    <h5 class="p-2 text-center bg-primary">{{ Auth::user()->nombre }}</h5>
-                                    {{-- <a class="dropdown-item"
-                                        href="{{ route('profile.datos', Auth::user()->id_cliente) }}"><span
-                                            class="font-icon glyphicon glyphicon-user"></span>Perfil</a> --}}
-                                    <a class="dropdown-item" href="{{ route('cambiarClave.index') }}"><span
-                                            class="font-icon glyphicon glyphicon-lock"></span>Cambiar contraseña</a>
-
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                                        <span class="font-icon glyphicon glyphicon-log-out"></span>salir
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <!--.site-header-shown-->
-
-                        <div class="mobile-menu-right-overlay"></div>
-                        <div class="site-header-collapsed">
-
-                        </div>
-                        <!--.site-header-collapsed-->
-                    </div>
-                    <!--site-header-content-in-->
-                </div>
-                <!--.site-header-content-->
-            </div>
-            <!--.container-fluid-->
-        </header>
-
-        <div class="mobile-menu-left-overlay">
-        </div>
-        <nav class="side-menu">
-
-            <ul class="side-menu-list p-0">
-                <li class="red">
-                    <a href="{{ route('homeCliente') }}" class="{{ Request::is('home*') ? 'activo' : '' }}">
-                        <img src="{{ asset('img-inicio/house.png') }}" class="img-inicio" alt="">
-                        {{-- <i class="fas fa-house-user"></i> --}}
-                        <span class="lbl">INICIO</span>
-                    </a>
-                </li>
-
-                <li class="red">
-                    <a href="{{ route('ver.asistencia') }}"
-                        class="{{ Request::is('verAsistencia*') ? 'activo' : '' }}">
-                        <img src="{{ asset('img-inicio/programar.png') }}" class="img-inicio" alt="">
-                        {{-- <i class="fas fa-house-user"></i> --}}
-                        <span class="lbl">MI ASISTENCIA</span>
-                    </a>
-                </li>
-            </ul>
-
-        </nav>
-
-        <div class="page-content mt-2">
-            @if (session('CORRECTO'))
-                <div class="alert alert-success w-100"><i class="fas fa-check"></i> {{ session('CORRECTO') }}
-                </div>
-            @endif
-
-            @if (session('INCORRECTO'))
-                <div class="alert alert-danger w-100"><i class="fas fa-times"></i> {{ session('INCORRECTO') }}
-                </div>
-            @endif
-
-            @if (session('AVISO'))
-                <div class="alert alert-warning w-100"><i class="fas fa-exclamation-triangle"></i>
-                    {{ session('AVISO') }}</div>
-            @endif
-
-            <div>
-                <h1>BIENVENIDO: {{ strtoupper(Auth::user()->nombre) }}</h1>
-                </div>
-            <div class="col-12 col-sm-8">
-                <div class="d-flex justify-content-between">
-                    <p class="alert alert-secondary">Clases restantes: <b>{{ Auth::user()->DR }}</b></p>
-                    {{-- <a href="{{ route('ver.asistencia') }}" class="btn btn-secondary mb-2"><i
-                        class="far fa-calendar-alt"></i> Ver
-                    mi Asistencia</a> --}}
-                    <button onclick="activarCamara()" class="btn btn-primary mb-2"><i class="fas fa-qrcode"></i>
-                        ESCANEAR QR</button>
+@section('content')
+<style>
+    body, .page-content, .container-home-dark {
+        background: #181828 !important;
+    }
+    .card-home-dark {
+        background: #23232e;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        padding: 2.5rem 2rem;
+        color: #fff;
+        max-width: 500px;
+        margin: 2rem auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeIn 0.7s;
+    }
+    .btn-qr-neon {
+        background: linear-gradient(90deg, #00ff88 0%, #00aaff 100%) !important;
+        color: #181828 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-size: 1.3rem !important;
+        font-weight: bold !important;
+        padding: 1rem 2.5rem !important;
+        margin: 1.5rem 0 2rem 0 !important;
+        box-shadow: 0 0 18px #00ff88, 0 2px 8px rgba(0,0,0,0.10) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.7rem !important;
+        transition: all 0.2s !important;
+    }
+    .btn-qr-neon:hover {
+        background: linear-gradient(90deg, #00aaff 0%, #00ff88 100%) !important;
+        box-shadow: 0 0 28px #00ff88, 0 2px 16px rgba(0,0,0,0.18) !important;
+        transform: scale(1.04);
+    }
+    .qr-video-box {
+        background: #23232e;
+        border-radius: 16px;
+        border: 2px solid #00ff88;
+        box-shadow: 0 0 18px #00ff8833;
+        padding: 1.5rem 1rem;
+        margin: 0 auto;
+        width: 350px;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #preview {
+        width: 100%;
+        height: 260px;
+        border-radius: 10px;
+        background: #1a1a2e;
+        box-shadow: 0 0 12px #00ff8844;
+    }
+    .home-title-neon {
+        color: #00ff88;
+        font-size: 2.2rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 1.2rem;
+        text-shadow: 0 0 10px #00ff88;
+    }
+    .home-info-box {
+        background: #181828;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1.1rem;
+        padding: 0.7rem 1.2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        display: inline-block;
+    }
+</style>
+<div class="container-home-dark">
+    <div class="card-home-dark">
+        <h1 class="home-title-neon">BIENVENIDO: {{ strtoupper(Auth::user()->nombre) }}</h1>
+        <div class="home-info-box mb-4">Clases restantes: <b>{{ Auth::user()->DR }}</b></div>
+        <button onclick="activarCamara()" class="btn-qr-neon mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-qr-code-scan" viewBox="0 0 16 16">
+                <path d="M2 2h2V1H1v3h1V2Zm10-1v1h2v2h1V1h-3Zm2 13h-2v1h3v-3h-1v2ZM2 14v-2H1v3h3v-1H2ZM3 3h1V2H2v2h1V3Zm9 0h1V2h-2v1h1v1Zm1 9h-1v1h2v-2h-1v1ZM3 13H2v1h2v-2H3v1Zm2-9h6V3H5v1Zm0 8h6v-1H5v1Zm8-4v2h1V7h-1Zm-1 1v-2h-1v2h1Zm-2-2v2h1V7h-1Zm-1 1v-2h-1v2h1Zm-2-2v2h1V7h-1Zm-1 1v-2H5v2h1Zm-2 2v2h1v-2H4Zm1 1v-2H5v2h1Zm2 2v-2h-1v2h1Zm1-1v2h1v-2h-1Zm2 2v-2h-1v2h1Zm1-1v2h1v-2h-1Z"/>
+            </svg>
+            <span>ESCANEAR QR</span>
+        </button>
+        <audio controls src="{{ asset('mp3/pitido.mp3') }}" id="audio" style="display:none"></audio>
+        <div class="qr-video-box mt-3">
+            <video id="preview"></video>
         </div>
     </div>
-
-    
-    <div class="col-8 vistaCamara"><video id="preview"></video></div>
-
-            <script type="text/javascript">
-                let scanner;
-                let activeCamera = 1;
-
-                //function switchCamera() {
-                //    Instascan.Camera.getCameras().then(function(cameras) {
-                //        if (cameras.length > 1) {
-                //            activeCamera = (activeCamera + 1) % cameras.length;
-                //            scanner.start(cameras[activeCamera]);
-                //        }
-                //    });
-                //
-                // function activarCamara() {
-                //     Instascan.Camera.getCameras().then(function(cameras) {
-                //         var backCamera = cameras.find(function(camera) {
-                //             return camera.name.indexOf('back') !== -1;
-                //         });
-                //         // utiliza la cámara trasera si está disponible
-                //         if (backCamera) {
-                //             scanner.start(backCamera);
-                //             activeCamera = cameras.indexOf(backCamera);
-                //         } else if (cameras.length > 0) {
-                //             scanner.start(cameras[0]);
-                //             activeCamera = 0;
-                //         } else {
-                //             console.error('No se encontraron cámaras disponibles.');
-                //         }
-                //     }).catch(function(e) {
-                //         console.error(e);
-                //     })
-                //     scanner = new Instascan.Scanner({
-                //         video: document.getElementById('preview'),
-                //         mirror: false
-                //     })
-                //     scanner.addListener('scan', function(content) {
-                //         console.log(content);
-                //         window.location.href = content;
-                //         document.getElementById("audio").play();
-                //     });
-                // }
-                //}
-                function activarCamara() {
-                    Instascan.Camera.getCameras().then(function(cameras) {
-                        var backCamera = cameras.find(function(camera) {
-                            return camera.name && camera.name.indexOf('back') !== -1;
-                        });
-                        // utiliza la cámara trasera si está disponible
-                        if (backCamera) {
-                            scanner.start(backCamera);
-                            activeCamera = cameras.indexOf(backCamera);
-                        } else if (cameras.length > 0) {
-                            scanner.start(cameras[0]);
-                            activeCamera = 0;
-                        } else {
-                            console.error('No se encontraron cámaras disponibles.');
-                        }
-                    }).catch(function(e) {
-                        console.error(e);
-                    });
-
-                    scanner = new Instascan.Scanner({
-                        video: document.getElementById('preview'),
-                        mirror: false, //mirror:true para que se vea como espejo
-                    });
-
-                    scanner.addListener('scan', function(content) {
-                        console.log(content);
-                        window.location.href = content;
-                        document.getElementById("audio").play();
-                    });
-                }
-
-            </script>
-
-
-
-
-
-        </div>
-
-    </div>
-
-
-{{-- instalar apk PWA --}}
+</div>
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <script>
-        window.onload = (e) => {
-            const buttonAdd = document.querySelector('#buttonAdd');
- 
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
+    let scanner;
+    let activeCamera = 1;
+    function activarCamara() {
+        Instascan.Camera.getCameras().then(function(cameras) {
+            var backCamera = cameras.find(function(camera) {
+                return camera.name && camera.name.indexOf('back') !== -1;
             });
-    
-            buttonAdd.addEventListener('click', (e) => {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice
-                    .then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('Aceptó su inslación');
-                        } else {
-                            console.log('Rechazó su inslación');
-                        }
-                        deferredPrompt = null;
-                    });
-            });
-        }
-    </script>
-
-    <script src="{{ asset('bootstrap5/js/popper.min.js') }}"
-        integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-        integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
-    </script>
-
-
-    <script src="{{ asset('app/publico/js/lib/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('app/publico/js/lib/tether/tether.min.js') }}"></script>
-    <script src="{{ asset('app/publico/js/lib/bootstrap/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('app/publico/js/plugins.js') }}"></script>
-
-    {{-- datatables --}}
-    <script src="{{ asset('app/publico/js/lib/datatables-net/datatables.min.js') }}"></script>
-
-
-
-    {{-- sweet alert --}}
-    <script src="{{ asset('sweet/js/sweetalert2.js') }}"></script>
-    <script src="{{ asset('sweet/js/sweet.js') }}"></script>
-
-
-    <script type="text/javascript" src="{{ asset('app/publico/js/lib/jqueryui/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('app/publico/js/lib/lobipanel/lobipanel.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('app/publico/js/lib/match-height/jquery.matchHeight.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('loader/loader.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-
-            $('.panel').lobiPanel({
-                sortable: true
-            });
-            $('.panel').on('dragged.lobiPanel', function(ev, lobiPanel) {
-                $('.dahsboard-column').matchHeight();
-            });
-
-            google.charts.load('current', {
-                'packages': ['corechart']
-            });
-            google.charts.setOnLoadCallback(drawChart);
-
-            function drawChart() {
-                var dataTable = new google.visualization.DataTable();
-                dataTable.addColumn('string', 'Day');
-                dataTable.addColumn('number', 'Values');
-                // A column for custom tooltip content
-                dataTable.addColumn({
-                    type: 'string',
-                    role: 'tooltip',
-                    'p': {
-                        'html': true
-                    }
-                });
-                dataTable.addRows([
-                    ['MON', 130, ' '],
-                    ['TUE', 130, '130'],
-                    ['WED', 180, '180'],
-                    ['THU', 175, '175'],
-                    ['FRI', 200, '200'],
-                    ['SAT', 170, '170'],
-                    ['SUN', 250, '250'],
-                    ['MON', 220, '220'],
-                    ['TUE', 220, ' ']
-                ]);
-
-                var options = {
-                    height: 314,
-                    legend: 'none',
-                    areaOpacity: 0.18,
-                    axisTitlesPosition: 'out',
-                    hAxis: {
-                        title: '',
-                        textStyle: {
-                            color: '#fff',
-                            fontName: 'Proxima Nova',
-                            fontSize: 11,
-                            bold: true,
-                            italic: false
-                        },
-                        textPosition: 'out'
-                    },
-                    vAxis: {
-                        minValue: 0,
-                        textPosition: 'out',
-                        textStyle: {
-                            color: '#fff',
-                            fontName: 'Proxima Nova',
-                            fontSize: 11,
-                            bold: true,
-                            italic: false
-                        },
-                        baselineColor: '#16b4fc',
-                        ticks: [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350],
-                        gridlines: {
-                            color: '#1ba0fc',
-                            count: 15
-                        }
-                    },
-                    lineWidth: 2,
-                    colors: ['#fff'],
-                    curveType: 'function',
-                    pointSize: 5,
-                    pointShapeType: 'circle',
-                    pointFillColor: '#f00',
-                    backgroundColor: {
-                        fill: '#008ffb',
-                        strokeWidth: 0,
-                    },
-                    chartArea: {
-                        left: 0,
-                        top: 0,
-                        width: '100%',
-                        height: '100%'
-                    },
-                    fontSize: 11,
-                    fontName: 'Proxima Nova',
-                    tooltip: {
-                        trigger: 'selection',
-                        isHtml: true
-                    }
-                };
-
-                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-                chart.draw(dataTable, options);
+            if (backCamera) {
+                scanner.start(backCamera);
+                activeCamera = cameras.indexOf(backCamera);
+            } else if (cameras.length > 0) {
+                scanner.start(cameras[0]);
+                activeCamera = 0;
+            } else {
+                console.error('No se encontraron cámaras disponibles.');
             }
-            $(window).resize(function() {
-                drawChart();
-                setTimeout(function() {}, 1000);
-            });
+        }).catch(function(e) {
+            console.error(e);
         });
-    </script>
-    <script src="{{ asset('app/publico/js/app.js') }}"></script>
-
-    {{-- form --}}
-    <script src="{{ asset('app/publico/js/lib/jquery-flex-label/jquery.flex.label.js') }}"></script>
-
-    <script type="application/javascript">
-        (function ($) {
-        $(document).ready(function () {
-            $('.fl-flex-label').flexLabel();
+        scanner = new Instascan.Scanner({
+            video: document.getElementById('preview'),
+            mirror: false,
         });
-    })(jQuery);
-    </script>
-
-
-
-
-
-
-</body>
-
-</html>
+        scanner.addListener('scan', function(content) {
+            console.log(content);
+            window.location.href = content;
+            document.getElementById("audio").play();
+        });
+    }
+</script>
+@endsection

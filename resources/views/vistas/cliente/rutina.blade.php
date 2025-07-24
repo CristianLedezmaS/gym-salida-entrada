@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div id="step2" class="wizard-step" style="display:none;">
+        <div id="step2" class="wizard-step">
             <h2>Nivel de Experiencia</h2>
             <div class="level-options">
                 <div class="level-card" data-level="principiante" onclick="seleccionarNivel(this)">
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div id="step3" class="wizard-step" style="display:none;">
+        <div id="step3" class="wizard-step">
             <h2>Tu Objetivo Principal</h2>
             <div class="objective-options">
                 <div class="objective-card" data-objective="perder-peso" onclick="seleccionarObjetivo(this)">
@@ -72,7 +72,7 @@
             </div>
         </div>
 
-        <div id="step4" class="wizard-step" style="display:none;">
+        <div id="step4" class="wizard-step">
             <h2>Frecuencia de Entrenamiento</h2>
             <div class="frequency-options">
                 <div class="frequency-card" data-frequency="2" onclick="seleccionarFrecuencia(this)">
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <div id="step5" class="wizard-step" style="display:none;">
+        <div id="step5" class="wizard-step">
             <h2>Tu Peso y Altura</h2>
             <div class="measurements-container">
                 <div class="measurement-group">
@@ -137,7 +137,7 @@
             </div>
         </div>
 
-        <div id="step6" class="wizard-step" style="display:none;">
+        <div id="step6" class="wizard-step">
             <h2>Selecciona las áreas que deseas trabajar</h2>
             <div class="areas-container">
                 <button type="button" class="area-btn" data-area="todo" onclick="seleccionarArea(this, true)">
@@ -229,34 +229,79 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div id="loading-spinner" class="loading-overlay" style="display:none;">
-    <div class="spinner"></div>
-    <div class="loading-text">Generando tu rutina personalizada...</div>
-</div>
+        <!-- Paso 10: Loading Spinner -->
+        <div id="step10" class="wizard-step">
+            <div class="loading-step">
+                <div class="spinner"></div>
+                <div class="loading-text">Generando tu rutina personalizada...</div>
+            </div>
+        </div>
 
-<div id="preview-resumen" class="preview-resumen" style="display:none;">
-    <div class="preview-header">
-        <h2>¡Hola, <span id="prev-nombre">Cristian</span>! Este es tu plan personalizado</h2>
-    </div>
-    <div class="preview-plan-activo">
-        <span class="plan-icon">⚡</span>
-        <div>
-            <div class="plan-label">Plan Activo:</div>
-            <div class="plan-title" id="plan-titulo">Plan de [objetivo] de <span id="plan-nombre">Cristian</span></div>
+        <!-- Paso 11: Preview Resumen -->
+        <div id="step11" class="wizard-step">
+            <div class="preview-header">
+                <h2>¡Hola, <span id="prev-nombre">Cristian</span>! Este es tu plan personalizado</h2>
+            </div>
+            <div class="preview-plan-activo">
+                <span class="plan-icon">⚡</span>
+                <div>
+                    <div class="plan-label">Plan Activo:</div>
+                    <div class="plan-title" id="plan-titulo">Plan de [objetivo] de <span id="plan-nombre">Cristian</span></div>
+                </div>
+                <button class="plan-btn">Planes</button>
+            </div>
+            <div class="preview-next-block">
+                <div class="next-label">Tu próximo entrenamiento:</div>
+                <div class="next-title" id="next-titulo">Fuerza de Pecho y Tríceps</div>
+                <div class="ejercicios-lista" id="ejercicios-lista">
+                    <!-- Ejercicios se llenan por JS -->
+                </div>
+            </div>
+            <button class="btn-wizard btn-preview" id="btn-comenzar-entreno"><span class="btn-icon">⚡</span>Comenzar</button>
         </div>
-        <button class="plan-btn">Planes</button>
-    </div>
-    <div class="preview-next-block">
-        <div class="next-label">Tu próximo entrenamiento:</div>
-        <div class="next-title" id="next-titulo">Fuerza de Pecho y Tríceps</div>
-        <div class="ejercicios-lista" id="ejercicios-lista">
-            <!-- Ejercicios se llenan por JS -->
+
+        <!-- Paso 12: Preview Clásico -->
+        <div id="step12" class="wizard-step">
+            <h2>Tu Plan Personalizado</h2>
+            <div class="preview-flex">
+                <div class="preview-card">
+                    <h3>Información Personal</h3>
+                    <ul class="preview-list">
+                        <li><b>Género:</b> <span id="clasico-genero"></span></li>
+                        <li><b>Peso:</b> <span id="clasico-peso"></span> kg</li>
+                        <li><b>Altura:</b> <span id="clasico-altura"></span> cm</li>
+                        <li><b>IMC:</b> <span id="clasico-imc"></span></li>
+                        <li><b>Estado:</b> <span id="clasico-estado"></span></li>
+                    </ul>
+                </div>
+                <div class="preview-card">
+                    <h3>Objetivos y Nivel</h3>
+                    <ul class="preview-list">
+                        <li><b>Nivel de Experiencia:</b> <span id="clasico-nivel"></span></li>
+                        <li><b>Objetivo Principal:</b> <span id="clasico-objetivo"></span></li>
+                        <li><b>Calorías Diarias:</b> <span id="clasico-calorias"></span> kcal</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="preview-areas">
+                <h3>Áreas a Trabajar</h3>
+                <div id="clasico-areas" class="preview-tags"></div>
+            </div>
+            <div class="preview-recomendaciones">
+                <h3>Recomendaciones Personalizadas</h3>
+                <ul id="clasico-recomendaciones" class="preview-reco-list"></ul>
+            </div>
+            <button class="btn-wizard btn-preview" id="btn-clasico-comenzar">Comenzar Entrenamiento</button>
+        </div>
+
+        <!-- Paso 13: Countdown Overlay -->
+        <div id="step13" class="wizard-step">
+            <div class="countdown-overlay" style="display:flex;">
+                <div class="countdown-number" id="countdown-number">3</div>
+            </div>
         </div>
     </div>
-    <button class="btn-wizard btn-preview" id="btn-comenzar-entreno"><span class="btn-icon">⚡</span>Comenzar</button>
 </div>
 
 <div id="preview-clasico" class="preview-clasico" style="display:none;">
@@ -315,7 +360,109 @@
     </div>
 </div>
 
+<style>
+/* Forzar que todos los pasos estén ocultos por defecto */
+.wizard-step {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Solo mostrar el paso que tenga la clase active */
+.wizard-step.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    pointer-events: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+/* Ocultar cualquier otro contenido que no sea un paso */
+.wizard-container > *:not(.wizard-step) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Ocultar los bloques que están fuera del wizard */
+#loading-spinner,
+#preview-resumen,
+.loading-overlay,
+.preview-resumen {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+}
+
+/* OCULTAR cualquier bloque duplicado fuera del wizard */
+#preview-resumen:not(.wizard-step.active),
+#preview-clasico:not(.wizard-step.active),
+#loading-spinner:not(.wizard-step.active),
+#countdown-overlay:not(.wizard-step.active) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+</style>
+
 <script>
+// --- NUEVA LÓGICA DE NAVEGACIÓN ENTRE PASOS ---
+function mostrarPaso(paso) {
+    document.querySelectorAll('.wizard-step').forEach((step, idx) => {
+        step.classList.remove('active');
+    });
+    var step = document.getElementById('step' + paso);
+    if (step) step.classList.add('active');
+}
+
+// Ejemplo de navegación:
+function mostrarStep2() { mostrarPaso(2); }
+function mostrarStep3() { mostrarPaso(3); }
+function mostrarStep4() { mostrarPaso(4); }
+function mostrarStep5() { mostrarPaso(5); }
+function mostrarStep6() { mostrarPaso(6); }
+function mostrarStep7() { mostrarPaso(7); }
+function mostrarStep8() { mostrarPaso(8); }
+function mostrarStep9() { mostrarPaso(9); }
+function mostrarStep10() { mostrarPaso(10); }
+function mostrarStep11() { mostrarPaso(11); }
+function mostrarStep12() { mostrarPaso(12); }
+function mostrarStep13() { mostrarPaso(13); }
+
+function volverAtras(pasoActual) {
+    mostrarPaso(pasoActual - 1);
+}
+
+// Al cargar la página, solo mostrar el primer paso
+window.addEventListener('DOMContentLoaded', function() {
+    mostrarPaso(1);
+});
+
+// --- REEMPLAZO mostrar/ocultar previews, loading, overlays ---
+// Cuando quieras mostrar un preview, loading, etc., usa mostrarPaso(n) con el número de paso correspondiente
+// Por ejemplo, para mostrar el preview resumen: mostrarPaso(11);
+// Para mostrar el loading: mostrarPaso(10);
+// Para mostrar el preview clásico: mostrarPaso(12);
+// Para mostrar el countdown: mostrarPaso(13);
+
+// Elimina cualquier uso de style.display = 'block' o 'none' para previews, loading, overlays, etc.
+
 // Paso 1: Selección de género
 function seleccionarGenero(elemento, genero) {
     var cards = document.getElementsByClassName('gender-card');
@@ -324,11 +471,6 @@ function seleccionarGenero(elemento, genero) {
     }
     elemento.classList.add('selected');
     document.getElementById('next-button').style.display = 'block';
-}
-
-function mostrarStep2() {
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
 }
 
 // Paso 2: Selección de nivel
@@ -341,11 +483,6 @@ function seleccionarNivel(elemento) {
     document.getElementById('step2-btn').disabled = false;
 }
 
-function mostrarStep3() {
-    document.getElementById('step2').style.display = 'none';
-    document.getElementById('step3').style.display = 'block';
-}
-
 // Paso 3: Selección de objetivo
 function seleccionarObjetivo(elemento) {
     var objetivos = document.getElementsByClassName('objective-card');
@@ -354,11 +491,6 @@ function seleccionarObjetivo(elemento) {
     }
     elemento.classList.add('selected');
     document.getElementById('step3-btn').disabled = false;
-}
-
-function mostrarStep4() {
-    document.getElementById('step3').style.display = 'none';
-    document.getElementById('step4').style.display = 'block';
 }
 
 // Paso 4: Selección de frecuencia
@@ -371,11 +503,6 @@ function seleccionarFrecuencia(elemento) {
     document.getElementById('step4-btn').disabled = false;
 }
 
-function mostrarStep5() {
-    document.getElementById('step4').style.display = 'none';
-    document.getElementById('step5').style.display = 'block';
-}
-
 // Actualizar valores de los sliders
 document.getElementById('peso').addEventListener('input', function() {
     document.getElementById('peso-valor').textContent = this.value;
@@ -384,36 +511,6 @@ document.getElementById('peso').addEventListener('input', function() {
 document.getElementById('altura').addEventListener('input', function() {
     document.getElementById('altura-valor').textContent = this.value;
 });
-
-function volverAtras(pasoActual) {
-    // Ocultar el paso actual
-    document.getElementById('step' + pasoActual).style.display = 'none';
-    
-    // Mostrar el paso anterior
-    document.getElementById('step' + (pasoActual - 1)).style.display = 'block';
-    
-    // Limpiar la selección del paso actual
-    switch(pasoActual) {
-        case 2:
-            document.querySelectorAll('.level-card').forEach(card => card.classList.remove('selected'));
-            document.getElementById('step2-btn').disabled = true;
-            break;
-        case 3:
-            document.querySelectorAll('.objective-card').forEach(card => card.classList.remove('selected'));
-            document.getElementById('step3-btn').disabled = true;
-            break;
-        case 4:
-            document.querySelectorAll('.frequency-card').forEach(card => card.classList.remove('selected'));
-            document.getElementById('step4-btn').disabled = true;
-            break;
-        case 5:
-            document.getElementById('peso').value = 70;
-            document.getElementById('altura').value = 170;
-            document.getElementById('peso-valor').textContent = '70';
-            document.getElementById('altura-valor').textContent = '170';
-            break;
-    }
-}
 
 function mostrarStep6() {
     document.getElementById('step5').style.display = 'none';
@@ -599,811 +696,3 @@ function mostrarPreviewApp(datos, objetivoTxt) {
         }
     ];
     let ejerciciosHtml = ejercicios.map(e => `
-        <div class="ejercicio-card">
-            <img src="${e.img}" class="ej-img" alt="${e.nombre}">
-            <div class="ej-info">
-                <div class="ej-nombre">${e.nombre}</div>
-                <div class="ej-repes">${e.repes}</div>
-            </div>
-            <div class="ej-musculo">
-                <img src="${e.musculo}" class="ej-mus-img" alt="${e.grupo}">
-                <div class="ej-mus-grupo">${e.grupo}</div>
-                <div class="ej-mus-pct">${e.porcentaje}</div>
-            </div>
-        </div>
-    `).join('');
-    document.getElementById('ejercicios-lista').innerHTML = ejerciciosHtml;
-
-    document.getElementById('preview-resumen').style.display = 'block';
-}
-
-// Guardar ejercicios global para navegación
-let ejerciciosGlobal = [];
-let ejercicioActual = 0;
-let timerInterval = null;
-
-// Al hacer clic en Comenzar (tipo app)
-document.getElementById('btn-comenzar-entreno').onclick = function() {
-    document.getElementById('preview-resumen').style.display = 'none';
-    mostrarCuentaRegresiva();
-};
-
-function mostrarCuentaRegresiva() {
-    document.getElementById('countdown-overlay').style.display = 'flex';
-    let count = 3;
-    document.getElementById('countdown-number').textContent = count;
-    let interval = setInterval(function() {
-        count--;
-        if(count > 0) {
-            document.getElementById('countdown-number').textContent = count;
-        } else {
-            clearInterval(interval);
-            document.getElementById('countdown-overlay').style.display = 'none';
-            mostrarEjercicioActivo();
-        }
-    }, 1000);
-}
-
-function mostrarEjercicioActivo() {
-    // Usar los mismos ejercicios de la previsualización app
-    ejerciciosGlobal = [
-        {
-            img: 'https://wger.de/media/exercise-images/14/Chest-press-1.png',
-            nombre: 'Press de pecho en máquina',
-            repes: '3 series x 10 repeticiones',
-            grupo: 'Pecho'
-        },
-        {
-            img: 'https://wger.de/media/exercise-images/15/Dips-1.png',
-            nombre: 'Fondos Asistidos para Pecho',
-            repes: '3 series x 10 repeticiones',
-            grupo: 'Pecho'
-        },
-        {
-            img: 'https://wger.de/media/exercise-images/17/Dumbbell-bench-press-1.png',
-            nombre: 'Press Martillo con Mancuerna',
-            repes: '3 series x 10 repeticiones',
-            grupo: 'Pecho'
-        },
-        {
-            img: 'https://wger.de/media/exercise-images/20/Triceps-pushdown-1.png',
-            nombre: 'Pushdown con Cable',
-            repes: '3 series x 10 repeticiones',
-            grupo: 'Tríceps'
-        },
-        {
-            img: 'https://wger.de/media/exercise-images/21/Skull-crusher-1.png',
-            nombre: 'Triturador de Cráneo',
-            repes: '3 series x 10 repeticiones',
-            grupo: 'Tríceps'
-        },
-        {
-            img: 'https://wger.de/media/exercise-images/22/Triceps-extension-1.png',
-            nombre: 'Extensión de tríceps en máquina',
-            repes: '3 series x 10 repeticiones',
-            grupo: 'Tríceps'
-        }
-    ];
-    ejercicioActual = 0;
-    renderEjercicioActivo();
-    document.getElementById('ejercicio-activo').style.display = 'block';
-    iniciarTimer();
-}
-
-function renderEjercicioActivo() {
-    const ej = ejerciciosGlobal[ejercicioActual];
-    document.getElementById('ej-activo-img').src = ej.img;
-    document.getElementById('ej-activo-nombre').textContent = ej.nombre;
-    document.getElementById('ej-activo-repes').textContent = ej.repes;
-    document.getElementById('ej-activo-grupo').textContent = ej.grupo;
-    document.getElementById('ej-activo-num').textContent = ejercicioActual + 1;
-    // Miniaturas
-    let miniaturas = ejerciciosGlobal.map((e, i) => `<img src="${e.img}" class="ej-miniatura${i === ejercicioActual ? ' selected' : ''}" onclick="irAEjercicio(${i})">`).join('');
-    document.getElementById('ej-activo-lista').innerHTML = miniaturas;
-    // Botón siguiente
-    document.getElementById('btn-ej-siguiente').style.display = (ejercicioActual < ejerciciosGlobal.length - 1) ? 'block' : 'none';
-}
-
-function siguienteEjercicio() {
-    if(ejercicioActual < ejerciciosGlobal.length - 1) {
-        ejercicioActual++;
-        renderEjercicioActivo();
-        reiniciarTimer();
-    }
-}
-function irAEjercicio(idx) {
-    ejercicioActual = idx;
-    renderEjercicioActivo();
-    reiniciarTimer();
-}
-function cerrarEjercicio() {
-    document.getElementById('ejercicio-activo').style.display = 'none';
-    reiniciarTimer(true);
-    // Volver a mostrar la previsualización tipo app
-    document.getElementById('preview-resumen').style.display = 'block';
-}
-function finalizarEntrenamiento() {
-    alert('¡Entrenamiento finalizado!');
-    cerrarEjercicio();
-}
-// Timer simple
-function iniciarTimer() {
-    let seg = 0;
-    timerInterval = setInterval(function() {
-        seg++;
-        let min = Math.floor(seg/60);
-        let s = seg%60;
-        document.getElementById('ej-timer').textContent = `Tiempo: ${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    }, 1000);
-}
-function reiniciarTimer(stop) {
-    clearInterval(timerInterval);
-    if(!stop) iniciarTimer();
-}
-</script>
-
-<style>
-/* Estilos Base */
-body.with-side-menu {
-    background: #1a1a2e !important;
-    font-family: 'Poppins', sans-serif !important;
-    color: #fff !important;
-}
-
-.gender-options, .level-options, .objective-options, .frequency-options {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 2rem !important;
-    margin: 2rem 0 !important;
-    flex-wrap: wrap !important;
-}
-
-.gender-card, .level-card, .objective-card, .frequency-card {
-    background: rgba(42, 42, 58, 0.7) !important;
-    backdrop-filter: blur(10px) !important;
-    border-radius: 15px !important;
-    padding: 2rem !important;
-    text-align: center !important;
-    cursor: pointer !important;
-    transition: all 0.3s !important;
-    border: 2px solid transparent !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
-    width: 250px !important;
-}
-
-.gender-card:hover, .level-card:hover, .objective-card:hover, .frequency-card:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-}
-
-.gender-card.selected, .level-card.selected, .objective-card.selected, .frequency-card.selected {
-    border-color: #00ff88 !important;
-    box-shadow: 0 0 20px #00ff88 !important;
-    transform: scale(1.05) !important;
-}
-
-.gender-image {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 50% !important;
-    margin-bottom: 1rem !important;
-    object-fit: cover !important;
-    border: 3px solid #00ff88 !important;
-    transition: all 0.3s !important;
-}
-
-.gender-card:hover .gender-image {
-    transform: scale(1.1) !important;
-    border-color: #fff !important;
-}
-
-.gender-card.selected .gender-image {
-    border-color: #00ff88 !important;
-    box-shadow: 0 0 20px #00ff88 !important;
-}
-
-.gender-label, .level-title, .objective-title, .frequency-title {
-    color: #00ff88 !important;
-    font-size: 1.2rem !important;
-    font-weight: bold !important;
-    display: block !important;
-    margin-bottom: 0.5rem !important;
-}
-
-.gender-description, .level-desc, .objective-desc, .frequency-desc {
-    color: #fff !important;
-    font-size: 0.9rem !important;
-    margin-top: 0.5rem !important;
-    opacity: 0.8 !important;
-}
-
-.icon {
-    font-size: 2.5rem !important;
-    display: block !important;
-    margin-bottom: 1rem !important;
-}
-
-.wizard-buttons {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 1rem !important;
-    margin-top: 2rem !important;
-}
-
-.btn-wizard {
-    background: #00ff88 !important;
-    color: #1a1a2e !important;
-    border: none !important;
-    padding: 1rem 2rem !important;
-    border-radius: 10px !important;
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    min-width: 150px !important;
-    cursor: pointer !important;
-    transition: all 0.3s !important;
-    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3) !important;
-}
-
-.btn-wizard:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.5) !important;
-}
-
-.btn-wizard:disabled {
-    background: #aaa !important;
-    color: #fff !important;
-    cursor: not-allowed !important;
-}
-
-.btn-back {
-    background: #2a2a3a !important;
-    color: #fff !important;
-    border: 2px solid #00ff88 !important;
-    margin-right: 1rem !important;
-}
-
-.btn-back:hover {
-    background: #3a3a4a !important;
-    transform: translateY(-3px) !important;
-    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2) !important;
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.gender-card, .level-card, .objective-card, .frequency-card {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-#next-button, #step2-btn, #step3-btn, #step4-btn {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-.measurements-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 3rem !important;
-    max-width: 600px !important;
-    margin: 2rem auto !important;
-    padding: 2rem !important;
-    background: rgba(42, 42, 58, 0.7) !important;
-    backdrop-filter: blur(10px) !important;
-    border-radius: 15px !important;
-    border: 2px solid #00ff88 !important;
-}
-
-.measurement-group {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1rem !important;
-}
-
-.measurement-group label {
-    color: #00ff88 !important;
-    font-size: 1.2rem !important;
-    font-weight: bold !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-}
-
-.measurement-slider {
-    -webkit-appearance: none !important;
-    width: 100% !important;
-    height: 8px !important;
-    border-radius: 4px !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    outline: none !important;
-    margin: 1rem 0 !important;
-}
-
-.measurement-slider::-webkit-slider-thumb {
-    -webkit-appearance: none !important;
-    appearance: none !important;
-    width: 24px !important;
-    height: 24px !important;
-    border-radius: 50% !important;
-    background: #00ff88 !important;
-    cursor: pointer !important;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
-    transition: all 0.3s !important;
-}
-
-.measurement-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2) !important;
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.7) !important;
-}
-
-.slider-marks {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 0 12px !important;
-    color: #fff !important;
-    font-size: 0.9rem !important;
-    opacity: 0.8 !important;
-}
-
-.measurement-desc {
-    color: #fff !important;
-    font-size: 0.9rem !important;
-    opacity: 0.8 !important;
-    margin-top: 0.5rem !important;
-    text-align: center !important;
-}
-
-.areas-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 2rem !important;
-    align-items: center !important;
-    margin: 2rem 0 !important;
-}
-
-.areas-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem !important;
-    width: 100% !important;
-    max-width: 600px !important;
-}
-
-.area-btn {
-    background: #00aaff !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 1rem 0.5rem 0.5rem 0.5rem !important;
-    font-size: 1.2rem !important;
-    font-weight: bold !important;
-    width: 100% !important;
-    margin-bottom: 0.5rem !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    min-height: 90px !important;
-}
-
-.area-btn.selected {
-    background: #00ff88 !important;
-    color: #1a1a2e !important;
-    box-shadow: 0 0 15px #00ff88 !important;
-}
-
-.area-btn:active {
-    transform: scale(0.98) !important;
-}
-
-.area-icon {
-    font-size: 2rem !important;
-    margin-bottom: 0.2rem !important;
-}
-
-.area-title {
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    margin-bottom: 0.1rem !important;
-}
-
-.area-desc {
-    font-size: 0.9rem !important;
-    color: #fff !important;
-    opacity: 0.8 !important;
-    text-align: center !important;
-    font-weight: normal !important;
-}
-
-.loading-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(30,30,40,0.85);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.spinner {
-    border: 8px solid #222;
-    border-top: 8px solid #00ff88;
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 2rem;
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.loading-text {
-    color: #fff;
-    font-size: 1.3rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
-.preview-resumen {
-    max-width: 900px;
-    margin: 2rem auto;
-    background: #232323;
-    border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    padding: 2.5rem 2rem;
-    color: #fff;
-    display: block;
-    animation: fadeIn 0.7s;
-}
-.preview-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-.preview-header h2 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-}
-.preview-plan-activo {
-    display: flex;
-    align-items: center;
-    background: #181828;
-    border-radius: 16px;
-    padding: 1.2rem 1.5rem;
-    margin-bottom: 1.5rem;
-    gap: 1.2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-}
-.plan-icon {
-    font-size: 2.2rem;
-    color: #00ff88;
-    margin-right: 0.7rem;
-}
-.plan-label {
-    color: #fff;
-    font-size: 1rem;
-    opacity: 0.8;
-}
-.plan-title {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-.plan-btn {
-    margin-left: auto;
-    background: #00ff88;
-    color: #181828;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 0.5rem 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.plan-btn:hover {
-    background: #00c46a;
-}
-.preview-next-block {
-    background: #23233a;
-    border-radius: 14px;
-    padding: 1.2rem 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-}
-.next-label {
-    color: #fff;
-    font-size: 1rem;
-    opacity: 0.8;
-    margin-bottom: 0.3rem;
-}
-.next-title {
-    color: #00ff88;
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-bottom: 1.2rem;
-}
-.ejercicios-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-}
-.ejercicio-card {
-    display: flex;
-    align-items: center;
-    background: #181828;
-    border-radius: 10px;
-    padding: 0.7rem 1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    gap: 1.1rem;
-}
-.ej-img {
-    width: 54px;
-    height: 54px;
-    border-radius: 8px;
-    object-fit: cover;
-    background: #fff;
-}
-.ej-info {
-    flex: 1;
-}
-.ej-nombre {
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: bold;
-}
-.ej-repes {
-    color: #b0b0b0;
-    font-size: 0.98rem;
-}
-.ej-musculo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 60px;
-}
-.ej-mus-img {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    margin-bottom: 0.2rem;
-}
-.ej-mus-grupo {
-    color: #fff;
-    font-size: 0.95rem;
-    font-weight: bold;
-}
-.ej-mus-pct {
-    color: #b48cff;
-    font-size: 0.95rem;
-    font-weight: bold;
-}
-.btn-preview {
-    background: #00c46a !important;
-    color: #fff !important;
-    font-size: 1.2rem !important;
-    font-weight: bold !important;
-    border-radius: 10px !important;
-    padding: 1rem 2.5rem !important;
-    margin: 2rem auto 0 auto;
-    display: block;
-    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2) !important;
-    transition: all 0.3s !important;
-    letter-spacing: 1px;
-}
-.btn-preview .btn-icon {
-    font-size: 1.3rem;
-    margin-right: 0.7rem;
-    vertical-align: middle;
-}
-.btn-preview:hover {
-    background: #00ff88 !important;
-    color: #232323 !important;
-    transform: translateY(-2px) scale(1.04) !important;
-}
-
-.preview-clasico {
-    max-width: 900px;
-    margin: 2rem auto;
-    background: #232323;
-    border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    padding: 2.5rem 2rem;
-    color: #fff;
-    display: block;
-    animation: fadeIn 0.7s;
-}
-.preview-flex {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-}
-.preview-card {
-    flex: 1;
-    background: #181828;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-}
-.preview-list {
-    list-style: none;
-    padding: 0;
-}
-.preview-list li {
-    margin-bottom: 0.5rem;
-}
-.preview-areas {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
-.preview-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-.preview-recomendaciones {
-    margin-bottom: 2rem;
-}
-.preview-reco-list {
-    list-style: none;
-    padding: 0;
-}
-.preview-reco-list li {
-    margin-bottom: 0.5rem;
-}
-
-.countdown-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(30,30,40,0.95);
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-.countdown-number {
-    font-size: 8rem;
-    color: #00ff88;
-    font-weight: bold;
-    animation: countdownPop 1s linear;
-}
-@keyframes countdownPop {
-    0% { transform: scale(0.7); opacity: 0.5; }
-    60% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.ejercicio-activo {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #181828;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 2rem;
-    animation: fadeIn 0.5s;
-}
-.ej-activo-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem 1rem 2rem;
-}
-.ej-cerrar, .ej-finalizar {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 2rem;
-    cursor: pointer;
-    font-weight: bold;
-    transition: color 0.2s;
-}
-.ej-finalizar {
-    font-size: 1.1rem;
-    background: #00ff88;
-    color: #181828;
-    border-radius: 8px;
-    padding: 0.5rem 1.2rem;
-    margin-left: 1rem;
-}
-.ej-finalizar:hover {
-    background: #00c46a;
-}
-.ej-timer {
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: bold;
-}
-.ej-activo-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-}
-.ej-activo-lista {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 2rem;
-    top: 6rem;
-    gap: 0.7rem;
-}
-.ej-miniatura {
-    width: 54px;
-    height: 54px;
-    border-radius: 8px;
-    object-fit: cover;
-    background: #fff;
-    border: 2px solid transparent;
-    cursor: pointer;
-    margin-bottom: 0.2rem;
-    transition: border 0.2s;
-}
-.ej-miniatura.selected {
-    border: 2px solid #00ff88;
-}
-.ej-activo-num {
-    font-size: 5rem;
-    color: #fff;
-    font-weight: bold;
-    margin: 2rem 0 1rem 0;
-}
-.ej-activo-img {
-    width: 160px;
-    height: 160px;
-    border-radius: 16px;
-    object-fit: cover;
-    background: #fff;
-    margin-bottom: 1.2rem;
-}
-.ej-activo-nombre {
-    color: #00ff88;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    text-align: center;
-}
-.ej-activo-repes {
-    color: #fff;
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
-    text-align: center;
-}
-.ej-activo-grupo {
-    color: #b48cff;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-.btn-ej-siguiente {
-    background: #00c46a !important;
-    color: #fff !important;
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    border-radius: 10px !important;
-    padding: 0.8rem 2rem !important;
-    margin: 1.5rem auto 0 auto;
-    display: block;
-    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2) !important;
-    transition: all 0.3s !important;
-    letter-spacing: 1px;
-}
-.btn-ej-siguiente:hover {
-    background: #00ff88 !important;
-    color: #181828 !important;
-    transform: translateY(-2px) scale(1.04) !important;
-}
-</style>
-@endsection

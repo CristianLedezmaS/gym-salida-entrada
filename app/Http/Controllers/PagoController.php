@@ -1,34 +1,17 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Membresia;
 
 class PagoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -37,79 +20,73 @@ class PagoController extends Controller
      */
     public function store(Request $request)
     {
+        // Validación de los datos
         $request->validate([
-            "idcliente", "precio", "pagacon", "debe"
+            "idcliente" => "required|integer", 
+            "precio" => "required|numeric", 
+            "pagacon" => "required|numeric", 
+            "debe" => "required|numeric"
         ]);
+
         $nombreUsuario = Auth::user()->nombre;
 
-        $sql = DB::insert('insert into pago (id_cliente,registrado_por,costo_total,paga_con) values (?,?,?,?)', [
-            $request->idcliente, $nombreUsuario, $request->precio, $request->pagacon
-        ]);
+        // Iniciar transacción
+        DB::beginTransaction();
 
-        $actualizarDebeCliente = DB::update("update cliente set debe='$request->debe' where id_cliente=$request->idcliente");
+        try {
+            // Insertar en la tabla de pagos
+            DB::insert('insert into pago (id_cliente, registrado_por, costo_total, paga_con) values (?, ?, ?, ?)', [
+                $request->idcliente, 
+                $nombreUsuario, 
+                $request->precio, 
+                $request->pagacon
+            ]);
 
-        //ahora verificamos si el monto de acuenta es > 0, entoces registramos en la tabla abonos
-            try {
-                $id_registro_abono = DB::table('abono')->insertGetId([
+            // Actualizar el saldo 'debe' del cliente
+            DB::update("update cliente set debe = ? where id_cliente = ?", [
+                $request->debe, 
+                $request->idcliente
+            ]);
+
+            // Registrar abono si el monto pagado es mayor a 0
+            if ($request->pagacon > 0) {
+                DB::table('abono')->insert([
                     'monto' => $request->pagacon,
                     'cliente' => $request->idcliente,
                     'fecha' => Carbon::now(),
                     'recepcionista' => $nombreUsuario,
-                    'derecho_pago' => "Matricula"
+                    'derecho_pago' => 'Matricula'
                 ]);
-            } catch (\Throwable $th) {
-                //throw $th;
             }
 
-        if ($sql == 1) {
+            // Confirmar la transacción
+            DB::commit();
+
+            // Retornar éxito
             return back()->with("CORRECTO", "El pago se realizó con éxito");
-        } else {
-            return back()->with("INCORRECTO", "Error al realizar pago");
+        } catch (\Exception $e) {
+            // Si ocurre un error, revertir la transacción
+            DB::rollBack();
+            return back()->with("INCORRECTO", "Error al realizar el pago: " . $e->getMessage());
         }
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Mostrar los pagos
      */
-    public function show($id)
+    public function mostrarPago()
     {
-        //
-    }
+        // Recuperar los clientes activos junto con las membresías
+        $clientesActivos = DB::table('clientes')
+            ->join('membresias', 'clientes.membresia_id', '=', 'membresias.id')
+            ->where('clientes.activo', 1)  // Filtrar solo clientes activos
+            ->select('clientes.nombre', 'clientes.telefono', 'membresias.nombre as membresia_nombre')
+            ->get();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        // Verificar que los datos están siendo recuperados correctamente
+        dd($clientesActivos); // Esto mostrará los datos recuperados en pantalla
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // Si los datos son correctos, pasa los datos a la vista
+        return view('vistas.cliente.pago', compact('clientesActivos'));
     }
 }
