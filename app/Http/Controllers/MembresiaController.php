@@ -90,6 +90,13 @@ class MembresiaController extends Controller
 
     public function destroy($id)
     {
+        // Verificar si hay clientes usando esta membresía
+        $clientesUsandoMembresia = DB::select("SELECT COUNT(*) as total FROM cliente WHERE id_membresia = ?", [$id]);
+        
+        if ($clientesUsandoMembresia[0]->total > 0) {
+            return back()->with("AVISO", "No se puede eliminar esta membresía porque hay " . $clientesUsandoMembresia[0]->total . " cliente(s) registrado(s) con esta membresía. Primero debes cambiar la membresía de estos clientes.");
+        }
+
         try {
             $sql = DB::delete("DELETE FROM membresia WHERE id_membresia=?", [$id]);
         } catch (\Throwable $th) {

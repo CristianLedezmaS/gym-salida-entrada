@@ -56,7 +56,7 @@
                                     <form action="{{ route('membresia.destroy', $item2->id_membresia) }}" method="post" style="display:inline;">
                                         @method('delete')
                                         @csrf
-                                        <button type="submit" onclick="return confirmarEliminacion('{{ $item2->nombre }}', '{{ $item2->categoria }}')" title="Eliminar" style="padding: 6px 10px; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%); color: white; border-radius: 6px; font-size: 15px; border: none; display: flex; align-items: center; transition: background 0.2s;">
+                                        <button type="submit" onclick="return confirmarEliminacion(event, '{{ $item2->nombre }}', '{{ $item2->categoria }}')" title="Eliminar" style="padding: 6px 10px; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%); color: white; border-radius: 6px; font-size: 15px; border: none; display: flex; align-items: center; transition: background 0.2s;">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
@@ -209,7 +209,7 @@
             }
         });
 
-        function confirmarEliminacion(nombre, categoria) {
+        function confirmarEliminacion(event, nombre, categoria) {
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: `Esta acción eliminará la membresía "${nombre}" de la categoría "${categoria}". Esta acción no se puede deshacer.`,
@@ -229,11 +229,11 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    return true; // Confirmar eliminación
-                } else {
-                    return false; // Cancelar eliminación
+                    event.target.closest('form').submit();
                 }
             });
+            
+            return false; // Prevenir el envío del formulario por defecto
         }
     </script>
 </div>
