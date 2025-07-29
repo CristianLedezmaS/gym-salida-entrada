@@ -2,76 +2,76 @@
 
 @section('content')
 <div style="background: linear-gradient(135deg, #232046 0%, #2d225a 100%); min-height: 100vh; padding: 2rem; margin: 0; border: none;">
-    <div style="text-align: center; margin-bottom: 2.5rem;">
-        <h2 style="font-size: 2.2rem; font-weight: bold; color: #F3F4F6; margin-bottom: 1rem; letter-spacing: 1px;">GESTIÓN DE MEMBRESÍAS</h2>
-        <div style="width: 90px; height: 4px; background: linear-gradient(90deg, #FFD700 0%, #F3F4F6 100%); margin: 0 auto; border-radius: 2px;"></div>
-    </div>
 
-    <div style="max-width: 1100px; margin: 0 auto; padding: 0 1rem;">
+    <div style="background: rgba(40,36,70,0.85); backdrop-filter: blur(8px); border-radius: 16px; padding: 2rem 1.5rem; border: 1px solid #FFD70033; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10); color: #F3F4F6;">
+        
+        <h2 style="font-size: 2.5rem; font-weight: bold; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem; text-align: center;">GESTIÓN DE MEMBRESÍAS</h2>
+        
+        <div style="height: 2px; background: linear-gradient(90deg, #FFD700, #FFA500); margin-bottom: 2rem;"></div>
+
         <div style="margin-bottom: 1.5rem; text-align: right;">
-            <button onclick="openMembresiaModal()" style="display: inline-block; padding: 10px 22px; background: linear-gradient(90deg, #FFD700 0%, #F3F4F6 100%); color: #232046; font-weight: 600; border-radius: 10px; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10); text-decoration: none; transition: all 0.2s; letter-spacing: 1px; border: none; cursor: pointer;"
-               onmouseover="this.style.background='linear-gradient(90deg, #F3F4F6 0%, #FFD700 100%)'; this.style.color='#2d225a';"
-               onmouseout="this.style.background='linear-gradient(90deg, #FFD700 0%, #F3F4F6 100%)'; this.style.color='#232046';">
-                <i class="fas fa-plus" style="margin-right: 8px;"></i>Registrar Membresía
+            <button onclick="openMembresiaModal()" 
+               style="background: linear-gradient(135deg, #FFD700, #FFA500); color: white; font-weight: 600; padding: 12px 24px; border-radius: 8px; border: none; display: inline-flex; align-items: center; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <svg style="width: 20px; height: 20px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 019.374 21c-2.331 0-4.512-.645-6.374-1.766z"></path>
+                </svg>
+                Registrar Membresía
             </button>
         </div>
-        <div style="background: rgba(40,36,70,0.85); backdrop-filter: blur(8px); border-radius: 16px; padding: 2rem 1.5rem; border: 1px solid #FFD70033; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10); color: #F3F4F6;">
-            @if (session('CORRECTO'))
-                <div style="margin-bottom: 1rem; color: #10B981; font-weight: 600;">{{ session('CORRECTO') }}</div>
-            @endif
-            @if (session('INCORRECTO'))
-                <div style="margin-bottom: 1rem; color: #EF4444; font-weight: 600;">{{ session('INCORRECTO') }}</div>
-            @endif
-            @if (session('AVISO'))
-                <div style="margin-bottom: 1rem; color: #F59E0B; font-weight: 600;">{{ session('AVISO') }}</div>
-            @endif
 
-            <div style="overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse; background: transparent; color: #F3F4F6;">
-                    <thead>
-                        <tr style="background: linear-gradient(90deg, #232046 60%, #FFD700 100%); color: #FFD700;">
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">ID</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">Categoría</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">Nombre</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">Meses</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">Modo</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">Precio</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid #FFD70033;">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($datos as $item2)
-                        <tr style="border-bottom: 1px solid #FFD70022; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,215,0,0.07)';" onmouseout="this.style.background='transparent';">
-                            <td style="padding: 10px 8px;">{{ $item2->id_membresia }}</td>
-                            <td style="padding: 10px 8px;">{{ $item2->categoria }}</td>
-                            <td style="padding: 10px 8px; font-weight: 500;">{{ $item2->nombre }}</td>
-                            <td style="padding: 10px 8px;">{{ $item2->meses }}</td>
-                            <td style="padding: 10px 8px;">{{ $item2->modo }}</td>
-                            <td style="padding: 10px 8px; color: #FFD700; font-weight: 600;">S/. {{ $item2->precio }}</td>
-                            <td style="padding: 10px 8px;">
-                                <div style="display: flex; gap: 8px;">
-                                    <button onclick="openEditMembresiaModal({{ $item2->id_membresia }}, '{{ $item2->categoria }}', '{{ $item2->nombre }}', {{ $item2->meses }}, '{{ $item2->modo }}', '{{ $item2->precio }}')" title="Editar" style="padding: 6px 10px; background: linear-gradient(90deg, #6366F1 0%, #818CF8 100%); color: white; border-radius: 6px; font-size: 15px; display: flex; align-items: center; border: none; transition: background 0.2s; cursor: pointer;">
-                                        <i class="fas fa-edit"></i>
+        <div style="background: rgba(40,36,70,0.85); backdrop-filter: blur(8px); border-radius: 16px; overflow: hidden; border: 1px solid #FFD70033; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);">
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 100%;">
+                <thead style="background: linear-gradient(135deg, #4B0082, #800080); color: white;">
+                    <tr>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">ID</th>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">Categoría</th>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">Nombre</th>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">Meses</th>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">Modo</th>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">Precio</th>
+                        <th style="padding: 12px 8px; text-align: left; font-size: 14px; font-weight: 600; border-bottom: 2px solid rgba(255,215,0,0.3);">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($datos as $item2)
+                    <tr style="border-bottom: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,215,0,0.1)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 12px 8px; font-size: 14px; color: #F3F4F6; border-right: 1px solid rgba(255,215,0,0.2);">{{ $item2->id_membresia }}</td>
+                        <td style="padding: 12px 8px; font-size: 14px; color: #F3F4F6; border-right: 1px solid rgba(255,215,0,0.2);">{{ $item2->categoria }}</td>
+                        <td style="padding: 12px 8px; font-size: 14px; font-weight: 500; color: #F3F4F6; border-right: 1px solid rgba(255,215,0,0.2);">{{ $item2->nombre }}</td>
+                        <td style="padding: 12px 8px; font-size: 14px; color: #F3F4F6; border-right: 1px solid rgba(255,215,0,0.2);">{{ $item2->meses }}</td>
+                        <td style="padding: 12px 8px; font-size: 14px; color: #F3F4F6; border-right: 1px solid rgba(255,215,0,0.2);">{{ $item2->modo }}</td>
+                        <td style="padding: 12px 8px; font-size: 14px; color: #FFD700; font-weight: 600; border-right: 1px solid rgba(255,215,0,0.2);">S/. {{ $item2->precio }}</td>
+                        <td style="padding: 12px 8px; font-size: 14px;">
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <button onclick="openEditMembresiaModal({{ $item2->id_membresia }}, '{{ $item2->categoria }}', '{{ $item2->nombre }}', {{ $item2->meses }}, '{{ $item2->modo }}', '{{ $item2->precio }}')" 
+                                        style="padding: 8px; background: linear-gradient(135deg, #F97316, #EA580C); color: white; border-radius: 8px; border: none; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Editar">
+                                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+                                    </svg>
+                                </button>
+                                <form action="{{ route('membresia.destroy', $item2->id_membresia) }}" method="post" style="display:inline;">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" onclick="return confirmarEliminacion(event, '{{ $item2->nombre }}', '{{ $item2->categoria }}')" 
+                                            style="padding: 8px; background: linear-gradient(135deg, #EF4444, #DC2626); color: white; border-radius: 8px; border: none; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Eliminar">
+                                        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                                        </svg>
                                     </button>
-                                    <form action="{{ route('membresia.destroy', $item2->id_membresia) }}" method="post" style="display:inline;">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" onclick="return confirmarEliminacion(event, '{{ $item2->nombre }}', '{{ $item2->categoria }}')" title="Eliminar" style="padding: 6px 10px; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%); color: white; border-radius: 6px; font-size: 15px; border: none; display: flex; align-items: center; transition: background 0.2s;">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div style="margin-top: 1.5rem;">
-                {{ $datos->links() }}
-            </div>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top: 1.5rem;">
+            {{ $datos->links() }}
         </div>
     </div>
+</div>
 
     <!-- Modal de Registro de Membresía -->
     <div id="modalMembresia" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(30,23,54,0.85); align-items:center; justify-content:center;">
