@@ -332,51 +332,93 @@ class ClienteController extends Controller
 }
     public function edit($id)
     {
+        try {
+            // Verificar si el cliente existe
+            $cliente = DB::select("select * from cliente where id_cliente=?", [$id]);
+            
+            if (empty($cliente)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cliente no encontrado'
+                ], 404);
+            }
 
-        $verificarAsistencia = DB::select(" select count(*) as 'total' from asistencia where id_cliente=$id ");
+            $verificarAsistencia = DB::select("select count(*) as 'total' from asistencia where id_cliente=?", [$id]);
 
-        $sql = DB::select("select *,date(desde)as 'Ndesde',date(hasta) as'Nhasta' from cliente where id_cliente=?", [
-            $id
-        ]);
+            if ($verificarAsistencia[0]->total >= 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El cliente ya tiene registrada su asistencia, por lo que ya no puedes modificar datos de la membresía'
+                ], 400);
+            }
 
-        $membresia = DB::select("select * from membresia");
+            return response()->json([
+                'success' => true,
+                'cliente' => $cliente[0]
+            ]);
 
-        if ($verificarAsistencia[0]->total >= 1) {
-            return back()->with("INCORRECTO", "El cliente ya tiene registrada su asistencia, por lo que ya no puedes modificar datos de la membresia");
-            /*return view('vistas/cliente/actualizar', compact('sql'))->with("membresia", $membresia)
-                ->with("observacion", "El cliente ya tiene registrada su asistencia, por lo que ya no puedes modificar sus datos");*/
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar los datos del cliente: ' . $e->getMessage()
+            ], 500);
         }
-        return view('vistas/cliente/actualizar', compact('sql'))->with("membresia", $membresia)
-            ->with("observacion", "");
     }
 
     public function update(Request $request, $id)
     {
-
-        $request->validate([
-            "membresia" => "required",
-            "desde" => "required",
-            "hasta" => "required",
-            "dias" => "required",
-            "precio" => "required",
+        \Log::info('Iniciando actualización de cliente', [
+            'id' => $id,
+            'request_data' => $request->all()
         ]);
-
+        
         try {
-            $sql = DB::update("update cliente set id_membresia=?,desde=?, hasta=?, DT=?,DA=?,DR=?,debe=?  where id_cliente=?", [
-                $request->membresia, $request->desde, $request->hasta, $request->dias, "0", $request->dias, $request->precio,
+            // Validación básica
+            $request->validate([
+                "dni" => "required",
+                "usuario" => "required",
+                "nombre" => "required",
+                "correo" => "required|email",
+            ]);
+
+            // Actualización simple
+            $result = DB::update("UPDATE cliente SET usuario = ?, dni = ?, nombre = ?, correo = ?, telefono = ?, direccion = ? WHERE id_cliente = ?", [
+                $request->usuario,
+                $request->dni,
+                $request->nombre,
+                $request->correo,
+                $request->telefono ?: '',
+                $request->direccion ?: '',
                 $id
             ]);
-            if ($sql == 0) {
-                $sql = 1;
-            }
-        } catch (\Throwable $th) {
-            $sql = 0;
-        }
 
-        if ($sql == 1) {
-            return back()->with("CORRECTO", "Cliente actualizado correctamente");
-        } else {
-            return back()->with("INCORRECTO", "Error al actualizar");
+            \Log::info('Resultado de actualización', [
+                'result' => $result
+            ]);
+
+            if ($result >= 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Cliente actualizado correctamente'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al actualizar el cliente'
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('Error al actualizar cliente', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el cliente: ' . $e->getMessage()
+            ], 500);
         }
     }
 

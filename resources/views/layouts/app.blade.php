@@ -2,48 +2,48 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
-    <meta content="ie=edge" http-equiv="x-ua-compatible">
-    <title>Sistema GYM</title>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+        <meta content="ie=edge" http-equiv="x-ua-compatible">
+        <title>Sistema GYM</title>
 
-    {{-- token --}}
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+        {{-- token --}}
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
+        <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
     
     {{-- TailwindCSS --}}
     <link href="{{ asset('css/app.css') }}?v={{ time() }}" rel="stylesheet">
 
     {{-- Font Awesome --}}
-    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
 
     {{-- DataTables --}}
-    <link rel="stylesheet" href="{{ asset('app/publico/css/lib/datatables-net/datatables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('app/publico/css/separate/vendor/datatables-net.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('app/publico/css/lib/datatables-net/datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('app/publico/css/separate/vendor/datatables-net.min.css') }}">
 
     {{-- PNotify --}}
-    <link href="{{ asset('pnotify/css/pnotify.css') }}" rel="stylesheet" />
-    <link href="{{ asset('pnotify/css/pnotify.buttons.css') }}" rel="stylesheet" />
-    <link href="{{ asset('pnotify/css/custom.min.css') }}" rel="stylesheet" />
+        <link href="{{ asset('pnotify/css/pnotify.css') }}" rel="stylesheet" />
+        <link href="{{ asset('pnotify/css/pnotify.buttons.css') }}" rel="stylesheet" />
+        <link href="{{ asset('pnotify/css/custom.min.css') }}" rel="stylesheet" />
 
     {{-- Google Fonts --}}
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
     {{-- jQuery (solo una versión) --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     {{-- PNotify Scripts --}}
-    <script src="{{ asset('pnotify/js/pnotify.js') }}"></script>
-    <script src="{{ asset('pnotify/js/pnotify.buttons.js') }}"></script>
+        <script src="{{ asset('pnotify/js/pnotify.js') }}"></script>
+        <script src="{{ asset('pnotify/js/pnotify.buttons.js') }}"></script>
 
     {{-- Alpine.js --}}
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
     {{-- Chart.js --}}
-    <script src="{{ asset('chart/chart.js') }}"></script>
+        <script src="{{ asset('chart/chart.js') }}"></script>
 
     {{-- FullCalendar --}}
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
@@ -128,7 +128,7 @@
 
                 <!-- Navigation Menu -->
                 <ul style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    @if (Auth::check() && Auth::user()->tipo_usuario == 'cliente')
+                @if (Auth::check() && Auth::user()->tipo_usuario == 'cliente')
                         <!-- Cliente Menu -->
                         <li>
                             <a href="{{ route('homeCliente') }}" 
@@ -137,8 +137,8 @@
                                onmouseout="this.style.background='{{ Request::is('homeCliente*') ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'transparent' }}'; this.style.color='{{ Request::is('homeCliente*') ? 'white' : '#E9D5FF' }}';">
                                 <img src="{{ asset('img-inicio/house.png') }}" style="width: 20px; height: 20px; margin-right: 12px;" alt="">
                                 <span style="font-weight: 500;">INICIO</span>
-                            </a>
-                        </li>
+                        </a>
+                    </li>
                         <li>
                             <a href="{{ route('ver.asistencia') }}" 
                                style="display: flex; align-items: center; padding: 12px 16px; color: #E9D5FF; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; {{ Request::is('verAsistencia*') ? 'background: linear-gradient(135deg, #FFD700, #FFA500); color: white; box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);' : '' }}"
@@ -146,9 +146,9 @@
                                onmouseout="this.style.background='{{ Request::is('verAsistencia*') ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'transparent' }}'; this.style.color='{{ Request::is('verAsistencia*') ? 'white' : '#E9D5FF' }}';">
                                 <img src="{{ asset('img-inicio/programar.png') }}" style="width: 20px; height: 20px; margin-right: 12px;" alt="">
                                 <span style="font-weight: 500;">MI ASISTENCIA</span>
-                            </a>
-                        </li>
-                    @else
+                        </a>
+                    </li>
+                @else
                         <!-- Admin/Vendedor Menu -->
                         <li>
                             <a href="{{ route('home') }}" 
@@ -157,10 +157,10 @@
                                onmouseout="this.style.background='{{ Request::is('home*') ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'transparent' }}'; this.style.color='{{ Request::is('home*') ? 'white' : '#E9D5FF' }}';">
                                 <img src="{{ asset('img-inicio/house.png') }}" style="width: 20px; height: 20px; margin-right: 12px;" alt="">
                                 <span style="font-weight: 500;">INICIO</span>
-                            </a>
-                        </li>
+                        </a>
+                    </li>
 
-                        @if (Auth::check() && Auth::user()->tipo_usuario != 'cliente')
+                    @if (Auth::check() && Auth::user()->tipo_usuario != 'cliente')
                             <!-- Membresías -->
                             <li x-data="{ open: {{ Request::is('membresia*') ? 'true' : 'false' }} }">
                                 <button @click="open = !open" 
@@ -174,17 +174,17 @@
                                     <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }" style="transition: transform 0.3s ease;"></i>
                                 </button>
                                 <ul x-show="open" x-transition style="margin-left: 1rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                                    <li>
-                                        <a href="{{ route('membresia.index') }}" 
+                                <li>
+                                    <a href="{{ route('membresia.index') }}"
                                            style="display: flex; align-items: center; padding: 8px 16px; font-size: 0.875rem; color: #C4B5FD; text-decoration: none; transition: color 0.3s ease; {{ Request::is('membresia') ? 'color: #FCD34D;' : '' }}"
                                            onmouseover="this.style.color='#FCD34D';" 
                                            onmouseout="this.style.color='{{ Request::is('membresia') ? '#FCD34D' : '#C4B5FD' }}';">
                                             <i class="fas fa-th-list" style="margin-right: 12px;"></i>
                                             <span>Lista de membresias</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                             <!-- Clientes -->
                             <li x-data="{ open: {{ Request::is('cliente*') ? 'true' : 'false' }} }">
@@ -199,17 +199,17 @@
                                     <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }" style="transition: transform 0.3s ease;"></i>
                                 </button>
                                 <ul x-show="open" x-transition style="margin-left: 1rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                                    <li>
-                                        <a href="{{ route('cliente.index') }}" 
+                                <li>
+                                    <a href="{{ route('cliente.index') }}"
                                            style="display: flex; align-items: center; padding: 8px 16px; font-size: 0.875rem; color: #C4B5FD; text-decoration: none; transition: color 0.3s ease; {{ Request::is('cliente') ? 'color: #FCD34D;' : '' }}"
                                            onmouseover="this.style.color='#FCD34D';" 
                                            onmouseout="this.style.color='{{ Request::is('cliente') ? '#FCD34D' : '#C4B5FD' }}';">
                                             <i class="fas fa-th-list" style="margin-right: 12px;"></i>
                                             <span>Lista de clientes</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                             <!-- Asistencia -->
                             <li x-data="{ open: {{ Request::is('asistencia*') ? 'true' : 'false' }} }">
@@ -224,17 +224,17 @@
                                     <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }" style="transition: transform 0.3s ease;"></i>
                                 </button>
                                 <ul x-show="open" x-transition style="margin-left: 1rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                                    <li>
-                                        <a href="{{ route('asistencia.index') }}" 
+                                <li>
+                                    <a href="{{ route('asistencia.index') }}"
                                            style="display: flex; align-items: center; padding: 8px 16px; font-size: 0.875rem; color: #C4B5FD; text-decoration: none; transition: color 0.3s ease; {{ Request::is('asistencia') ? 'color: #FCD34D;' : '' }}"
                                            onmouseover="this.style.color='#FCD34D';" 
                                            onmouseout="this.style.color='{{ Request::is('asistencia') ? '#FCD34D' : '#C4B5FD' }}';">
                                             <i class="fas fa-th-list" style="margin-right: 12px;"></i>
                                             <span>Lista de asistencias</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                             <!-- Rutinas -->
                             <li>
@@ -244,10 +244,10 @@
                                    onmouseout="this.style.background='{{ Request::is('rutinas.rutinas*') ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'transparent' }}'; this.style.color='{{ Request::is('rutinas.rutinas*') ? 'white' : '#E9D5FF' }}';">
                                     <img src="{{ asset('img-inicio/programar.png') }}" style="width: 20px; height: 20px; margin-right: 12px;" alt="">
                                     <span style="font-weight: 500;">RUTINAS</span>
-                                </a>
-                            </li>
+                            </a>
+                        </li>
 
-                            @if (Auth::user()->tipo_usuario == 'administrador')
+                        @if (Auth::user()->tipo_usuario == 'administrador')
                                 <!-- Usuarios -->
                                 <li x-data="{ open: {{ Request::is('usuario*') ? 'true' : 'false' }} }">
                                     <button @click="open = !open" 
@@ -261,38 +261,38 @@
                                         <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }" style="transition: transform 0.3s ease;"></i>
                                     </button>
                                     <ul x-show="open" x-transition style="margin-left: 1rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                                        <li>
-                                            <a href="{{ route('usuario.create') }}" 
+                                    <li>
+                                        <a href="{{ route('usuario.create') }}"
                                                style="display: flex; align-items: center; padding: 8px 16px; font-size: 0.875rem; color: #C4B5FD; text-decoration: none; transition: color 0.3s ease; {{ Request::is('usuario/create*') ? 'color: #FCD34D;' : '' }}"
                                                onmouseover="this.style.color='#FCD34D';" 
                                                onmouseout="this.style.color='{{ Request::is('usuario/create*') ? '#FCD34D' : '#C4B5FD' }}';">
                                                 <i class="fas fa-plus-square" style="margin-right: 12px;"></i>
                                                 <span>Registrar usuarios</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('usuario.index') }}" 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('usuario.index') }}"
                                                style="display: flex; align-items: center; padding: 8px 16px; font-size: 0.875rem; color: #C4B5FD; text-decoration: none; transition: color 0.3s ease; {{ Request::is('usuario') ? 'color: #FCD34D;' : '' }}"
                                                onmouseover="this.style.color='#FCD34D';" 
                                                onmouseout="this.style.color='{{ Request::is('usuario') ? '#FCD34D' : '#C4B5FD' }}';">
                                                 <i class="fas fa-th-list" style="margin-right: 12px;"></i>
                                                 <span>Lista de usuarios</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
 
                                 <!-- Acerca de -->
                                 <li>
-                                    <a href="{{ route('empresa.datos') }}" 
+                                <a href="{{ route('empresa.datos') }}"
                                        style="display: flex; align-items: center; padding: 12px 16px; color: #E9D5FF; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; {{ Request::is('empresa*') ? 'background: linear-gradient(135deg, #FFD700, #FFA500); color: white; box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);' : '' }}"
                                        onmouseover="this.style.background='#7C3AED'; this.style.color='#FCD34D';" 
                                        onmouseout="this.style.background='{{ Request::is('empresa*') ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'transparent' }}'; this.style.color='{{ Request::is('empresa*') ? 'white' : '#E9D5FF' }}';">
                                         <img src="{{ asset('img-inicio/info.png') }}" style="width: 20px; height: 20px; margin-right: 12px;" alt="">
                                         <span style="font-weight: 500;">ACERCA DE</span>
-                                    </a>
-                                </li>
-                            @endif
+                                </a>
+                            </li>
+                        @endif
 
                             <!-- QR Section -->
                             <div style="margin-top: 2rem; padding: 1rem; background: #4C1D95; border-radius: 8px; border: 1px solid #7C3AED;">
@@ -303,10 +303,10 @@
                                    onmouseout="this.style.background='linear-gradient(135deg, #FFD700, #FFA500)'; this.style.transform='translateY(0)';">
                                     Descargar QR
                                 </a>
-                            </div>
-                        @endif
+                        </div>            
                     @endif
-                </ul>
+                @endif
+            </ul>
             </div>
         </nav>
 
@@ -394,7 +394,7 @@
             <!-- Page Content -->
             <main style="flex: 1; overflow: auto; margin: 0; padding: 0; border: none;">
                 <div style="padding: 0; margin: 0; border: none;">
-                    @yield('content')
+            @yield('content')
                 </div>
             </main>
         </div>
@@ -412,18 +412,18 @@
             });
 
             if (buttonAdd) {
-                buttonAdd.addEventListener('click', (e) => {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice
-                        .then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
+            buttonAdd.addEventListener('click', (e) => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice
+                    .then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
                                 console.log('Aceptó su instalación');
-                            } else {
+                        } else {
                                 console.log('Rechazó su instalación');
-                            }
-                            deferredPrompt = null;
-                        });
-                });
+                        }
+                        deferredPrompt = null;
+                    });
+            });
             }
         }
     </script>
@@ -621,7 +621,7 @@
                 var chartElement = document.getElementById('chart_div');
                 if (chartElement) {
                     var chart = new google.visualization.AreaChart(chartElement);
-                    chart.draw(dataTable, options);
+                chart.draw(dataTable, options);
                 }
             }
             $(window).resize(function() {
@@ -638,10 +638,10 @@
     <script src="{{ asset('app/publico/js/lib/jquery-flex-label/jquery.flex.label.js') }}"></script>
     <script type="application/javascript">
         (function ($) {
-            $(document).ready(function () {
-                $('.fl-flex-label').flexLabel();
-            });
-        })(jQuery);
+        $(document).ready(function () {
+            $('.fl-flex-label').flexLabel();
+        });
+    })(jQuery);
     </script>
 
     <!-- Mobile Sidebar Toggle -->

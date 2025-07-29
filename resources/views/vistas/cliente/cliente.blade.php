@@ -311,12 +311,12 @@
                                             </svg>
                                         </button>
                                     @endif
-                                    <a href="{{ route('cliente.edit', $item->id_cliente) }}"
-                                       style="padding: 8px; background: linear-gradient(135deg, #F97316, #EA580C); color: white; border-radius: 8px; text-decoration: none; display: inline-block; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Editar">
+                                    <button onclick="openEditarModal({{ $item->id_cliente }})"
+                                       style="padding: 8px; background: linear-gradient(135deg, #F97316, #EA580C); color: white; border-radius: 8px; border: none; display: inline-block; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Editar">
                                         <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
                                         </svg>
-                                    </a>
+                                    </button>
                                     <a href="#" style="padding: 8px; background: linear-gradient(135deg, #EF4444, #DC2626); color: white; border-radius: 8px; text-decoration: none; display: inline-block; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" class="eliminar"
                                        data-id="{{ $item->id_cliente }}" title="Eliminar">
                                         <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -410,6 +410,59 @@
                 <button type="submit" style="padding:8px 18px; background:linear-gradient(135deg,#0EA5E9,#0284C7); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Renovar</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Modal de Editar Cliente -->
+<div id="editarModal" class="hidden" style="position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(30,23,54,0.85); display:flex; align-items:center; justify-content:center;">
+    <div style="background:rgba(40,36,70,0.97); border-radius:18px; max-width:1000px; width:95%; max-height:90vh; padding:2rem 1.5rem; box-shadow:0 8px 32px 0 rgba(0,0,0,0.25); border:2px solid #FFD70033; position:relative; overflow-y:auto;">
+        <button onclick="closeEditarModal()" style="position:absolute; top:18px; right:18px; background:rgba(255,255,255,0.12); border:none; border-radius:50%; width:32px; height:32px; color:#FFD700; font-size:20px; cursor:pointer;">&times;</button>
+        
+        <h2 style="color:#FFD700; text-align:center; margin-bottom:2rem; font-size:1.5rem; font-weight:bold;">Editar Cliente</h2>
+        
+        <div style="background:rgba(255,255,255,0.05); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
+            <form id="editarClienteForm" action="" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="id_cliente" id="editarIdCliente">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label for="editarDni" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">DNI *</label>
+                        <input type="text" name="dni" id="editarDni" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
+                    </div>
+                    <div>
+                        <label for="editarUsuario" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Usuario *</label>
+                        <input type="text" name="usuario" id="editarUsuario" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="editarNombre" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Nombre Completo *</label>
+                        <input type="text" name="nombre" id="editarNombre" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
+                    </div>
+                    <div>
+                        <label for="editarTelefono" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Teléfono</label>
+                        <input type="text" name="telefono" id="editarTelefono" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;">
+                    </div>
+                    <div>
+                        <label for="editarDireccion" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Dirección</label>
+                        <input type="text" name="direccion" id="editarDireccion" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;">
+                    </div>
+                    <div>
+                        <label for="editarCorreo" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Correo Electrónico *</label>
+                        <input type="email" name="correo" id="editarCorreo" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
+                    </div>
+                    <div>
+                        <label for="editarPassword" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Contraseña (dejar vacío para no cambiar)</label>
+                        <input type="password" name="password" id="editarPassword" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;">
+                    </div>
+                </div>
+                
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:1.5rem;">
+                    <button type="button" onclick="closeEditarModal()" style="background:rgba(255,255,255,0.1); color:#F3F4F6; padding:0.75rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">Cancelar</button>
+                    <button type="submit" style="background:linear-gradient(135deg,#10B981,#059669); color:white; padding:0.75rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">Actualizar Cliente</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -634,18 +687,12 @@
 </div>
 
 <!-- Modal de Registro de Cliente -->
-<div id="registrarClienteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+<div id="registrarClienteModal" class="hidden" style="position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(30,23,54,0.85); display:flex; align-items:center; justify-content:center;">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
-            <!-- Header del Modal -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                <h3 class="text-xl font-bold text-gray-800">Registrar Nuevo Cliente</h3>
-                <button onclick="closeRegistrarClienteModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
+        <div style="background:rgba(40,36,70,0.97); border-radius:18px; max-width:1000px; width:95%; max-height:90vh; padding:2rem 1.5rem; box-shadow:0 8px 32px 0 rgba(0,0,0,0.25); border:2px solid #FFD70033; position:relative; overflow-y:auto;">
+                    <button onclick="closeRegistrarClienteModal()" style="position:absolute; top:18px; right:18px; background:rgba(255,255,255,0.12); border:none; border-radius:50%; width:32px; height:32px; color:#FFD700; font-size:20px; cursor:pointer;">&times;</button>
+        
+        <h2 style="color:#FFD700; text-align:center; margin-bottom:2rem; font-size:1.5rem; font-weight:bold;">Registrar Nuevo Cliente</h2>
 
             <!-- Indicador de Progreso -->
             <div class="px-6 py-4 border-b border-gray-200">
@@ -676,7 +723,7 @@
             </div>
 
             <!-- Contenido del Modal -->
-            <div class="p-6">
+            <div style="background:rgba(255,255,255,0.05); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
                 <form id="registrarClienteForm" action="{{ route('cliente.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
@@ -685,8 +732,8 @@
                         <h4 class="text-lg font-semibold text-gray-800 mb-4">Paso 1: Datos de Membresía</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="md:col-span-2">
-                                <label for="membresia" class="block text-sm font-medium text-gray-700 mb-2">Membresía *</label>
-                                <select name="membresia" id="membresia" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="membresia" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Membresía *</label>
+                                <select name="membresia" id="membresia" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                                     <option value="">Seleccione una membresía</option>
                                     @foreach($membresia as $mem)
                                         <option value="{{ $mem->id_membresia }}">{{ $mem->nombre }}</option>
@@ -694,14 +741,14 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="desde" class="block text-sm font-medium text-gray-700 mb-2">Desde *</label>
-                                <input type="date" name="desde" id="desde" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="desde" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Desde *</label>
+                                <input type="date" name="desde" id="desde" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div>
-                                <label for="hasta" class="block text-sm font-medium text-gray-700 mb-2">Hasta *</label>
+                                <label for="hasta" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Hasta *</label>
                                 <div class="flex space-x-2">
-                                    <input type="date" name="hasta" id="hasta" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required readonly>
-                                    <button type="button" onclick="calcularFechaHasta()" class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors" title="Calcular automáticamente">
+                                    <input type="date" name="hasta" id="hasta" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required readonly>
+                                                                          <button type="button" onclick="calcularFechaHasta()" style="background:linear-gradient(135deg,#0EA5E9,#0284C7); color:white; padding:0.5rem; border:none; border-radius:8px; cursor:pointer; transition:all 0.3s ease;" title="Calcular automáticamente">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                         </svg>
@@ -710,9 +757,9 @@
                                 <p class="text-xs text-gray-500 mt-1">Se calcula automáticamente basado en la membresía y fecha desde</p>
                             </div>
                             <div>
-                                <label for="dias" class="block text-sm font-medium text-gray-700 mb-2">Días *</label>
-                                <input type="number" name="dias" id="dias" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" required readonly>
-                                <p class="text-xs text-gray-500 mt-1">Se calcula automáticamente (excluyendo domingos)</p>
+                                <label for="dias" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Días *</label>
+                                <input type="number" name="dias" id="dias" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required readonly>
+                                <p style="font-size: 0.75rem; color: #9CA3AF; margin-top: 0.25rem;">Se calcula automáticamente (excluyendo domingos)</p>
                             </div>
                         </div>
                     </div>
@@ -722,32 +769,32 @@
                         <h4 class="text-lg font-semibold text-gray-800 mb-4">Paso 2: Datos Personales</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
-                                <label for="dni" class="block text-sm font-medium text-gray-700 mb-2">DNI *</label>
-                                <input type="text" name="dni" id="dni" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="dni" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">DNI *</label>
+                                <input type="text" name="dni" id="dni" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div>
-                                <label for="usuario" class="block text-sm font-medium text-gray-700 mb-2">Usuario *</label>
-                                <input type="text" name="usuario" id="usuario" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="usuario" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Usuario *</label>
+                                <input type="text" name="usuario" id="usuario" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña *</label>
-                                <input type="password" name="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="password" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Contraseña *</label>
+                                <input type="password" name="password" id="password" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div class="md:col-span-2">
-                                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">Nombre Completo *</label>
-                                <input type="text" name="nombre" id="nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="nombre" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Nombre Completo *</label>
+                                <input type="text" name="nombre" id="nombre" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div>
-                                <label for="correo" class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico *</label>
-                                <input type="email" name="correo" id="correo" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="correo" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Correo Electrónico *</label>
+                                <input type="email" name="correo" id="correo" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div>
-                                <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                                <input type="text" name="telefono" id="telefono" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label for="telefono" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Teléfono</label>
+                                <input type="text" name="telefono" id="telefono" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;">
                             </div>
                             <div>
-                                <label for="direccion" class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-                                <input type="text" name="direccion" id="direccion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label for="direccion" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Dirección</label>
+                                <input type="text" name="direccion" id="direccion" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="foto" class="block text-sm font-medium text-gray-700 mb-2">Foto</label>
@@ -762,12 +809,12 @@
                         <h4 class="text-lg font-semibold text-gray-800 mb-4">Paso 3: Datos de Pago</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="precio" class="block text-sm font-medium text-gray-700 mb-2">Precio *</label>
-                                <input type="number" step="0.01" name="precio" id="precio" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="precio" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">Precio *</label>
+                                <input type="number" step="0.01" name="precio" id="precio" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" required>
                             </div>
                             <div>
-                                <label for="acuenta" class="block text-sm font-medium text-gray-700 mb-2">A Cuenta</label>
-                                <input type="number" step="0.01" name="acuenta" id="acuenta" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                                <label for="acuenta" style="color:#E5E7EB; font-weight:600; display:block; margin-bottom:0.5rem;">A Cuenta</label>
+                                <input type="number" step="0.01" name="acuenta" id="acuenta" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #FFD700; background: rgba(30,23,54,0.5); color: white; outline: none; transition: all 0.3s ease;" value="0">
                             </div>
                             
                             <!-- Métodos de Pago -->
@@ -845,24 +892,24 @@
                     </div>
 
                     <!-- Botones de Navegación -->
-                    <div class="flex justify-between pt-6 border-t border-gray-200 mt-6">
-                        <button type="button" id="prev-btn" onclick="prevStep()" class="px-4 py-2 text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors hidden">
+                                          <div style="display:flex; justify-content:space-between; padding-top:1.5rem; border-top:2px solid rgba(255,215,0,0.3); margin-top:1.5rem;">
+                        <button type="button" id="prev-btn" onclick="prevStep()" style="background:rgba(255,255,255,0.1); color:#F3F4F6; padding:0.75rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease;" class="hidden">
                             <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                             Anterior
                         </button>
                         <div class="flex space-x-3">
-                            <button type="button" onclick="closeRegistrarClienteModal()" class="px-4 py-2 text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors">
+                            <button type="button" onclick="closeRegistrarClienteModal()" style="background:rgba(255,255,255,0.1); color:#F3F4F6; padding:0.75rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
                                 Cancelar
                             </button>
-                            <button type="button" id="next-btn" onclick="nextStep()" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                            <button type="button" id="next-btn" onclick="nextStep()" style="background:linear-gradient(135deg,#FFD700,#FFA500); color:#232046; padding:0.75rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
                                 Siguiente
                                 <svg class="w-4 h-4 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </button>
-                            <button type="submit" id="submit-btn" class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors hidden">
+                            <button type="submit" id="submit-btn" style="background:linear-gradient(135deg,#10B981,#059669); color:white; padding:0.75rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease;" class="hidden">
                                 Registrar Cliente
                             </button>
                         </div>
@@ -913,11 +960,13 @@
         updateStepDisplay();
         
         // Mostrar modal
-        document.getElementById('registrarClienteModal').classList.remove('hidden');
+        const modal = document.getElementById('registrarClienteModal');
+        if (modal) modal.classList.remove('hidden');
     }
 
     function closeRegistrarClienteModal() {
-        document.getElementById('registrarClienteModal').classList.add('hidden');
+        const modal = document.getElementById('registrarClienteModal');
+        if (modal) modal.classList.add('hidden');
         
         // Limpiar formulario
         document.getElementById('registrarClienteForm').reset();
@@ -957,11 +1006,13 @@
     function updateStepDisplay() {
         // Ocultar todos los pasos
         for (let i = 1; i <= totalSteps; i++) {
-            document.getElementById(`step${i}`).classList.add('hidden');
+            const stepElement = document.getElementById(`step${i}`);
+            if (stepElement) stepElement.classList.add('hidden');
         }
         
         // Mostrar paso actual
-        document.getElementById(`step${currentStep}`).classList.remove('hidden');
+        const currentStepElement = document.getElementById(`step${currentStep}`);
+        if (currentStepElement) currentStepElement.classList.remove('hidden');
         
         // Actualizar indicadores de progreso
         updateProgressIndicators();
@@ -1003,18 +1054,18 @@
         
         // Botón Anterior
         if (currentStep === 1) {
-            prevBtn.classList.add('hidden');
+            if (prevBtn) prevBtn.classList.add('hidden');
         } else {
-            prevBtn.classList.remove('hidden');
+            if (prevBtn) prevBtn.classList.remove('hidden');
         }
         
         // Botón Siguiente/Registrar
         if (currentStep === totalSteps) {
-            nextBtn.classList.add('hidden');
-            submitBtn.classList.remove('hidden');
+            if (nextBtn) nextBtn.classList.add('hidden');
+            if (submitBtn) submitBtn.classList.remove('hidden');
         } else {
-            nextBtn.classList.remove('hidden');
-            submitBtn.classList.add('hidden');
+            if (nextBtn) nextBtn.classList.remove('hidden');
+            if (submitBtn) submitBtn.classList.add('hidden');
         }
     }
 
@@ -1025,7 +1076,7 @@
         
         // Limpiar errores anteriores
         currentStepElement.querySelectorAll('.border-red-500').forEach(field => {
-            field.classList.remove('border-red-500');
+            if (field) field.classList.remove('border-red-500');
         });
         
         // Validar campos requeridos del paso actual
@@ -1113,22 +1164,30 @@
                 if (!element) {
                     // Marcar visualmente los contenedores de radio buttons
                     document.querySelectorAll(`input[name="${field}"]`).forEach(radio => {
-                        radio.closest('.border-2').classList.add('border-red-500');
+                        const container = radio.closest('.border-2');
+                        if (container) {
+                            container.classList.add('border-red-500');
+                        }
                     });
                     isValid = false;
                 } else {
                     // Remover marcas de error
                     document.querySelectorAll(`input[name="${field}"]`).forEach(radio => {
-                        radio.closest('.border-2').classList.remove('border-red-500');
+                        const container = radio.closest('.border-2');
+                        if (container) {
+                            container.classList.remove('border-red-500');
+                        }
                     });
                 }
             } else {
                 element = document.getElementById(field);
-                if (!element.value.trim()) {
-                    element.classList.add('border-red-500');
-                    isValid = false;
-                } else {
-                    element.classList.remove('border-red-500');
+                if (element) {
+                    if (!element.value.trim()) {
+                        if (element) element.classList.add('border-red-500');
+                        isValid = false;
+                    } else {
+                        if (element) element.classList.remove('border-red-500');
+                    }
                 }
             }
         });
@@ -1257,27 +1316,36 @@
                     // Limpiar campos que causan errores de duplicación
                     if (data.errors) {
                         if (data.errors.dni) {
-                            document.getElementById('dni').value = '';
-                            document.getElementById('dni').classList.add('border-red-500');
-                            // Generar DNI único
-                            const nuevoDNI = Math.floor(Math.random() * 90000000) + 10000000;
-                            document.getElementById('dni').placeholder = `Ejemplo: ${nuevoDNI}`;
+                            const dniElement = document.getElementById('dni');
+                            if (dniElement) {
+                                dniElement.value = '';
+                                dniElement.classList.add('border-red-500');
+                                // Generar DNI único
+                                const nuevoDNI = Math.floor(Math.random() * 90000000) + 10000000;
+                                dniElement.placeholder = `Ejemplo: ${nuevoDNI}`;
+                            }
                         }
                         if (data.errors.usuario) {
-                            document.getElementById('usuario').value = '';
-                            document.getElementById('usuario').classList.add('border-red-500');
-                            // Generar usuario único
-                            const nombres = ['usuario', 'cliente', 'gym', 'fitness', 'deportista'];
-                            const randomNombre = nombres[Math.floor(Math.random() * nombres.length)];
-                            const randomNum = Math.floor(Math.random() * 1000);
-                            document.getElementById('usuario').placeholder = `Ejemplo: ${randomNombre}${randomNum}`;
+                            const usuarioElement = document.getElementById('usuario');
+                            if (usuarioElement) {
+                                usuarioElement.value = '';
+                                usuarioElement.classList.add('border-red-500');
+                                // Generar usuario único
+                                const nombres = ['usuario', 'cliente', 'gym', 'fitness', 'deportista'];
+                                const randomNombre = nombres[Math.floor(Math.random() * nombres.length)];
+                                const randomNum = Math.floor(Math.random() * 1000);
+                                usuarioElement.placeholder = `Ejemplo: ${randomNombre}${randomNum}`;
+                            }
                         }
                         if (data.errors.correo) {
-                            document.getElementById('correo').value = '';
-                            document.getElementById('correo').classList.add('border-red-500');
-                            // Generar correo único
-                            const randomNum = Math.floor(Math.random() * 10000);
-                            document.getElementById('correo').placeholder = `Ejemplo: usuario${randomNum}@gmail.com`;
+                            const correoElement = document.getElementById('correo');
+                            if (correoElement) {
+                                correoElement.value = '';
+                                correoElement.classList.add('border-red-500');
+                                // Generar correo único
+                                const randomNum = Math.floor(Math.random() * 10000);
+                                correoElement.placeholder = `Ejemplo: usuario${randomNum}@gmail.com`;
+                            }
                         }
                     }
                     
@@ -1520,15 +1588,18 @@
                 let errorMessage = 'Los siguientes datos ya están registrados:\n';
                 if (data.errors && data.errors.dni) {
                     errorMessage += '• DNI\n';
-                    document.getElementById('dni').classList.add('border-red-500');
+                    const dniElement = document.getElementById('dni');
+                    if (dniElement) dniElement.classList.add('border-red-500');
                 }
                 if (data.errors && data.errors.usuario) {
                     errorMessage += '• Usuario\n';
-                    document.getElementById('usuario').classList.add('border-red-500');
+                    const usuarioElement = document.getElementById('usuario');
+                    if (usuarioElement) usuarioElement.classList.add('border-red-500');
                 }
                 if (data.errors && data.errors.correo) {
                     errorMessage += '• Correo electrónico\n';
-                    document.getElementById('correo').classList.add('border-red-500');
+                    const correoElement = document.getElementById('correo');
+                    if (correoElement) correoElement.classList.add('border-red-500');
                 }
                 
                 Swal.fire({
@@ -1608,7 +1679,8 @@
                 document.getElementById('renovarForm').action = `/renovar/cliente/${id}`;
                 
                 // Mostrar el modal
-                document.getElementById('renovarModal').classList.remove('hidden');
+                const renovarModal = document.getElementById('renovarModal');
+                if (renovarModal) renovarModal.classList.remove('hidden');
             })
             .catch(error => {
                 console.error('Error al obtener datos del cliente:', error);
@@ -1617,7 +1689,8 @@
     }
 
     function closeRenovarModal() {
-        document.getElementById('renovarModal').classList.add('hidden');
+        const modal = document.getElementById('renovarModal');
+        if (modal) modal.classList.add('hidden');
         clienteIdRenovar = null;
         clienteDataRenovar = null;
         
@@ -1685,7 +1758,8 @@
         clienteIdDetalles = id;
         
         // Mostrar loading
-        document.getElementById('detallesModal').classList.remove('hidden');
+        const detallesModal = document.getElementById('detallesModal');
+        if (detallesModal) detallesModal.classList.remove('hidden');
         
         // Obtener datos del cliente mediante AJAX
         fetch(`/clienteDatos-${id}`)
@@ -1760,7 +1834,8 @@
     }
 
     function closeDetallesModal() {
-        document.getElementById('detallesModal').classList.add('hidden');
+        const modal = document.getElementById('detallesModal');
+        if (modal) modal.classList.add('hidden');
         clienteIdDetalles = null;
         clienteDataDetalles = null;
         
@@ -1919,7 +1994,7 @@
     function cambiarPestana(pestana) {
         // Ocultar todos los contenidos
         document.querySelectorAll('.contenido-pestana').forEach(contenido => {
-            contenido.classList.add('hidden');
+            if (contenido) contenido.classList.add('hidden');
         });
         
         // Resetear todos los botones
@@ -1929,7 +2004,8 @@
         });
         
         // Mostrar contenido seleccionado
-        document.getElementById(`contenido-${pestana}`).classList.remove('hidden');
+        const contenidoElement = document.getElementById(`contenido-${pestana}`);
+        if (contenidoElement) contenidoElement.classList.remove('hidden');
         
         // Activar botón seleccionado
         const activeBtn = document.querySelector(`[onclick="cambiarPestana('${pestana}')"]`);
@@ -2089,7 +2165,8 @@
                 
                 // Mostrar el modal
                 console.log('Mostrando modal...');
-                document.getElementById('pagarModal').classList.remove('hidden');
+                const pagarModal = document.getElementById('pagarModal');
+                if (pagarModal) pagarModal.classList.remove('hidden');
                 console.log('Modal mostrado exitosamente');
                 
                 // Inicializar métodos de pago después de mostrar el modal
@@ -2104,7 +2181,8 @@
     }
 
     function closePagarModal() {
-        document.getElementById('pagarModal').classList.add('hidden');
+        const modal = document.getElementById('pagarModal');
+        if (modal) modal.classList.add('hidden');
         clienteIdPagar = null;
         
         // Limpiar formulario
@@ -2431,10 +2509,12 @@
         // Marcar el seleccionado
         if (metodo === 'efectivo') {
             document.getElementById('pagoEfectivoWizard').checked = true;
-            document.getElementById('qrContainerWizard').classList.add('hidden');
+                            const qrContainer = document.getElementById('qrContainerWizard');
+                if (qrContainer) qrContainer.classList.add('hidden');
         } else if (metodo === 'qr') {
             document.getElementById('pagoQRWizard').checked = true;
-            document.getElementById('qrContainerWizard').classList.remove('hidden');
+                            const qrContainer = document.getElementById('qrContainerWizard');
+                if (qrContainer) qrContainer.classList.remove('hidden');
             // No generar QR automáticamente
         }
     }
@@ -2842,6 +2922,130 @@
                 `;
             });
     }
+
+    // Funciones para el modal de editar cliente
+    function openEditarModal(id) {
+        console.log('Abriendo modal de editar para cliente:', id);
+        
+        // Cargar datos del cliente
+        fetch(`/cliente/${id}/edit`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Llenar el formulario con los datos del cliente
+                    document.getElementById('editarIdCliente').value = data.cliente.id_cliente;
+                    document.getElementById('editarDni').value = data.cliente.dni;
+                    document.getElementById('editarUsuario').value = data.cliente.usuario;
+                    document.getElementById('editarNombre').value = data.cliente.nombre;
+                    document.getElementById('editarTelefono').value = data.cliente.telefono || '';
+                    document.getElementById('editarDireccion').value = data.cliente.direccion || '';
+                    document.getElementById('editarCorreo').value = data.cliente.correo;
+                    document.getElementById('editarPassword').value = ''; // Dejar vacío para no cambiar
+                    
+                    // Configurar la acción del formulario
+                    document.getElementById('editarClienteForm').action = `/cliente/${id}`;
+                    
+                    // Mostrar el modal
+                    const modal = document.getElementById('editarModal');
+                    if (modal) modal.classList.remove('hidden');
+                } else {
+                    console.error('Error al cargar datos del cliente:', data.message);
+                    alert('Error al cargar los datos del cliente');
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar cliente:', error);
+                alert('Error al cargar los datos del cliente');
+            });
+    }
+
+    function closeEditarModal() {
+        const modal = document.getElementById('editarModal');
+        if (modal) modal.classList.add('hidden');
+        
+        // Limpiar formulario
+        document.getElementById('editarClienteForm').reset();
+    }
+
+    // Manejar envío del formulario de editar
+    document.addEventListener('DOMContentLoaded', function() {
+        const editarForm = document.getElementById('editarClienteForm');
+        if (editarForm) {
+            editarForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-HTTP-Method-Override': 'PUT'
+                    }
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response data:', data);
+                    if (data.success) {
+                        // Cerrar modal
+                        closeEditarModal();
+                        
+                        // Mostrar mensaje de éxito
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Cliente actualizado!',
+                            text: 'Los datos del cliente han sido actualizados correctamente.',
+                            confirmButtonColor: '#10B981'
+                        }).then(() => {
+                            // Recargar la página para mostrar los cambios
+                            location.reload();
+                        });
+                    } else {
+                        // Mostrar errores de validación
+                        let errorMessage = 'Error al actualizar el cliente';
+                        if (data.errors) {
+                            errorMessage = Object.values(data.errors).flat().join('\n');
+                        }
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: errorMessage,
+                            confirmButtonColor: '#EF4444'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    let errorMessage = 'Error al actualizar el cliente';
+                    
+                    if (error.response) {
+                        // Error de respuesta del servidor
+                        errorMessage = `Error ${error.response.status}: ${error.response.statusText}`;
+                    } else if (error.message) {
+                        errorMessage = error.message;
+                    }
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage,
+                        confirmButtonColor: '#EF4444'
+                    });
+                });
+            });
+        }
+    });
 </script>
 
 @endsection
