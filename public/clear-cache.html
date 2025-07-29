@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpiar Cache - Gym App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 1rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .status {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Limpiar Cache del Navegador</h1>
+        
+        <div class="status" id="status">
+            <p>Haz clic en el botón para limpiar el cache y eliminar errores de Service Worker.</p>
+        </div>
+        
+        <button class="btn" onclick="clearAllCache()">Limpiar Cache Completamente</button>
+        
+        <div style="margin-top: 2rem;">
+            <a href="http://127.0.0.1:8000/" class="btn">Ir al Sistema</a>
+        </div>
+    </div>
+
+    <script>
+        function clearAllCache() {
+            const status = document.getElementById('status');
+            status.innerHTML = '<p>Limpiando cache...</p>';
+            
+            // 1. Desregistrar Service Workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('Service Worker desregistrado:', registration.scope);
+                    }
+                });
+            }
+
+            // 2. Limpiar cache
+            caches.keys().then(function(cacheNames) {
+                return Promise.all(
+                    cacheNames.map(function(cacheName) {
+                        console.log('Eliminando cache:', cacheName);
+                        return caches.delete(cacheName);
+                    })
+                );
+            }).then(function() {
+                console.log('Cache limpiado');
+                
+                // 3. Limpiar storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                status.innerHTML = '<p style="color: #4CAF50;">✅ Cache limpiado exitosamente!</p>';
+                
+                // 4. Recargar después de 2 segundos
+                setTimeout(function() {
+                    window.location.href = 'http://127.0.0.1:8000/';
+                }, 2000);
+            }).catch(function(error) {
+                console.error('Error limpiando cache:', error);
+                status.innerHTML = '<p style="color: #f44336;">❌ Error limpiando cache</p>';
+            });
+        }
+    </script>
+</body>
+</html> 

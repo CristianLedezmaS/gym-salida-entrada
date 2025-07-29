@@ -50,5 +50,17 @@ class LoginController extends Controller
             // 'tipo' => 'required',
         ]);
     }
+    protected function attemptLogin(Request $request)
+    {
+        $user = \App\Models\Usuario::where($this->username(), $request->{$this->username()})->first();
+
+        if ($user && $user->password === md5($request->password)) {
+            \Auth::login($user, $request->filled('remember'));
+            return true;
+        }
+
+        return false;
+    }
     
 }
+

@@ -2,16 +2,16 @@
 
 @section('content')
 <style>
-    body, .page-content, .container-asistencia-dark {
-        background: #181828 !important;
+    body, .page-content, .container-asistencia-light {
+        background: #f8fafc !important;
         overflow-x: hidden !important;
     }
-    .card-asistencia-dark {
-        background: #23232e;
+    .card-asistencia-light {
+        background: #ffffff;
         border-radius: 24px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         padding: 2.5rem 2rem 2rem 2rem;
-        color: #fff;
+        color: #1e293b;
         max-width: 600px;
         margin: 2rem auto;
         display: flex;
@@ -19,52 +19,59 @@
         align-items: center;
         animation: fadeIn 0.7s;
         overflow: visible !important;
+        border: 1px solid #e2e8f0;
     }
-    .asistencia-title-neon {
-        color: #00ff88;
+    .asistencia-title-modern {
+        color: #3b82f6;
         font-size: 2.2rem;
         font-weight: bold;
         text-align: center;
         margin-bottom: 1.2rem;
-        text-shadow: 0 0 10px #00ff88;
+        text-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
     }
     .asistencia-info-box {
-        background: #181828;
+        background: #f1f5f9;
         border-radius: 12px;
-        color: #fff;
+        color: #1e293b;
         font-size: 1.1rem;
         padding: 0.7rem 1.2rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         display: inline-block;
+        border: 1px solid #e2e8f0;
     }
     #calendar {
-        background: #23232e;
+        background: #ffffff;
         border-radius: 16px;
-        box-shadow: 0 0 18px #00ff8833;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.15);
         padding: 0 !important;
         margin: 0 auto;
         width: 100%;
         max-width: 500px;
-        color: #fff;
+        color: #1e293b;
         overflow: visible !important;
+        border: 1px solid #e2e8f0;
     }
     .fc-toolbar-title, .fc-col-header-cell-cushion, .fc-daygrid-day-number {
-        color: #00ff88 !important;
+        color: #3b82f6 !important;
         font-weight: bold;
     }
     .fc-event-title {
-        color: #fff !important;
+        color: #1e293b !important;
     }
     /* Eliminar scroll de FullCalendar */
     .fc-scroller-harness, .fc-scroller {
         overflow: visible !important;
         max-height: none !important;
     }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
-<div class="container-asistencia-dark">
-    <div class="card-asistencia-dark">
-        <h1 class="asistencia-title-neon">MI ASISTENCIA</h1>
+<div class="container-asistencia-light">
+    <div class="card-asistencia-light">
+        <h1 class="asistencia-title-modern">MI ASISTENCIA</h1>
         <div class="asistencia-info-box mb-4">Clases restantes: <b>{{ Auth::user()->DR }}</b></div>
         <div id='calendar'></div>
     </div>

@@ -64,6 +64,13 @@
                             value="{{ $item2->precio }}" readonly>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="fl-flex-label mb-4 col-6">
+                        <label class="text-left">Deuda actual</label>
+                        <input type="text" name="debe" id="debe" class="input input__text block danger"
+                            value="{{ $item2->debe }}" readonly>
+                    </div>
+                </div>
 
                 <!-- Plan de pagos por cuotas -->
                 <div class="mt-4">

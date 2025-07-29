@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Cliente;
 
 class ClienteController extends Controller
 {
@@ -36,7 +37,10 @@ class ClienteController extends Controller
         cliente.id_cliente
         FROM cliente INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia ");
 
-        return view("vistas/cliente/cliente", compact("sql"));
+        // Obtener membresías para el modal
+        $membresia = DB::select("SELECT * FROM membresia");
+
+        return view("vistas/cliente/cliente", compact("sql", "membresia"));
     }
     public function usuariosIndex() {
         $usuarios = DB::table('usuarios')->get();
@@ -83,47 +87,103 @@ class ClienteController extends Controller
         return view('vistas.cliente.pagos.create', compact('cliente'));
     }
     public function pagosStore(Request $request) {
+        // Validación de los datos
         $request->validate([
-            'cliente_id' => 'required',
-            'monto' => 'required|numeric',
-            'fecha' => 'required|date',
+            "idcliente" => "required|integer", 
+            "precio" => "required|numeric", 
+            "pagacon" => "required|numeric", 
+            "debe" => "required|numeric"
         ]);
-    
-        DB::table('pagos')->insert([
-            'cliente_id' => $request->cliente_id,
-            'monto' => $request->monto,
-            'fecha' => $request->fecha,
-        ]);
-    
-        return redirect()->route('pagos.index')->with('success', 'Pago registrado exitosamente.');
-    }
-    
-    public function create()
-    {
-        $membresia = DB::select("select * from membresia");
-        return view("vistas/cliente/registrar")->with("membresia", $membresia);
-    }
 
+        $nombreUsuario = Auth::user()->nombre;
+
+        // Iniciar transacción
+        DB::beginTransaction();
+
+        try {
+            // Insertar en la tabla de pagos
+            DB::insert('insert into pago (id_cliente, registrado_por, costo_total, paga_con, metodo_pago, fecha) values (?, ?, ?, ?, ?, ?)', [
+                $request->idcliente, 
+                $nombreUsuario, 
+                $request->precio, 
+                $request->pagacon,
+                $request->metodoPago ?? 'efectivo',
+                Carbon::now()
+            ]);
+
+            // Actualizar el saldo 'debe' del cliente
+            DB::update("update cliente set debe = ? where id_cliente = ?", [
+                $request->debe, 
+                $request->idcliente
+            ]);
+
+            // Actualizar la columna 'pago' del cliente (monto total pagado)
+            $clienteActual = DB::table('cliente')->where('id_cliente', $request->idcliente)->first();
+            $pagoActual = $clienteActual->pago ?? 0;
+            $nuevoPagoTotal = $pagoActual + $request->pagacon;
+            
+            DB::update("update cliente set pago = ? where id_cliente = ?", [
+                $nuevoPagoTotal, 
+                $request->idcliente
+            ]);
+
+            // Registrar abono si el monto pagado es mayor a 0
+            if ($request->pagacon > 0) {
+                DB::table('abono')->insert([
+                    'monto' => $request->pagacon,
+                    'id_cliente' => $request->idcliente,
+                    'fecha' => Carbon::now(),
+                    'recepcionista' => $nombreUsuario,
+                    'derecho_pago' => 'Matricula'
+                ]);
+            }
+
+            // Confirmar la transacción
+            DB::commit();
+
+            // Retornar éxito
+            return back()->with("CORRECTO", "El pago se realizó con éxito");
+        } catch (\Exception $e) {
+            // Si ocurre un error, revertir la transacción
+            DB::rollBack();
+            return back()->with("INCORRECTO", "Error al realizar el pago: " . $e->getMessage());
+        }
+    }
+    
     public function store(Request $request)
 {
-    $request->validate([
-        "membresia" => "required",
-        "desde" => "required",
-        "hasta" => "required",
-        "dias" => "required",
-        "dni" => "required|unique:App\Models\Cliente,dni",
-        "usuario" => "required|unique:App\Models\Cliente,usuario",
-        "password" => "required",
-        "nombre" => "required",
-        "correo" => [
-            "required",
-            "email",
-            "unique:App\Models\Cliente,correo",
-        ],
-        "precio" => "required",
-        "foto" => "mimes:jpg,jpeg,png",
-        "acuenta" => "numeric"
-    ]);
+    try {
+        $request->validate([
+            "membresia" => "required",
+            "desde" => "required",
+            "hasta" => "required",
+            "dias" => "required",
+            "dni" => "required|unique:App\Models\Cliente,dni",
+            "usuario" => "required|unique:App\Models\Cliente,usuario",
+            "password" => "required",
+            "nombre" => "required",
+            "correo" => [
+                "required",
+                "email",
+                "unique:App\Models\Cliente,correo",
+            ],
+            "telefono" => "nullable|string",
+            "direccion" => "nullable|string",
+            "precio" => "required",
+            "metodoPago" => "required|in:efectivo,qr",
+            "foto" => "mimes:jpg,jpeg,png",
+            "acuenta" => "nullable|numeric|min:0"
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        }
+        return back()->withErrors($e->errors())->withInput();
+    }
 
     $nombreUsuario = Auth::user()->nombre;
     $debe = $request->precio - $request->acuenta;
@@ -132,39 +192,98 @@ class ClienteController extends Controller
     $verifificarDuplicidad = DB::select("SELECT count(*) as 'total' FROM cliente WHERE (usuario='$request->usuario' OR dni='$request->dni')");
     
     if ($verifificarDuplicidad[0]->total >= 1) {
-        // En lugar de redirigir, devuelve un mensaje
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El usuario o CI ya está en uso'
+            ], 422);
+        }
         return back()->with("AVISO", "El usuario o CI ya está en uso");
     }
 
     // Registrar datos del cliente
     try {
-        $id_registro = DB::table('cliente')->insertGetId([
-            'id_membresia' => $request->membresia,
-            'tipo_usuario' => 'cliente',
-            'creado_por' => $nombreUsuario,
-            'usuario' => $request->usuario,
-            'password' => md5($request->password),
-            'dni' => $request->dni,
-            'nombre' => $request->nombre,
-            'correo' => $request->correo,
-            'telefono' => $request->telefono,
-            'direccion' => $request->direccion,
-            'desde' => $request->desde,
-            'hasta' => $request->hasta,
-            'DT' => $request->dias,
-            'DA' => '0',
-            'DR' => $request->dias,
-            'debe' => $debe
-        ]);
+        $cliente = new Cliente();
+        $cliente->id_membresia = $request->membresia;
+        $cliente->tipo_usuario = 'cliente';
+        $cliente->creado_por = $nombreUsuario;
+        $cliente->usuario = $request->usuario;
+        $cliente->password = md5($request->password);
+        $cliente->dni = $request->dni;
+        $cliente->nombre = $request->nombre;
+        $cliente->correo = $request->correo;
+        $cliente->telefono = $request->telefono;
+        $cliente->direccion = $request->direccion;
+        $cliente->desde = $request->desde;
+        $cliente->hasta = $request->hasta;
+        $cliente->DT = $request->dias;
+        $cliente->DA = 0;
+        $cliente->DR = $request->dias;
+        $cliente->debe = $debe;
+        $cliente->pago = $request->acuenta ?? 0;
+        $cliente->save();
+        
+        $id_registro = $cliente->id_cliente;
         
         // Manejo de la imagen
         if ($request->hasFile('foto')) {
-            // Guardar la imagen...
+            $foto = $request->file('foto');
+            $nombreFoto = time() . '_' . $foto->getClientOriginalName();
+            $foto->move(public_path('foto/usuario'), $nombreFoto);
+            
+            // Actualizar el registro con el nombre de la foto
+            $cliente->foto = $nombreFoto;
+            $cliente->save();
         }
 
+        // Registrar el pago
+        // Siempre registrar el pago, incluso si acuenta es 0
+        $pagoData = [
+            'id_cliente' => $id_registro,
+            'registrado_por' => $nombreUsuario,
+            'costo_total' => $request->precio,
+            'paga_con' => $request->acuenta ?? 0,
+            'metodo_pago' => $request->metodoPago,
+            'fecha' => Carbon::now()
+        ];
+        
+        DB::table('pago')->insert($pagoData);
+        
+        // Log para debug
+        \Log::info('Pago registrado:', $pagoData);
+        
+        // Registrar abono solo si el monto pagado es mayor a 0
+        if (($request->acuenta ?? 0) > 0) {
+            $abonoData = [
+                'monto' => $request->acuenta,
+                'id_cliente' => $id_registro,
+                'fecha' => Carbon::now(),
+                'recepcionista' => $nombreUsuario,
+                'derecho_pago' => 'Matricula'
+            ];
+            
+            DB::table('abono')->insert($abonoData);
+            
+            // Log para debug
+            \Log::info('Abono registrado:', $abonoData);
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cliente registrado correctamente'
+            ]);
+        }
+        
         return back()->with("CORRECTO", "Cliente registrado correctamente");
         
     } catch (\Throwable $th) {
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al registrar cliente'
+            ], 500);
+        }
         return back()->with("INCORRECTO", "Error al registrar");
     }
 }
@@ -367,6 +486,169 @@ class ClienteController extends Controller
         return response()->json(['respuesta' => $fechaFinalISO, "dias" => $diasTotales, "precio" => $precio], 200);
     }
 
+    public function consultarPrecio($id_membresia)
+    {
+        try {
+            $membresia = DB::select("SELECT precio FROM membresia WHERE id_membresia = ?", [$id_membresia]);
+            
+            if (empty($membresia)) {
+                return response()->json(['error' => 'Membresía no encontrada'], 404);
+            }
+            
+            return response()->json(['precio' => $membresia[0]->precio], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al consultar precio'], 500);
+        }
+    }
+
+    public function verificarDuplicados(Request $request)
+    {
+        try {
+            $request->validate([
+                'dni' => 'required',
+                'usuario' => 'required',
+                'correo' => 'required|email'
+            ]);
+
+            $errors = [];
+            
+            // Verificar DNI
+            $dniExists = DB::table('cliente')->where('dni', $request->dni)->exists();
+            if ($dniExists) {
+                $errors['dni'] = 'El DNI ya está registrado';
+            }
+            
+            // Verificar usuario
+            $usuarioExists = DB::table('cliente')->where('usuario', $request->usuario)->exists();
+            if ($usuarioExists) {
+                $errors['usuario'] = 'El usuario ya está registrado';
+            }
+            
+            // Verificar correo
+            $correoExists = DB::table('cliente')->where('correo', $request->correo)->exists();
+            if ($correoExists) {
+                $errors['correo'] = 'El correo ya está registrado';
+            }
+            
+            if (empty($errors)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Todos los datos son únicos'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $errors
+                ], 422);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación en los datos enviados',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error interno del servidor',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function consultarPagos($id_cliente)
+    {
+        try {
+            // Consultar pagos del cliente
+            $pagos = DB::table('pago')
+                ->where('id_cliente', $id_cliente)
+                ->orderBy('fecha', 'desc')
+                ->get();
+            
+            // Consultar abonos del cliente
+            $abonos = DB::table('abono')
+                ->where('id_cliente', $id_cliente)
+                ->orderBy('fecha', 'desc')
+                ->get();
+            
+            return response()->json([
+                'success' => true,
+                'pagos' => $pagos,
+                'abonos' => $abonos,
+                'total_pagos' => $pagos->count(),
+                'total_abonos' => $abonos->count()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al consultar pagos',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function verificarColumnaPago()
+    {
+        try {
+            // Consultar todos los clientes con su información de pago
+            $clientes = DB::table('cliente')
+                ->select('id_cliente', 'nombre', 'pago', 'debe')
+                ->where('tipo_usuario', 'cliente')
+                ->get();
+            
+            $resumen = [
+                'total_clientes' => $clientes->count(),
+                'clientes_con_pago' => $clientes->where('pago', '>', 0)->count(),
+                'clientes_sin_pago' => $clientes->where('pago', '=', 0)->count(),
+                'clientes_con_deuda' => $clientes->where('debe', '>', 0)->count(),
+                'clientes_sin_deuda' => $clientes->where('debe', '=', 0)->count(),
+                'detalle_clientes' => $clientes
+            ];
+            
+            return response()->json([
+                'success' => true,
+                'resumen' => $resumen
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al verificar columna pago',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function verificarTimestamps()
+    {
+        try {
+            // Consultar clientes con timestamps
+            $clientes = DB::table('cliente')
+                ->select('id_cliente', 'nombre', 'created_at', 'updated_at')
+                ->where('tipo_usuario', 'cliente')
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+            
+            $resumen = [
+                'total_clientes' => $clientes->count(),
+                'clientes_con_timestamps' => $clientes->where('created_at', '!=', null)->count(),
+                'clientes_sin_timestamps' => $clientes->where('created_at', '=', null)->count(),
+                'ultimos_clientes' => $clientes
+            ];
+            
+            return response()->json([
+                'success' => true,
+                'resumen' => $resumen
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al verificar timestamps',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function renovar(Request $request, $id_cliente)
     {
         $request->validate([
@@ -402,7 +684,7 @@ class ClienteController extends Controller
             try {
                 $id_registro_abono = DB::table('abono')->insertGetId([
                     'monto' => $request->acuenta,
-                    'cliente' => $request->id_cliente,
+                    'id_cliente' => $request->id_cliente,
                     'fecha' => Carbon::now(),
                     'recepcionista' => $nombreUsuario,
                     'derecho_pago' => "Renovación"
@@ -447,11 +729,11 @@ class ClienteController extends Controller
     {
         $datos = DB::select("select * from cliente where id_cliente=?", [$id]);
 
-        //consulta
+        //consulta de abonos
         $abonos = DB::select("SELECT
         abono.id_abono,
         abono.monto,
-        abono.id_cliente as cliente,
+        abono.id_cliente,
         abono.fecha,
         abono.recepcionista,
         abono.derecho_pago,
@@ -471,7 +753,25 @@ class ClienteController extends Controller
         where cliente.id_cliente=$id
         ");
 
-        return view("vistas/cliente/transacciones", compact("datos", "abonos"));
+        //consulta de pagos
+        $pagos = DB::select("SELECT
+        pago.id_pago,
+        pago.id_cliente,
+        pago.registrado_por,
+        pago.costo_total,
+        pago.paga_con,
+        pago.metodo_pago,
+        pago.fecha,
+        cliente.nombre,
+        cliente.dni
+        FROM
+        pago
+        INNER JOIN cliente ON pago.id_cliente = cliente.id_cliente
+        where cliente.id_cliente=$id
+        ORDER BY pago.fecha DESC
+        ");
+
+        return view("vistas/cliente/transacciones", compact("datos", "abonos", "pagos"));
     }
 
     public function pagoCliente($id_cliente)
@@ -500,6 +800,40 @@ class ClienteController extends Controller
         cliente.id_cliente
         FROM cliente INNER JOIN membresia ON cliente.id_membresia = membresia.id_membresia WHERE id_cliente=$id_cliente");
         return view("vistas/cliente/pago", compact("datos"));
+    }
+    
+    public function asistenciasCliente($id)
+    {
+        // Obtener datos del cliente
+        $datos = DB::select("select * from cliente where id_cliente=?", [$id]);
+        
+        // Obtener fechas de membresía
+        $sql = DB::select("select date(desde) as 'desde', date(hasta) as 'hasta' from cliente where tipo_usuario='cliente' and id_cliente=?", [$id]);
+        
+        // Obtener asistencias
+        $asistencias = DB::select("select *, DATE_FORMAT(fecha_hora, '%Y-%m-%d') as fecha,DATE_FORMAT(fecha_hora, '%h:%i:%s %p') as hora from asistencia where id_cliente=?", [$id]);
+        
+        $entrada = null;
+        $salida = null;
+        foreach ($sql as $event) {
+            $entrada = $event->desde;
+            $salida = $event->hasta;
+        }
+        
+        // Preparar eventos para FullCalendar
+        $eventos = [];
+        foreach ($asistencias as $asistencia) {
+            $eventos[] = [
+                'title' => $asistencia->hora,
+                'start' => $asistencia->fecha
+            ];
+        }
+        
+        return response()->json([
+            'eventos' => $eventos,
+            'desde' => $entrada,
+            'hasta' => $salida
+        ]);
     }
     
 }

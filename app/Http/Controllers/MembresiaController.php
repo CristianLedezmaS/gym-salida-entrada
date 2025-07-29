@@ -13,12 +13,6 @@ class MembresiaController extends Controller
         $datos = DB::table('membresia')->orderBy('id_membresia', 'desc')->paginate(10);
 
         return view('vistas/membresia/membresia', compact('datos'));
-        }
-
-
-    public function create()
-    {
-        return view("vistas/membresia/registrar");
     }
 
     public function store(Request $request)
@@ -53,12 +47,6 @@ class MembresiaController extends Controller
         } else {
             return back()->with("INCORRECTO", "Error al registrar");
         }
-    }
-
-    public function edit($id)
-    {
-        $sql = DB::select("SELECT * FROM membresia WHERE id_membresia=?", [$id]);
-        return view('vistas/membresia/actualizar', compact('sql'));
     }
 
     public function update(Request $request, $id)
@@ -99,34 +87,21 @@ class MembresiaController extends Controller
             return back()->with("INCORRECTO", "Error al actualizar");
         }
     }
+
     public function destroy($id)
     {
         try {
-            // Verificamos si existen clientes asociados a la membresía
-            // Usamos el nombre correcto de la columna, por ejemplo, 'id_membresia'
-            $clientesAsociados = DB::select("SELECT COUNT(*) as total FROM cliente WHERE id_membresia = ?", [$id]);
-    
-            // Si hay clientes asociados, mostramos un aviso y no eliminamos la membresía
-            if ($clientesAsociados[0]->total > 0) {
-                return back()->with("AVISO", "No puedes eliminar esta membresía porque tiene clientes asociados.");
-            }
-    
-            // Si no hay clientes asociados, procedemos con la eliminación de la membresía
-            $sql = DB::delete("DELETE FROM membresia WHERE id_membresia = ?", [$id]);
-    
-            if ($sql == 0) {
-                return back()->with("INCORRECTO", "No se pudo eliminar la membresía.");
-            }
-    
-            return back()->with("CORRECTO", "Membresía eliminada correctamente.");
-    
+            $sql = DB::delete("DELETE FROM membresia WHERE id_membresia=?", [$id]);
         } catch (\Throwable $th) {
-            // Capturamos el error y mostramos un mensaje específico
-            return back()->with("INCORRECTO", "Ocurrió un error al intentar eliminar la membresía: " . $th->getMessage());
+            $sql = 0;
+        }
+
+        if ($sql == 1) {
+            return back()->with("CORRECTO", "Membresía eliminada correctamente");
+        } else {
+            return back()->with("INCORRECTO", "Error al eliminar");
         }
     }
-    
-    
 }
 
 

@@ -64,9 +64,15 @@ Route::resource("asistencia", AsistenciaController::class)->middleware(['verifie
 
 Route::resource("cliente", ClienteController::class)->middleware(['verified', 'admin_empleado']);
 Route::get("/clienteDatos-{id}", [ClienteController::class, "datosCliente"])->name("cliente.datosCliente")->middleware(['verified', 'admin_empleado']);
+Route::get("/clienteAsistencias-{id}", [ClienteController::class, "asistenciasCliente"])->name("cliente.asistenciasCliente")->middleware(['verified', 'admin_empleado']);
 Route::get("/clienteTransaccion-{id}", [ClienteController::class, "transaccionCliente"])->name("cliente.transaccionCliente")->middleware(['verified', 'admin_empleado']);
 Route::get("/clientePago-{id}", [ClienteController::class, "pagoCliente"])->name("cliente.pagoCliente")->middleware(['verified', 'admin_empleado']);
 Route::get("/consultar/registro/cliente/{id_membresia}/{desde}", [ClienteController::class, "consultar"])->name("cliente.consultar")->middleware(['verified', 'admin_empleado']);
+Route::get("/consultar/precio/membresia/{id_membresia}", [ClienteController::class, "consultarPrecio"])->name("cliente.consultarPrecio")->middleware(['verified', 'admin_empleado']);
+Route::post("/verificar/duplicados", [ClienteController::class, "verificarDuplicados"])->name("cliente.verificarDuplicados")->middleware(['verified', 'admin_empleado']);
+Route::get("/consultar/pagos/{id_cliente}", [ClienteController::class, "consultarPagos"])->name("cliente.consultarPagos")->middleware(['verified', 'admin_empleado']);
+Route::get("/verificar/columna-pago", [ClienteController::class, "verificarColumnaPago"])->name("cliente.verificarColumnaPago")->middleware(['verified', 'admin_empleado']);
+Route::get("/verificar/timestamps", [ClienteController::class, "verificarTimestamps"])->name("cliente.verificarTimestamps")->middleware(['verified', 'admin_empleado']);
 Route::PUT("/renovar/cliente/{id_cliente}", [ClienteController::class, "renovar"])->name("cliente.renovar")->middleware(['verified', 'admin_empleado']);
 Route::POST("/actualizar/cliente", [ClienteController::class, "editarDatosCliente"])->name("cliente.editarDatosCliente")->middleware(['verified', 'admin_empleado']);
 Route::post('/clientes/store', [ClienteController::class, 'store'])->name('clientes.store');
@@ -159,3 +165,7 @@ Route::delete('/rutinas/{id}', [RutinasExpertController::class, 'destroy'])->nam
 Route::post('/submit-fitness-form', [RutinaController::class, 'tuMetodo'])->name('submit.fitness.form');
 Route::get('/rutinas', [App\Http\Controllers\RutinasExpertController::class, 'index'])->name('rutinas.index');
 Route::get('/rutinas/registrar', [App\Http\Controllers\RutinaController::class, 'seleccionarGenero'])->name('rutinas.registrar');
+
+Route::get('/generar-rutina', function () {
+    return view('Rutinas.registrar');
+})->name('cliente.generarRutina')->middleware(['auth', 'cliente']);

@@ -189,7 +189,7 @@
             </div>
         </div>
 
-        <div id="step7" class="wizard-step">
+        {{-- <div id="step7" class="wizard-step">
             <h2>Resumen Personalizado</h2>
             <div class="summary-boxes">
                 <div class="summary-box">
@@ -206,16 +206,16 @@
                 <ul class="summary-list" id="recommendations"></ul>
             </div>
             <button class="btn-wizard" onclick="nextStep(6)">Comenzar Entrenamiento</button>
-        </div>
+        </div> --}}
 
         <div id="step8" class="wizard-step">
             <div class="loading-step">
                 <div class="loading-spinner"></div>
-                <div class="loading-text">Preparando tu entrenamiento personalizado...</div>
+                {{-- <div class="loading-text">Preparando tu entrenamiento personalizado...</div> --}}
             </div>
         </div>
 
-        <div id="step9" class="wizard-step">
+        {{-- <div id="step9" class="wizard-step">
             <div class="training-step">
                 <h2 class="training-title">Tu Rutina Personalizada</h2>
                 <div id="exercise-list"></div>
@@ -228,7 +228,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 
@@ -239,7 +239,7 @@
 
 <div id="preview-resumen" class="preview-resumen" style="display:none;">
     <div class="preview-header">
-        <h2>¡Hola, <span id="prev-nombre">Cristian</span>! Este es tu plan personalizado</h2>
+        <h2>¡Hola, <span id="prev-nombre">{{ Auth::user()->nombre }}</span>! Este es tu plan personalizado</h2>
     </div>
     <div class="preview-plan-activo">
         <span class="plan-icon">⚡</span>
@@ -325,6 +325,9 @@ function seleccionarGenero(elemento, genero) {
     elemento.classList.add('selected');
     document.getElementById('next-button').style.display = 'block';
 }
+
+// Nombre del cliente desde PHP
+var clienteNombre = @json(Auth::user()->nombre);
 
 function mostrarStep2() {
     document.getElementById('step1').style.display = 'none';
@@ -540,7 +543,7 @@ function mostrarPreview(datos) {
 function mostrarPreviewApp(datos, objetivoTxt) {
     // ... código de la previsualización tipo app (igual que antes, usando los datos recibidos) ...
     // Nombre de usuario (ejemplo, puedes usar Auth::user()->name si tienes sesión)
-    let nombre = (typeof datos.nombre !== 'undefined' && datos.nombre) ? datos.nombre : 'Cristian';
+    let nombre = clienteNombre;
     document.getElementById('prev-nombre').textContent = nombre;
     document.getElementById('plan-nombre').textContent = nombre;
     document.getElementById('plan-titulo').textContent = `Plan de ${objetivoTxt} de ${nombre}`;
@@ -1067,38 +1070,39 @@ body.with-side-menu {
 .preview-header h2 {
     font-size: 2rem;
     font-weight: bold;
-    color: #00ff88;
+    color: #3b82f6;
     margin-bottom: 0.5rem;
 }
 .preview-plan-activo {
     display: flex;
     align-items: center;
-    background: #181828;
+    background: #ffffff;
     border-radius: 16px;
     padding: 1.2rem 1.5rem;
     margin-bottom: 1.5rem;
     gap: 1.2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
 }
 .plan-icon {
     font-size: 2.2rem;
-    color: #00ff88;
+    color: #3b82f6;
     margin-right: 0.7rem;
 }
 .plan-label {
-    color: #fff;
+    color: #64748b;
     font-size: 1rem;
     opacity: 0.8;
 }
 .plan-title {
-    color: #fff;
+    color: #1e293b;
     font-size: 1.2rem;
     font-weight: bold;
 }
 .plan-btn {
     margin-left: auto;
-    background: #00ff88;
-    color: #181828;
+    background: #3b82f6;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-weight: bold;
@@ -1108,23 +1112,24 @@ body.with-side-menu {
     transition: all 0.2s;
 }
 .plan-btn:hover {
-    background: #00c46a;
+    background: #2563eb;
 }
 .preview-next-block {
-    background: #23233a;
+    background: #f8fafc;
     border-radius: 14px;
     padding: 1.2rem 1.5rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
 }
 .next-label {
-    color: #fff;
+    color: #64748b;
     font-size: 1rem;
     opacity: 0.8;
     margin-bottom: 0.3rem;
 }
 .next-title {
-    color: #00ff88;
+    color: #3b82f6;
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 1.2rem;
@@ -1137,11 +1142,12 @@ body.with-side-menu {
 .ejercicio-card {
     display: flex;
     align-items: center;
-    background: #181828;
+    background: #ffffff;
     border-radius: 10px;
     padding: 0.7rem 1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     gap: 1.1rem;
+    border: 1px solid #e2e8f0;
 }
 .ej-img {
     width: 54px;
@@ -1154,12 +1160,12 @@ body.with-side-menu {
     flex: 1;
 }
 .ej-nombre {
-    color: #fff;
+    color: #1e293b;
     font-size: 1.1rem;
     font-weight: bold;
 }
 .ej-repes {
-    color: #b0b0b0;
+    color: #64748b;
     font-size: 0.98rem;
 }
 .ej-musculo {
@@ -1226,10 +1232,11 @@ body.with-side-menu {
 }
 .preview-card {
     flex: 1;
-    background: #181828;
+    background: #ffffff;
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
 }
 .preview-list {
     list-style: none;
@@ -1283,7 +1290,7 @@ body.with-side-menu {
 .ejercicio-activo {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #181828;
+    background: #f8fafc;
     z-index: 9999;
     display: flex;
     flex-direction: column;
@@ -1310,17 +1317,17 @@ body.with-side-menu {
 }
 .ej-finalizar {
     font-size: 1.1rem;
-    background: #00ff88;
-    color: #181828;
+    background: #3b82f6;
+    color: #ffffff;
     border-radius: 8px;
     padding: 0.5rem 1.2rem;
     margin-left: 1rem;
 }
 .ej-finalizar:hover {
-    background: #00c46a;
+    background: #2563eb;
 }
 .ej-timer {
-    color: #fff;
+    color: #1e293b;
     font-size: 1.1rem;
     font-weight: bold;
 }
@@ -1356,7 +1363,7 @@ body.with-side-menu {
 }
 .ej-activo-num {
     font-size: 5rem;
-    color: #fff;
+    color: #1e293b;
     font-weight: bold;
     margin: 2rem 0 1rem 0;
 }
@@ -1369,20 +1376,20 @@ body.with-side-menu {
     margin-bottom: 1.2rem;
 }
 .ej-activo-nombre {
-    color: #00ff88;
+    color: #3b82f6;
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
     text-align: center;
 }
 .ej-activo-repes {
-    color: #fff;
+    color: #1e293b;
     font-size: 1.1rem;
     margin-bottom: 0.3rem;
     text-align: center;
 }
 .ej-activo-grupo {
-    color: #b48cff;
+    color: #8b5cf6;
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
     text-align: center;
@@ -1401,8 +1408,8 @@ body.with-side-menu {
     letter-spacing: 1px;
 }
 .btn-ej-siguiente:hover {
-    background: #00ff88 !important;
-    color: #181828 !important;
+    background: #3b82f6 !important;
+    color: #ffffff !important;
     transform: translateY(-2px) scale(1.04) !important;
 }
 </style>

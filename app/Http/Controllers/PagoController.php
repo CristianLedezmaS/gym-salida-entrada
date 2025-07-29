@@ -52,7 +52,7 @@ class PagoController extends Controller
             if ($request->pagacon > 0) {
                 DB::table('abono')->insert([
                     'monto' => $request->pagacon,
-                    'cliente' => $request->idcliente,
+                    'id_cliente' => $request->idcliente,
                     'fecha' => Carbon::now(),
                     'recepcionista' => $nombreUsuario,
                     'derecho_pago' => 'Matricula'

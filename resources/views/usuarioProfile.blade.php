@@ -84,7 +84,7 @@
                     @endif
                 </div>
                 <div>
-                    <h6 class="text-dark font-weight-bold">Modificar imagen</h6>
+                    <h6 class="text-light-text font-weight-bold">Modificar imagen</h6>
                     <form action="{{ route('profile.updateImg') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" value="{{ $item->id_cliente }}">

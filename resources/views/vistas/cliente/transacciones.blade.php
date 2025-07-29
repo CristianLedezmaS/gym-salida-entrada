@@ -187,7 +187,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <p class="badge bg-dark">{{ $item->derecho_pago }}</p>
+                                    <p class="badge bg-accent-blue text-white">{{ $item->derecho_pago }}</p>
                                 </td>
                                 <td>
                                     <p class="badge bg-secondary">{{ $item->recepcionista }}</p>
@@ -199,6 +199,48 @@
                                     @endif
                                 </td>
 
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <h5 class="alert text-white bg-info mt-4">Historial de Pagos</h5>
+
+            <div class="card-block">
+                <table id="pagosTable" class="display table table-striped" cellspacing="0" width="100%">
+                    <thead class="table-info">
+                        <tr>
+                            <th>ID Pago</th>
+                            <th>Cliente</th>
+                            <th>Costo Total</th>
+                            <th>Paga Con</th>
+                            <th>Método de Pago</th>
+                            <th>Fecha</th>
+                            <th>Registrado Por</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($pagos as $key => $pago)
+                            <tr>
+                                <td>{{ $pago->id_pago }}</td>
+                                <td>{{ $pago->nombre }}</td>
+                                <td>S/. {{ $pago->costo_total ?? '0.00' }}</td>
+                                <td>S/. {{ $pago->paga_con ?? '0.00' }}</td>
+                                <td>
+                                    @if($pago->metodo_pago == 'qr')
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-qrcode"></i> QR
+                                        </span>
+                                    @else
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-money-bill"></i> Efectivo
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>{{ $pago->fecha ? \Carbon\Carbon::parse($pago->fecha)->format('d/m/Y H:i') : 'N/A' }}</td>
+                                <td>{{ $pago->registrado_por }}</td>
                             </tr>
                         @endforeach
                     </tbody>

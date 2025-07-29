@@ -12,9 +12,10 @@ class Cliente extends Authenticatable
     use HasFactory, Notifiable;
     public $table = 'cliente';
     public $primaryKey = 'id_cliente';
-    public $timestamps = false;
+    public $timestamps = true; // Habilitar timestamps
     public $fillable = [
-        'membresia',
+        'id_membresia',
+        'tipo_usuario',
         'creado_por',
         'usuario',
         'password',
@@ -22,12 +23,17 @@ class Cliente extends Authenticatable
         'nombre',
         'correo',
         'telefono',
+        'direccion',
         'desde',
         'hasta',
         'DT',
         'DA',
         'DR',
-
+        'foto',
+        'pago',
+        'debe',
+        'codigo',
+        'nfc_id'
     ];
     public function rutinas()
     {

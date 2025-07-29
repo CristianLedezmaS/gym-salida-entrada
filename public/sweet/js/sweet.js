@@ -38,23 +38,23 @@ $(document).on("click", "a.eliminar", function (event) {
     var form = $(this).parent(".formulario-eliminar"); // Obtiene el formulario anterior al botón
     var url = form.attr("action"); // Obtiene la URL de la ruta de eliminación
     var csrf_token = $('meta[name="csrf-token"]').attr("content"); // Obtiene el token CSRF
+    var id = $(this).data("id"); // Obtiene el ID del elemento
 
     Swal.fire({
-        title: "¿Está seguro?",
-        text: "¡ No podrá recuperar este registro !",
+        title: "¿Eliminar registro?",
+        text: "¿Estás seguro de que quieres eliminar este registro?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#2CB073",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si, Eliminar",
-        cancelButtonText: "No, Salir",
+        confirmButtonColor: "#ef4444",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
         reverseButtons: true,
-        padding: "20px",
-        backdrop: true,
-        position: "top",
-        allowOutsideClick: true,
-        allowEscapeKey: true,
-        allowEnterKey: false,
+        customClass: {
+            popup: 'rounded-lg',
+            confirmButton: 'rounded-lg',
+            cancelButton: 'rounded-lg'
+        }
     }).then((confirm) => {
         if (confirm.isConfirmed) {
             // Agrega el token CSRF al formulario

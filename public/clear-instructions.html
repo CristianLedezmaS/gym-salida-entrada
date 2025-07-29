@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpiar Cache - Gym App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .step h3 {
+            margin: 0 0 1rem 0;
+            color: #4CAF50;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 1rem 0;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-left-color: #FFC107;
+            margin: 2rem 0;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border-left-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Limpiar Cache del Navegador</h1>
+        
+        <div class="step warning">
+            <h3>⚠️ Problema Detectado</h3>
+            <p>El sistema está experimentando errores de Service Worker. Para solucionarlo, necesitas limpiar el cache del navegador.</p>
+        </div>
+
+        <div class="step">
+            <h3>🚀 Solución Automática</h3>
+            <p>Haz clic en el botón para limpiar automáticamente el cache:</p>
+            <button class="btn" onclick="clearCache()">Limpiar Cache Automáticamente</button>
+        </div>
+
+        <div class="step">
+            <h3>📋 Solución Manual (Chrome/Edge)</h3>
+            <ol>
+                <li>Abre las <strong>Herramientas de desarrollador</strong> (F12)</li>
+                <li>Ve a la pestaña <strong>Application</strong></li>
+                <li>En el panel izquierdo, busca <strong>Service Workers</strong></li>
+                <li>Haz clic en <strong>Unregister</strong> para cada Service Worker</li>
+                <li>Ve a <strong>Storage</strong> → <strong>Clear storage</strong></li>
+                <li>Haz clic en <strong>Clear site data</strong></li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>📋 Solución Manual (Firefox)</h3>
+            <ol>
+                <li>Abre las <strong>Herramientas de desarrollador</strong> (F12)</li>
+                <li>Ve a la pestaña <strong>Application</strong></li>
+                <li>En <strong>Service Workers</strong>, haz clic en <strong>Unregister</strong></li>
+                <li>En <strong>Storage</strong>, haz clic en <strong>Clear All</strong></li>
+            </ol>
+        </div>
+
+        <div class="step success">
+            <h3>✅ Después de Limpiar</h3>
+            <p>Una vez que hayas limpiado el cache:</p>
+            <ul>
+                <li>Recarga la página (Ctrl + F5)</li>
+                <li>Accede a: <strong>http://127.0.0.1:8000/</strong></li>
+                <li>Inicia sesión con: <strong>admin@admin.com</strong> / <strong>admin</strong></li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="http://127.0.0.1:8000/" class="btn">Ir al Sistema</a>
+        </div>
+    </div>
+
+    <script>
+        function clearCache() {
+            // Desregistrar Service Workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('Service Worker desregistrado:', registration.scope);
+                    }
+                });
+            }
+
+            // Limpiar cache
+            caches.keys().then(function(cacheNames) {
+                return Promise.all(
+                    cacheNames.map(function(cacheName) {
+                        console.log('Eliminando cache:', cacheName);
+                        return caches.delete(cacheName);
+                    })
+                );
+            }).then(function() {
+                console.log('Cache limpiado');
+                
+                // Limpiar storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                alert('Cache limpiado exitosamente. Redirigiendo al sistema...');
+                window.location.href = 'http://127.0.0.1:8000/';
+            });
+        }
+    </script>
+</body>
+</html> 

@@ -189,7 +189,7 @@
             </div>
         </div>
 
-        <div id="step7" class="wizard-step">
+        {{-- <div id="step7" class="wizard-step">
             <h2>Resumen Personalizado</h2>
             <div class="summary-boxes">
                 <div class="summary-box">
@@ -206,16 +206,16 @@
                 <ul class="summary-list" id="recommendations"></ul>
             </div>
             <button class="btn-wizard" onclick="nextStep(6)">Comenzar Entrenamiento</button>
-        </div>
+        </div> --}}
 
         <div id="step8" class="wizard-step">
             <div class="loading-step">
                 <div class="loading-spinner"></div>
-                <div class="loading-text">Preparando tu entrenamiento personalizado...</div>
+                {{-- <div class="loading-text">Preparando tu entrenamiento personalizado...</div> --}}
             </div>
         </div>
 
-        <div id="step9" class="wizard-step">
+        {{-- <div id="step9" class="wizard-step">
             <div class="training-step">
                 <h2 class="training-title">Tu Rutina Personalizada</h2>
                 <div id="exercise-list"></div>
@@ -228,7 +228,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Paso 10: Loading Spinner -->
         <div id="step10" class="wizard-step">

@@ -1,203 +1,395 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="{{ asset('bootstrap4/css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('inicio/css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <title>Gym App - Login</title>
+    <link rel="shortcut icon" href="https://tresplazas.com/web/img/big_punto_de_venta.png">
+    
+    <!-- TailwindCSS -->
+    <link href="{{ asset('css/app.css') }}?v={{ time() }}" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
-    <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
-    <title>login</title>
-
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            background-color: #000; /* Fondo negro para la página */
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        .login-content {
-            background: #333; /* Fondo oscuro para el formulario */
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Sombra clara para el formulario */
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #4B0082 0%, #800080 50%, #00008B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            padding: 40px;
             width: 100%;
             max-width: 400px;
-            color: #fff; /* Texto blanco */
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        .login-content img {
-            display: block;
-            margin: 0 auto 1rem;
-        }
-
-        .login-content .title {
+        
+        .logo-section {
             text-align: center;
-            margin-bottom: 1rem;
-            color: #f0f0f0; /* Color de texto de título */
+            margin-bottom: 30px;
         }
-
-        .login-content .input-div {
-            margin-bottom: 1rem;
+        
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
         }
-
-        .login-content .input-div .div {
-            margin-left: 1rem;
+        
+        .logo-circle i {
+            color: white;
+            font-size: 32px;
         }
-
-        .login-content .input-div input {
+        
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .form-input {
             width: 100%;
-            padding: 0.75rem;
-            background-color: #222; /* Fondo oscuro para los campos de entrada */
-            color: #fff; /* Color de texto blanco */
-            border: 1px solid #444; /* Borde gris oscuro */
-            border-radius: 4px;
-            box-sizing: border-box; /* Asegura que el padding no afecte al ancho */
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            background: white;
+            transition: all 0.3s ease;
         }
-
-        .login-content .input-div input:focus {
+        
+        .form-input:focus {
             outline: none;
-            border-color: #2a5298; /* Color de borde en foco */
-            background-color: #333; /* Fondo ligeramente más claro en foco */
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
         }
-
-        .login-content .input-div input[type="password"] {
-            font-family: 'Poppins', sans-serif; /* Fuente consistente para ambos campos */
-            font-size: 1rem; /* Tamaño de fuente consistente para ambos campos */
+        
+        .form-input::placeholder {
+            color: #999;
         }
-
-        .login-content .input-div input[type="password"]::-webkit-password-field {
-            color: #1e3c72; /* Color de los puntos en el campo de contraseña (coincide con el botón) */
+        
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #FFD700;
+            font-size: 18px;
         }
-
-        .login-content .text-center {
-            margin-top: 1rem;
-        }
-
-        .login-content .btn {
-            width: 100%;
-            padding: 0.75rem;
-            background: linear-gradient(45deg, #1e3c72, #2a5298); /* Gradiente azul galáctico */
-            color: #fff;
+        
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
             border: none;
-            border-radius: 4px;
+            color: #999;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3); /* Sombra luminosa para el botón */
-            transition: background 0.3s, transform 0.3s;
+            font-size: 18px;
+            transition: color 0.3s ease;
         }
-
-        .login-content .btn:hover {
-            background: linear-gradient(45deg, #1e3c72, #1e4a8a); /* Cambia el gradiente en hover */
-            transform: scale(1.05); /* Efecto de aumento en hover */
+        
+        .password-toggle:hover {
+            color: #FFD700;
         }
-
-        .login-content .btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* Resalta el botón cuando está enfocado */
+        
+        .forgot-link {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .forgot-link a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-link a:hover {
+            color: #FFA500;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-message i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .warning-message {
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
+            color: #d97706;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-message i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="login-content">
+    <div class="login-container animate-fade-in">
+        <!-- Logo y Título -->
+        <div class="logo-section">
+            <div class="logo-circle">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            <h1 class="title">SATURN GYM</h1>
+            <p class="subtitle">Fitness & Wellness</p>
+        </div>
+
+        <!-- Formulario -->
         <form method="POST" action="{{ route('login') }}">
             @csrf
-            <img src="{{ asset('inicio/img/avatar.svg') }}" alt="Avatar">
-            <h2 class="title">BIENVENIDO</h2>
+            
+            <!-- Mensajes de Error/Success -->
             @if (session('mensaje'))
-                <div class="alert alert-warning alert-dismissible fade show mb-0" role="alert">
-                    <small>{{ session('mensaje') }}</small>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="warning-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>{{ session('mensaje') }}</span>
                 </div>
             @endif
-            <div class="mb-3">
-                @error('usuario')
-                    <div class="alert alert-danger alert-dismissible fade show mb-1" role="alert">
-                        <small>{{ $errors->first('usuario') }}</small>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @enderror
-                @error('password')
-                    <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                        <small>{{ $errors->first('password') }}</small>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @enderror
-                @error('tipo')
-                    <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                        <small>{{ $errors->first('tipo') }}</small>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @enderror
-            </div>
-            <div class="input-div one">
-                <div class="i">
-                    <i class="fas fa-user"></i>
+
+            @error('usuario')
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>{{ $errors->first('usuario') }}</span>
                 </div>
-                <div class="div">
-                    <h5>Usuario</h5>
-                    <input id="usuario" type="text"
-                        class="input @error('usuario') is-invalid @enderror" name="usuario"
-                        title="ingrese su nombre de usuario" autocomplete="usuario" value="{{ old('usuario') }}">
+            @enderror
+
+            @error('password')
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>{{ $errors->first('password') }}</span>
                 </div>
-            </div>
-            <div class="input-div pass">
-                <div class="i">
-                    <i class="fas fa-lock"></i>
+            @enderror
+
+            @error('tipo')
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>{{ $errors->first('tipo') }}</span>
                 </div>
-                <div class="div">
-                    <h5>Contraseña</h5>
-                    <input type="password" id="input" class="input @error('password') is-invalid @enderror"
-                        name="password" title="ingrese su clave para ingresar" autocomplete="current-password">
+            @enderror
+
+            <!-- Campo Usuario -->
+            <div class="form-group">
+                <label for="usuario" class="form-label">Usuario</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input 
+                        id="usuario" 
+                        type="text" 
+                        name="usuario" 
+                        value="{{ old('usuario') }}"
+                        class="form-input"
+                        placeholder="Ingresa tu usuario"
+                        autocomplete="username"
+                        required
+                    >
                 </div>
-            </div>
-            <div class="view">
-                <div class="fas fa-eye verPassword" onclick="vista()" id="verPassword"></div>
             </div>
 
-            {{-- <div class="input-div pass">
-                <div class="i">
-                    <i class="fas fa-lock"></i>
+            <!-- Campo Contraseña -->
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input 
+                        id="password" 
+                        type="password" 
+                        name="password"
+                        class="form-input"
+                        placeholder="Ingresa tu contraseña"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button 
+                        type="button" 
+                        id="togglePassword"
+                        class="password-toggle"
+                    >
+                        <i class="fas fa-eye" id="eyeIcon"></i>
+                    </button>
                 </div>
-                <div class="div">
-                    <h5>Ingresar como</h5>
-                    <select name="tipo" class="input @error('tipo') is-invalid @enderror">
-                        <option value=""></option>
-                        <option value="administrador">Administrador</option>
-                        <option value="vendedor">Vendedor</option>
-                        <option value="cliente">Cliente</option>
-                    </select>
-                </div>
-            </div> --}}
-
-            <div class="text-center">
-                <a class="font-italic isai5" href="{{route("recuperar.index")}}">Olvidé mi contraseña</a>
             </div>
-            <input name="btningresar" class="btn" title="click para ingresar" type="submit"
-                value="INICIAR SESION">
-            {{-- login --}}
+
+            <!-- Enlace Olvidé Contraseña -->
+            <div class="forgot-link">
+                <a href="{{ route('recuperar.index') }}">
+                    ¿Olvidaste tu contraseña?
+                </a>
+            </div>
+
+            <!-- Botón de Login -->
+            <button 
+                type="submit" 
+                name="btningresar"
+                class="login-btn"
+            >
+                <i class="fas fa-sign-in-alt mr-2"></i>
+                INICIAR SESIÓN
+            </button>
         </form>
-    </div>
-    <script type="text/javascript" src="{{ asset('inicio/js/main.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('inicio/js/main2.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap4/js/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap4/js/bootstrap.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bootstrap4/js/bootstrap.bundle.js') }}"></script>
-</body>
 
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2025 Gym App. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+
+        // Auto-focus en el primer campo
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('usuario').focus();
+        });
+    </script>
+</body>
 </html>
