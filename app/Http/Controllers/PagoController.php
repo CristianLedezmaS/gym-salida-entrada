@@ -35,11 +35,12 @@ class PagoController extends Controller
 
         try {
             // Insertar en la tabla de pagos
-            DB::insert('insert into pago (id_cliente, registrado_por, costo_total, paga_con) values (?, ?, ?, ?)', [
+            DB::insert('insert into pago (id_cliente, registrado_por, costo_total, paga_con, metodo_pago) values (?, ?, ?, ?, ?)', [
                 $request->idcliente, 
                 $nombreUsuario, 
                 $request->precio, 
-                $request->pagacon
+                $request->pagacon,
+                $request->metodoPago ?? 'efectivo'
             ]);
 
             // Actualizar el saldo 'debe' del cliente
@@ -55,7 +56,8 @@ class PagoController extends Controller
                     'id_cliente' => $request->idcliente,
                     'fecha' => Carbon::now(),
                     'recepcionista' => $nombreUsuario,
-                    'derecho_pago' => 'Matricula'
+                    'derecho_pago' => 'Matricula',
+                    'metodo_pago' => $request->metodoPago ?? 'efectivo'
                 ]);
             }
 

@@ -70,6 +70,34 @@
                         <input type="text" name="debe" id="debe" class="input input__text block danger"
                             value="{{ $item2->debe }}" readonly>
                     </div>
+                    <div class="fl-flex-label mb-4 col-6">
+                        <label class="text-left">Monto a pagar</label>
+                        <input type="number" name="pagacon" id="pagacon" class="input input__text" 
+                            placeholder="Ingrese el monto a pagar" step="0.01" required>
+                    </div>
+                </div>
+
+                <!-- Método de pago -->
+                <div class="row">
+                    <div class="fl-flex-label mb-4 col-12">
+                        <label class="text-left">Método de pago</label>
+                        <div class="d-flex gap-3 mt-2">
+                            <div class="form-check">
+                                <input type="radio" id="pagoEfectivo" name="metodoPago" value="efectivo" 
+                                    class="form-check-input" checked>
+                                <label class="form-check-label" for="pagoEfectivo">
+                                    <i class="fas fa-money-bill-wave text-success"></i> Efectivo
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" id="pagoQR" name="metodoPago" value="qr" 
+                                    class="form-check-input">
+                                <label class="form-check-label" for="pagoQR">
+                                    <i class="fas fa-qrcode text-primary"></i> QR
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Plan de pagos por cuotas -->

@@ -44,6 +44,11 @@ Route::get('/verAsistencia', [HomeUsuarioController::class, 'verAsistencia'])->n
 
 Auth::routes(['verify' => true]);
 
+// Rutas personalizadas para verificación de email
+Route::get('/email/verify', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('/email/verification-notification', [App\Http\Controllers\Auth\VerificationController::class, 'resend'])->name('verification.resend');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['verified','admin_empleado']);
 
 

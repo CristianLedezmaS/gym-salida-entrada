@@ -25,30 +25,6 @@ class CreatePagoTable extends Migration
 
             $table->foreign('id_cliente')->references('id_cliente')->on('cliente')->onDelete('cascade')->onUpdate('cascade');
         });
-
-        // Insertar datos de ejemplo para mostrar métodos de pago
-        DB::table('pago')->insert([
-            [
-                'id_cliente' => 1,
-                'registrado_por' => 'admin',
-                'costo_total' => '50',
-                'paga_con' => '30',
-                'metodo_pago' => 'efectivo',
-                'fecha' => now()->subDays(5),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id_cliente' => 1,
-                'registrado_por' => 'admin',
-                'costo_total' => '50',
-                'paga_con' => '20',
-                'metodo_pago' => 'qr',
-                'fecha' => now()->subDays(2),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
     }
 
     /**

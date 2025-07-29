@@ -2703,7 +2703,8 @@
                                 <thead>
                                     <tr style="background:rgba(255,215,0,0.1); border-bottom:2px solid rgba(255,215,0,0.3);">
                                         <th style="padding:12px; text-align:left; font-weight:600; color:#FFD700;">Fecha</th>
-                                        <th style="padding:12px; text-align:left; font-weight:600; color:#FFD700;">Método</th>
+                                        <th style="padding:12px; text-align:left; font-weight:600; color:#FFD700;">Tipo</th>
+                                        <th style="padding:12px; text-align:left; font-weight:600; color:#FFD700;">Tipo de Pago</th>
                                         <th style="padding:12px; text-align:left; font-weight:600; color:#FFD700;">Monto</th>
                                         <th style="padding:12px; text-align:left; font-weight:600; color:#FFD700;">Estado</th>
                                     </tr>
@@ -2717,12 +2718,37 @@
                             const fecha = new Date(pago.fecha).toLocaleDateString('es-ES');
                             const monto = parseFloat(pago.costo_total || pago.paga_con || 0).toFixed(2);
                             const estado = 'Completado';
-                            const metodo = pago.metodo_pago || 'Efectivo';
+                            const tipo = 'Pago';
+                            const metodoPago = pago.metodo_pago || 'Efectivo';
+                            
+                            // Determinar el color y texto del método de pago
+                            let metodoColor = '#10B981';
+                            let metodoTexto = metodoPago;
+                            
+                            if (metodoPago.toLowerCase() === 'qr') {
+                                metodoColor = '#8B5CF6';
+                                metodoTexto = 'QR';
+                            } else if (metodoPago.toLowerCase() === 'efectivo') {
+                                metodoColor = '#10B981';
+                                metodoTexto = 'Efectivo';
+                            } else {
+                                metodoColor = '#3B82F6';
+                                metodoTexto = metodoPago;
+                            }
                             
                             html += `
                                 <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
                                     <td style="padding:12px;">${fecha}</td>
-                                    <td style="padding:12px;">${metodo}</td>
+                                    <td style="padding:12px;">
+                                        <span style="background:rgba(16,185,129,0.2); color:#10B981; padding:4px 8px; border-radius:6px; font-size:0.875rem;">
+                                            ${tipo}
+                                        </span>
+                                    </td>
+                                    <td style="padding:12px;">
+                                        <span style="background:rgba(${metodoColor === '#8B5CF6' ? '139,92,246' : metodoColor === '#10B981' ? '16,185,129' : '59,130,246'},0.2); color:${metodoColor}; padding:4px 8px; border-radius:6px; font-size:0.875rem;">
+                                            ${metodoTexto}
+                                        </span>
+                                    </td>
                                     <td style="padding:12px; color:#10B981; font-weight:600;">S/. ${monto}</td>
                                     <td style="padding:12px;">
                                         <span style="background:rgba(16,185,129,0.2); color:#10B981; padding:4px 8px; border-radius:6px; font-size:0.875rem;">
@@ -2740,12 +2766,37 @@
                             const fecha = new Date(abono.fecha).toLocaleDateString('es-ES');
                             const monto = parseFloat(abono.monto || 0).toFixed(2);
                             const estado = 'Abono';
-                            const metodo = 'Abono';
+                            const tipo = 'Abono';
+                            const metodoPago = abono.metodo_pago || 'efectivo';
+                            
+                            // Determinar el color y texto del método de pago para abonos
+                            let metodoColor = '#10B981';
+                            let metodoTexto = metodoPago;
+                            
+                            if (metodoPago.toLowerCase() === 'qr') {
+                                metodoColor = '#8B5CF6';
+                                metodoTexto = 'QR';
+                            } else if (metodoPago.toLowerCase() === 'efectivo') {
+                                metodoColor = '#10B981';
+                                metodoTexto = 'Efectivo';
+                            } else {
+                                metodoColor = '#3B82F6';
+                                metodoTexto = metodoPago;
+                            }
                             
                             html += `
                                 <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
                                     <td style="padding:12px;">${fecha}</td>
-                                    <td style="padding:12px;">${metodo}</td>
+                                    <td style="padding:12px;">
+                                        <span style="background:rgba(59,130,246,0.2); color:#3B82F6; padding:4px 8px; border-radius:6px; font-size:0.875rem;">
+                                            ${tipo}
+                                        </span>
+                                    </td>
+                                    <td style="padding:12px;">
+                                        <span style="background:rgba(${metodoColor === '#8B5CF6' ? '139,92,246' : metodoColor === '#10B981' ? '16,185,129' : '59,130,246'},0.2); color:${metodoColor}; padding:4px 8px; border-radius:6px; font-size:0.875rem;">
+                                            ${metodoTexto}
+                                        </span>
+                                    </td>
                                     <td style="padding:12px; color:#3B82F6; font-weight:600;">S/. ${monto}</td>
                                     <td style="padding:12px;">
                                         <span style="background:rgba(59,130,246,0.2); color:#3B82F6; padding:4px 8px; border-radius:6px; font-size:0.875rem;">

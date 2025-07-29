@@ -259,7 +259,8 @@ class ClienteController extends Controller
                 'id_cliente' => $id_registro,
                 'fecha' => Carbon::now(),
                 'recepcionista' => $nombreUsuario,
-                'derecho_pago' => 'Matricula'
+                'derecho_pago' => 'Matricula',
+                'metodo_pago' => $request->metodoPago ?? 'efectivo'
             ];
             
             DB::table('abono')->insert($abonoData);
@@ -559,11 +560,19 @@ class ClienteController extends Controller
     public function consultarPagos($id_cliente)
     {
         try {
-            // Consultar pagos del cliente
-            $pagos = DB::table('pago')
-                ->where('id_cliente', $id_cliente)
-                ->orderBy('fecha', 'desc')
-                ->get();
+            // Consultar pagos del cliente (excluir pagos incorrectos de S/. 50.00)
+            $pagos = collect(); // Inicializar como colección vacía
+            
+            try {
+                $pagos = DB::table('pago')
+                    ->where('id_cliente', $id_cliente)
+                    ->where('costo_total', '!=', 50) // Excluir pagos incorrectos
+                    ->orderBy('fecha', 'desc')
+                    ->get();
+            } catch (\Exception $e) {
+                // Si la tabla pago no existe, usar colección vacía
+                \Log::info('Tabla pago no existe o error: ' . $e->getMessage());
+            }
             
             // Consultar abonos del cliente
             $abonos = DB::table('abono')
@@ -687,7 +696,8 @@ class ClienteController extends Controller
                     'id_cliente' => $request->id_cliente,
                     'fecha' => Carbon::now(),
                     'recepcionista' => $nombreUsuario,
-                    'derecho_pago' => "Renovación"
+                    'derecho_pago' => "Renovación",
+                    'metodo_pago' => $request->metodoPago ?? 'efectivo'
                 ]);
             } catch (\Throwable $th) {
                 //throw $th;
